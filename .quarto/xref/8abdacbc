@@ -1,0 +1,1 @@
+{"entries":[],"headings":["concurrency-mutual-exclusion-and-synchronization","objectives","background","race-conditions","terms-related-to-concurrency","the-critical-section-problem","software-solutions-to-the-critical-section-problem","petersons-solution-and-modern-architecture","memory-barriers","synchronization-hardware","mutex-locks","semaphores"]}

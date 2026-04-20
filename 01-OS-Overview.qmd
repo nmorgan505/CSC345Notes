@@ -1,0 +1,263 @@
+---
+title: "01 · OS Overview"
+---
+
+## A Computer System
+
+  - The computer system can be divided into four main parts:
+    - Hardware: Provide basic computing resources, and does basic calculation at request
+    - Operating System: Controls and coordinates use of hardware among various applications and users
+    - Application Programs: Defines ways in which the system resources are used to solve computing problems of the user
+      - Examples: word processors, compilers, browsers, database systems and so on
+    - Users: Humans, machines, or other computers, that can control another computer
+
+- What is a system?
+  - A complex unit formed of many, often diverse, parts subject to a common plan, or serving a common purpose
+
+- What is an Operating System?
+  - A complex program that acts an intermediary, or interface, between users and hardware
+  - An OS turns awful hardware interfaces into clean, and clear abstractions for programs and users
+
+- Goals:
+  - Executing user programs and making solving user problems easier
+  - Making a computer convenient to use
+  - Use hardware efficiently
+
+- Roles an OS plays:
+  - Referee: Manages shared resources (and makes sure they're used appropriately)
+    - Shared Resources: Memory, CPU, disk, networks
+  - Illusionist: Every running program (process) has infinite memory and exclusive access to the CPU
+  - Glue: Offers a set of common services/applications independent of hardware on a system
+
+## OS Services
+
+- Program development
+- Program execution
+- Access to input/output (I/O)
+- Controlled access to files
+- System access
+- Error detection and response
+- Accounting
+
+## Reasons an OS May Evolve
+
+- New types of hardware
+- Hardware upgrades
+- New features
+- Fixes
+
+## History of Operating Systems
+
+- Operating Systems have gone through four major phases:
+  - Serial Processing
+  - Simple Batch Systems
+  - Multiprogrammed batch systems
+  - Time sharing systems
+
+- Serial Processing (1945-1955)
+  - Earliest Computers:
+    - No OS
+      - Programmers interacted directly with computer hardware
+    - Users had to interact with computers in "series"
+
+    - Problems:
+      - Scheduling
+      - Most installations used a hard-copy sign-up sheet to reserve computer time
+      - Times could run long or short, resulted in wasted computer time
+      - Set-up time: A considerable amount of time was just the time required to set up a "program" to run
+- Simple Batch Systems (1955-1965):
+  - Early computers were expensive, so it was important to maximize processor utilization
+  - The central idea behind the simple batch processing system scheme is the use of a piece of software called a monitor
+  - Monitor:
+    - The user no longer directly interacts with the processor
+    - Job is submitted to the computer operator who batches them together and places them on an input device
+    - Program brnaches back to the monitor when finished
+  - Overhead:
+    - Processor time alternates between execution of user programs and execution of the monitor
+    - Sacrifices:
+      - A portion of main memory is now given to the monitor
+      - Some processor time is used by the monitor
+
+- Multiprogrammed batch systems (1965-1980):
+  - Issues with prior systems:
+    - I/O devices are slow compared to a processor
+    - Processor is often left idle, even with automatic job sequencing
+
+    - Example:
+      - Read one record from a file: 15 us
+      - Execute 100 instructions: 1 us
+      - Write out records to a file: 15 us
+
+      - Percent CPU utilization: 1/31 = .032 or 3.2%
+
+  - Uniprogramming: The processor spends a certain amount of time until it reaches and I/O instruction; it must wait until that I/O instruction concludes before continuing
+
+  - Multiprogramming:
+    - There must be enough memory to hold the OS (our monitor) and one user program
+    - When one job is waiting for I/O, the processor can switch to the other job, which is likely not waiting for I/O
+    - Allows for multitasking
+    - Memory can be expanded to hold some number of programs that there is time to switch between
+    - Goal: Maximize processor utilization
+
+  - Time Sharing Systems (up to current):
+    - Can be used to handle many interactive jobs
+    - Processor time can be shared across users
+    - Multiple users can simultaneously access the system through terminals, with the OS interleaving the execution of each user program in short bursts
+    - Goal: Minimize user response time
+
+## Processes
+
+- Fundamental to the structure of operating systems
+  - It can be defined as:
+    - A program in execution
+    - An instance of a running program
+    - The entitiy that can be assigned to, and executed on a processor
+    - A unit of activity charactarized by a single thread of execution, a current state, and an associate set of system resources
+  - Components of a process ("process state"):
+    - An executable program
+    - The associated data needed by the program (variables, workspace, buffers)
+    - The execution context
+      - The internal data by which the OS is able to supervicse and control the process
+      - Includes the contents of various process registers
+      - Includes information such as the priority of a process, and whether or not the process is waiting for execution, or waiting on I/O
+  - Process Management:
+    - The entire process state at any instant is contained in its "context"
+    - If there are any new features designed, they can be incorporated into the OS by expanding its context
+
+## Memory
+
+  - The Memory Hierarchy
+    - There are three main constraints to memory:
+      - Quantity
+      - Speed
+      - Cost
+    - If you have capacity, applications will likely be developed to use it
+    - Memory must be able to keep up with the processor
+    - Cost of memory must be reasonable in relationsip to other components
+
+    - Tradeoffs:
+      - Faster Access Time: Higher cost per bit, generally smaller capacity
+      - Greater Capacity: Lower cost per bit, generally slower
+
+    - Hierarchy Structure:
+      - Inboard memory: Registers, Cache, Main Memory
+      - Outboard memory: SSDs, Hard Drives/Magnetic Discs, CD/DVD
+      - Off-line Storage: Magnetic Tapes
+
+      - Going down the hierarchy:
+        - Decrease cost per bit
+        - Increase capacity
+        - Increase access time
+        - Decrease frequency of access to the memory by the processor
+
+    - Principal of Locality:
+      - Memory references by the processor tend to cluster
+      - Data is organized so that the percentage of access to each successively lower level is substantially less than that of the level above
+      - Can be applied across more than two levels of memory
+
+  - Cache memory
+    - Invisible to the OS, all hardware
+    - All hardware interactions
+    - Processor must access memory for every instruction cycle (at least once)
+      - Execution is limited by memory cycle type as a result of this
+    - Cache memory exploits the principal of locality by introducing small, fast memory, which is quicker to access and read than RAM
+
+    - Design
+      - Cache Size: Small caches have significant positive impact on performance since they keep important instructions closer to the CPU
+      - Block Size: Size of a unit of data exchanged between main memory and the cache
+      - Mapping Functions: Determine where in cache a block of information will occupy
+      - Replacement Algorithms: Chooses which block to replace when a new block is loaded into the cache
+        - Least Recently Used (LRU) Algorithm: An effective strategy to replace a block that has been in the cache the longest with no references to it
+          - All algorithms have to have hardware mechanisms to identify the LRU block, this is why more advanced algorithms are harder, or impractical to implement
+      - Write policies
+      - Number of levels: The more levels of cache there are, the slower access to main memory is, but low levels of small cache sizes still increase performance
+
+- Responsibilities of the OS
+  - Memory Management:
+    - Process Isolation
+    - Automatic allocation and management
+    - Support for modular programming
+    - Protection and access control
+    - Long term storage
+
+  - Virtual Memory:
+    - A facility that allows programs to address memory from a logical point of view without regard to physical main memory
+    - Protects systems from runaway programs by tricking a process into believing it has exclusive access to physical memory
+    - Concieved to meet the requirement of having multiple user jobs reside in main memory concurrently
+
+  - Information protection and security
+    - Main issues (CIA Triad):
+      - Confidentiality: Only authenticated users can access information
+      - Integrity: Only authorized users should be able to modify information
+      - Accessability/Availablity: Authenticated users should be able to access information reliably
+    - The nature of any threat to an orgainzation varies based on the organization's circumstances (The threats at one place are different than at another)
+    - In most threats, the problem involves controlling access to computer systems and the information stored on them
+
+  - Scheduling and resource management
+    - Resource management is the most major of the OS's responsibilities
+    - Resource allocation policies must consider:
+      - Differential Responsiveness
+      - Fairness
+      - Efficiency
+
+  - Fault Tolerance:
+    - Refers to the ability of a system or component to continue normal operation despite the presence of hardware or software faults
+      - Typically involves some degree of redundancy
+      - Intended to increase the reliability of a system
+        - Typically comes with a cost, either in financial terms or performance
+      - The extent of adoption of fault tolerance measures must be determined by how critical a resource is
+
+    - Basic Measures:
+      - Reliability:
+        - R(t)
+        - The probability of a system's correct operation up to a time t, given that the system was operating correctly at time t = 0
+      - Mean time to failure
+        - The length of time that a component from a system is expected to last before failure (also called the lifetime of a product)
+        - MTTF
+      - Mean time to repair
+        - The average time it takes to repair or replace a faulty element
+        - MTTR
+      - Availability
+        - Defined as the fraction of time that a system is availble to service a user's requests
+
+  - Faults:
+    - Defined by the IEEE Standards Dictionary as an erroneous hardware or software state as a result of the following:
+      - Component failure
+      - Operator error
+      - Physical interference from the environment
+      - Design error
+      - Program error
+      - Data structure errors
+    - The standards also provide that a fault manifests itself as:
+      - A defect in hardware device or components
+      - An incorrect, step, process, or data definition in a computer program
+
+  - Faults can be:
+    - Permanent:
+      - Faults that, after it occurs, are always present
+      - Faults that persist until the faulty component is replaced or repaired
+    - Temporary
+      - Not present at all times, for all operating conditions
+        - Transient - Only occurs once
+        - Intermittent - Occurs at multiple, unpredictable times
+
+  - Methods of redundancy:
+    - Spacial (Physical) redundancy: Involves the use of mulitple components that either perform the same function simultaneously or are configured such that one is available as a backup in case of primary component failure
+    - Temporal redundancy: Involves repeating a function or operation when an error is detected. These work well for tempoary faults, but not permanent
+    - Information redundancy: Provides fault tolerance by replicating or coding data in such a way that bit errors can be detected and corrected
+      - Could be data backups, or RAID based systems
+
+  - OS Mechanisms for Fault Tolerance:
+    - Several techniques can be incorporated into OS software to support fault tolerance:
+      - Process isolation: Prevents processes from interfering with one another
+      - Concurrency controls: Ensure orderly access to shared resources
+      - Virtual machines: Isolate software environments to contain faults
+      - Checkpoints and rollbacks: Save system state so it can be restored after a fault
+
+## Multicore OS Considerations
+
+- The design challenge for a many-core multicore system is to efficiently harness the multicore processing power and intelligently manage the substantial on-chip resources
+- Potential for parallelism exists at three levels:
+  - Instruction-level parallelism: Within a single instruction stream
+  - Thread-level parallelism: Across multiple threads within a process
+  - Process-level parallelism: Across independent processes

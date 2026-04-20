@@ -1,0 +1,27 @@
+---
+title: "CSC 345 — Operating Systems Notes"
+---
+
+Course notes for **CSC 345 Operating Systems** at Louisiana Tech University.
+Textbook: *Operating System Concepts*, Silberschatz, 10th Edition.
+
+---
+
+| # | Topic | Description |
+|---|-------|-------------|
+| [01](01-OS-Overview.qmd) | OS Overview | What an OS is, its roles (Referee/Illusionist/Glue), OS services, history of OS phases, memory hierarchy, virtual memory, fault tolerance, and multicore considerations. |
+| [02](02-Processes.qmd) | Processes | Process model, process states, the Process Control Block (PCB), context switching, process creation/termination, interrupts, and the kernel's role. |
+| [03](03-Threads.qmd) | Threads | Threads vs. processes, multithreading benefits, User-Level Threads (ULTs) vs. Kernel-Level Threads (KLTs), pthreads API, fork-join parallelism, and multicore programming. |
+| [04](04-Multiprocessor-Scheduling.qmd) | Multiprocessor Scheduling | SMP, synchronization granularity, primary/secondary vs. peer architectures, load sharing, gang scheduling, dedicated assignment, and dynamic scheduling. |
+| [05](05-Uniprocessor-Scheduling.qmd) | Uniprocessor Scheduling | FCFS, SJF, SRTF, Round Robin, and Priority Scheduling — with criteria, metrics, and preemption concepts. |
+| [06](06-Concurrency-Mutual-Exclusion.qmd) | Concurrency & Mutual Exclusion | Race conditions, critical section problem, Peterson's Algorithm, hardware solutions (test-and-set, compare-and-swap), mutex locks, and semaphores. |
+| [07](07-Deadlock-and-Starvation.qmd) | Deadlock & Starvation | Dining philosophers, deadlock conditions, resource allocation graphs, Banker's Algorithm, deadlock detection, and recovery strategies. |
+| [08](08-Memory-Management.qmd) | Memory Management | Fixed/dynamic partitioning, paging, segmentation, virtual memory, demand paging, page replacement (FIFO, OPT, LRU), thrashing, and disk scheduling. |
+| [09](09-OS-Security.qmd) | OS Security | Security violations, intruder types, malware, principle of least privilege, four-layer security model, IDS, user authentication, access control, and cryptography. |
+| [10](10-Buffer-Overflow-Lab.qmd) | Buffer Overflow Lab | Step-by-step lab demo for exploiting a stack buffer overflow using GDB and pwntools. |
+| [11](11-File-Management.qmd) | File Management | *(Notes pending — Lecture #12)* |
+
+---
+
+> Use the sidebar or **Lectures** menu in the navbar to navigate between topics.
+> Each page has a **table of contents** on the right for quick in-page navigation.

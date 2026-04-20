@@ -1,0 +1,160 @@
+---
+title: "04 · Multiprocessor Scheduling"
+---
+
+## Multiprocessor/Multicore Scheduling
+
+- Classifications of Multiprocessor Systems:
+  - Loosely Coupled/Distributed Microprocessors or cluster processors:
+    - Consists of a collection of relatively autonomous systems, each processor having its own main memory and I/O channels
+
+  - Functionally specialized processor:
+    - There is a primary, general-purpose processor
+    - Specialized processors are generally controlled by the primary processor, and provide services to it
+
+  - Tightly Coupled Multiprocessors:
+    - Consists of a set of processors that share common main memory and are under the integrated control of the OS
+    - Symmetrical MultiProcessing (SMP) is the most common modern example of this
+
+- Synchronization granularity in processes
+
+  | Grain Size   | Description                                                          | Sync Interval (instructions) |
+  |--------------|----------------------------------------------------------------------|------------------------------|
+  | Fine         | Parallelism inherent in a single instruction stream                  | < 20                         |
+  | Medium       | Parallel processing or multitasking within a single application      | 20 – 200                     |
+  | Coarse       | Multiprocessing of concurrent processes in a multiprogrammed env.    | 200 – 2,000                  |
+  | Very Coarse  | Distributed processes across network nodes                           | 2,000 – 1M                   |
+  | Independent  | Multiple unrelated processes                                         | N/A                          |
+
+- Independent Parallelism
+  - No explicit synchronization between processes
+    - Each process represents a separate, independent job or application
+    - Typically used in time-sharing systems where each user is (generally) performing an independent job
+
+  - Multiprocessor provides the same service as a multiprogrammed uniprocessor
+  - Because there are multiple processors, average user response time is lower
+
+- Coarse/Very Coarse:
+  - There is synchronization between processes, but at a very low level
+  - Easily handled as a set of concurrent processes running on a multiprogrammed processor
+  - Can be supported on a multiprocessor with little to no change in user software
+
+- Medium-Grained Parallelism
+  - Single application can be effectively implemented as a collection of threads within a single process
+    - Programmer must explicitly specify the potential parallelism in code
+    - There needs to be a high-degree of coordination and interaction among threads of an application
+  - Because the various threads of an application interact so frequently, scheduling decisions concerning one thread may affect the performance of the entire application
+      - Think of if a single thread gets blocked, and the others don't wait, which could cause data inconsistency
+
+- Fine-Grained Parallelism
+  - Represents a much more complex use of parallelism than is found in the use of threads in code
+  - Mostly OS/Scheduler, or hardware based
+
+- Design issues:
+  - The approach taken to scheduling depends on a couple of things:
+    - The granularity of applications
+    - Speed of applications
+    - The number of processors you have available
+  - Scheduling on a multiprocessor involves three interrelated issues:
+    - The dispatching of a process (separate but linked to the assignment of a process)
+    - Assignment of processes to processors
+    - Use of multiprogramming on an individual proccesor/core
+
+- Assignment of processes to a processor:
+  - Assuming all processors are equal, it is simplest to treat processors like a pooled resource and assign processes to processors as needed
+    - Dynamic Assignment
+  - If a process is permanently assigned to a processor from activation to termination
+    - Static Assignment
+    - Each processor has its own short term assignment queue
+    - The advantage is that there may be less overhead in the scheduling function
+    - Allows for group/gang scheduling
+    - Disadvantage:
+      - Load imbalance: One processor could be idle, with an empty queue, while another processor has a backlog
+      - The simplest solution is to provide a common queue of processes shared across all processors, or use dynamic load balancing
+
+- There are two methods of process assignment to a processor used for both static and dynamic methods:
+  - Primary/Secondary Architecture
+  - Peer Assignment
+
+- Primary Secondary Architecture
+  - Primary processor executes key kernel functions, and schedules for all other processors
+  - Secondary processors provides services for the primary
+  - Think of the primary as the brain, and secondary as arms or legs
+  - Advantages:
+    - Simple, and requires very little enhancement to a multiprogrammed uniprocessor system
+    - Conflict resolution for resources and synchronization is simplified since one processor has control
+  - Disadvantage:
+    - Single point of failure: If the primary fails, the system fails
+    - Primary can become a performance bottleneck: If a lot of small processes are sent to schedule at the same time, it would take longer to distribute each task to a processor than it would take for that processor to complete that task
+
+- Peer Architecture:
+  - Kernel can execute on any processor
+  - Each processor does self-scheduling from a pool of available processes
+  - Complicates the OS:
+    - OS must ensure that two processors do not choose the same process, and that processes are completed before being removed from the queue
+
+- Process Scheduling:
+  - In traditional multicore systems, processes are not dedicated to a single processor. Dynamic Assignment is most common.
+  - A single process queue is used for all processors to retrieve tasks from
+    - If some priority scheme is used, there are multiple queues, one for each priority
+
+- Thread Scheduling:
+  - Thread execution is separated from the rest of a process
+  - An application can be a set of threads that cooperate and execute concurrently (or in parallel) in the same memory address space
+  - On a uniprocessor (concurrent system), threads can be used as a program structuring aid, and allows overlap of I/O processing
+  - In a multiprocessor system, threads can be used to exploit true parallelism of an application
+    - Dramatic gains in performance are possible in multiprocessor system due to this
+
+  - Four approaches to thread scheduling:
+    - Load sharing: Threads are not assigned to a particular processor
+    - Gang Scheduling: A set of related threads are scheduled to run on a set of processors at the same time on a one-to-one basis
+    - Dedicated Processor Assignment: Provides implicit scheduling defined by the assignment of threads to processors
+    - Dynamic Scheduling: The number of threads in a process can be altered during the course of execution
+
+- Load Sharing:
+  - Simplest approach and the one that carries over the most from uniprocessor environments
+  - Advantages:
+    - Load is distributed evenly across all processors, ensuring that no processor is idle while there is work available to do
+    - No centralized scheduler required
+    - There is a global queue of threads that is easier to organize and access
+  - Disadvantages:
+    - Central queue occupies a region of memory that must be accessed in a manner that enforces mutual exclusion (so multiple processors can't take the same process)
+      - Leads to performance bottleneck
+    - Preemptive threads are unlikely to resume execution on the same processor
+      - Caching becomes less efficient, leading to another performance bottleneck
+    - If all threads are treated as a common pool of threads, it is unlikely that all of the threads of a program will gain access to processors at the same time
+      - Decreases efficiency of parallel processes
+      - The process switches could seriously compromise performance
+  - Common implementations of Load sharing:
+    - FCFS
+    - Smallest number of threads first
+    - Preemptive smallest number of threads first
+
+- Gang/Group Scheduling:
+  - A set of related threads is scheduled to run on a set of processors at the same time on a one-to-one basis
+  - Can be uniform or weighted:
+    - Uniform: As processes have no weight, all the threads in one process will execute before the threads of another process, alternating until completion
+    - Weighted: Processes are prioritized such that all of the threads of a higher priority process will execute until completion before another process executes
+  - Advantages:
+    - Synchronization and blocking may be reduced, as there is less process switching
+    - Scheduling process overhead may be reduced
+    - Useful for medium/fine grained applications whose performance severely degrades when any part of the application is not running, while other parts are ready to run
+  - Disadvantage:
+    - If there is a large process queue, a process will likely take longer to execute while waiting for processors to be freed for each of its threads
+
+- Dedicated processor assignment:
+  - When an application is scheduled, each of its threads is assigned to a processor that remains dedicated to that thread until the application is completed
+  - If a thread of an application is blocked waiting for I/O or for synchronization with another thread then that thread's processor remains idle
+  - Defense of this strategy:
+    - In a highly parallel system with tens or hundreds of processors, processor utilization is no longer an important metric of a system
+    - The total avoidance of process switching during the lifetime of a process should result in a substantial speedup of that process
+
+## Dynamic Scheduling
+
+- This method allows an application to adjust the number of threads used during execution
+- This allows the OS to adjust the load on processors to improve utilization by reallocating resources based on current workload
+- When a job requests one or more processors (either when the job arrives for the first time, or because its requirements change):
+  - If there are idle processors, use them to satisfy the request
+  - If there are no idle processors, and if the job making the request is a new arrival:
+    - allocate a single processor by taking one away from any current job that currently holds more than one processor
+  - If any portion of the request cannot be satisfied (if all current processes only have a single processor), the new job remains outstanding until either a processor becomes available, or the job is rescinded

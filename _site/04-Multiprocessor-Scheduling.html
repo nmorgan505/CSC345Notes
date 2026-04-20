@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>04 · Multiprocessor Scheduling – CSC 345 — Operating Systems</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-de84f8d6bb715db06a919283c2d1e787.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-a3739dca1af5094c51609e276de28651.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+
+
+</head>
+
+<body class="nav-sidebar docked nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">CSC 345 — Operating Systems</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="./index.html" aria-current="page"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-lectures" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Lectures</span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-lectures">    
+        <li>
+    <a class="dropdown-item" href="./01-OS-Overview.html">
+ <span class="dropdown-text">01 · OS Overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./02-Processes.html">
+ <span class="dropdown-text">02 · Processes</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-Threads.html">
+ <span class="dropdown-text">03 · Threads</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./04-Multiprocessor-Scheduling.html">
+ <span class="dropdown-text">04 · Multiprocessor Scheduling</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./05-Uniprocessor-Scheduling.html">
+ <span class="dropdown-text">05 · Uniprocessor Scheduling</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./06-Concurrency-Mutual-Exclusion.html">
+ <span class="dropdown-text">06 · Concurrency &amp; Mutual Exclusion</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./07-Deadlock-and-Starvation.html">
+ <span class="dropdown-text">07 · Deadlock &amp; Starvation</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./08-Memory-Management.html">
+ <span class="dropdown-text">08 · Memory Management</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./09-OS-Security.html">
+ <span class="dropdown-text">09 · OS Security</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./10-Buffer-Overflow-Lab.html">
+ <span class="dropdown-text">10 · Buffer Overflow Lab</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./11-File-Management.html">
+ <span class="dropdown-text">11 · File Management</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-OS-Overview.html">Lectures</a></li><li class="breadcrumb-item"><a href="./04-Multiprocessor-Scheduling.html">04 · Multiprocessor Scheduling</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">CSC 345 — Operating Systems Notes</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Lectures</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-OS-Overview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">01 · OS Overview</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-Processes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">02 · Processes</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-Threads.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">03 · Threads</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-Multiprocessor-Scheduling.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">04 · Multiprocessor Scheduling</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-Uniprocessor-Scheduling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">05 · Uniprocessor Scheduling</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-Concurrency-Mutual-Exclusion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">06 · Concurrency &amp; Mutual Exclusion</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-Deadlock-and-Starvation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">07 · Deadlock &amp; Starvation</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-Memory-Management.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">08 · Memory Management</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-OS-Security.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">09 · OS Security</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-Buffer-Overflow-Lab.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">10 · Buffer Overflow Lab</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-File-Management.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">11 · File Management</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#multiprocessormulticore-scheduling" id="toc-multiprocessormulticore-scheduling" class="nav-link active" data-scroll-target="#multiprocessormulticore-scheduling">Multiprocessor/Multicore Scheduling</a></li>
+  <li><a href="#dynamic-scheduling" id="toc-dynamic-scheduling" class="nav-link" data-scroll-target="#dynamic-scheduling">Dynamic Scheduling</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-OS-Overview.html">Lectures</a></li><li class="breadcrumb-item"><a href="./04-Multiprocessor-Scheduling.html">04 · Multiprocessor Scheduling</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">04 · Multiprocessor Scheduling</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="multiprocessormulticore-scheduling" class="level2">
+<h2 class="anchored" data-anchor-id="multiprocessormulticore-scheduling">Multiprocessor/Multicore Scheduling</h2>
+<ul>
+<li><p>Classifications of Multiprocessor Systems:</p>
+<ul>
+<li>Loosely Coupled/Distributed Microprocessors or cluster processors:
+<ul>
+<li>Consists of a collection of relatively autonomous systems, each processor having its own main memory and I/O channels</li>
+</ul></li>
+<li>Functionally specialized processor:
+<ul>
+<li>There is a primary, general-purpose processor</li>
+<li>Specialized processors are generally controlled by the primary processor, and provide services to it</li>
+</ul></li>
+<li>Tightly Coupled Multiprocessors:
+<ul>
+<li>Consists of a set of processors that share common main memory and are under the integrated control of the OS</li>
+<li>Symmetrical MultiProcessing (SMP) is the most common modern example of this</li>
+</ul></li>
+</ul></li>
+<li><p>Synchronization granularity in processes</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 12%">
+<col style="width: 61%">
+<col style="width: 26%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Grain Size</th>
+<th>Description</th>
+<th>Sync Interval (instructions)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Fine</td>
+<td>Parallelism inherent in a single instruction stream</td>
+<td>&lt; 20</td>
+</tr>
+<tr class="even">
+<td>Medium</td>
+<td>Parallel processing or multitasking within a single application</td>
+<td>20 – 200</td>
+</tr>
+<tr class="odd">
+<td>Coarse</td>
+<td>Multiprocessing of concurrent processes in a multiprogrammed env.</td>
+<td>200 – 2,000</td>
+</tr>
+<tr class="even">
+<td>Very Coarse</td>
+<td>Distributed processes across network nodes</td>
+<td>2,000 – 1M</td>
+</tr>
+<tr class="odd">
+<td>Independent</td>
+<td>Multiple unrelated processes</td>
+<td>N/A</td>
+</tr>
+</tbody>
+</table></li>
+<li><p>Independent Parallelism</p>
+<ul>
+<li>No explicit synchronization between processes
+<ul>
+<li>Each process represents a separate, independent job or application</li>
+<li>Typically used in time-sharing systems where each user is (generally) performing an independent job</li>
+</ul></li>
+<li>Multiprocessor provides the same service as a multiprogrammed uniprocessor</li>
+<li>Because there are multiple processors, average user response time is lower</li>
+</ul></li>
+<li><p>Coarse/Very Coarse:</p>
+<ul>
+<li>There is synchronization between processes, but at a very low level</li>
+<li>Easily handled as a set of concurrent processes running on a multiprogrammed processor</li>
+<li>Can be supported on a multiprocessor with little to no change in user software</li>
+</ul></li>
+<li><p>Medium-Grained Parallelism</p>
+<ul>
+<li>Single application can be effectively implemented as a collection of threads within a single process
+<ul>
+<li>Programmer must explicitly specify the potential parallelism in code</li>
+<li>There needs to be a high-degree of coordination and interaction among threads of an application</li>
+</ul></li>
+<li>Because the various threads of an application interact so frequently, scheduling decisions concerning one thread may affect the performance of the entire application
+<ul>
+<li>Think of if a single thread gets blocked, and the others don’t wait, which could cause data inconsistency</li>
+</ul></li>
+</ul></li>
+<li><p>Fine-Grained Parallelism</p>
+<ul>
+<li>Represents a much more complex use of parallelism than is found in the use of threads in code</li>
+<li>Mostly OS/Scheduler, or hardware based</li>
+</ul></li>
+<li><p>Design issues:</p>
+<ul>
+<li>The approach taken to scheduling depends on a couple of things:
+<ul>
+<li>The granularity of applications</li>
+<li>Speed of applications</li>
+<li>The number of processors you have available</li>
+</ul></li>
+<li>Scheduling on a multiprocessor involves three interrelated issues:
+<ul>
+<li>The dispatching of a process (separate but linked to the assignment of a process)</li>
+<li>Assignment of processes to processors</li>
+<li>Use of multiprogramming on an individual proccesor/core</li>
+</ul></li>
+</ul></li>
+<li><p>Assignment of processes to a processor:</p>
+<ul>
+<li>Assuming all processors are equal, it is simplest to treat processors like a pooled resource and assign processes to processors as needed
+<ul>
+<li>Dynamic Assignment</li>
+</ul></li>
+<li>If a process is permanently assigned to a processor from activation to termination
+<ul>
+<li>Static Assignment</li>
+<li>Each processor has its own short term assignment queue</li>
+<li>The advantage is that there may be less overhead in the scheduling function</li>
+<li>Allows for group/gang scheduling</li>
+<li>Disadvantage:
+<ul>
+<li>Load imbalance: One processor could be idle, with an empty queue, while another processor has a backlog</li>
+<li>The simplest solution is to provide a common queue of processes shared across all processors, or use dynamic load balancing</li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><p>There are two methods of process assignment to a processor used for both static and dynamic methods:</p>
+<ul>
+<li>Primary/Secondary Architecture</li>
+<li>Peer Assignment</li>
+</ul></li>
+<li><p>Primary Secondary Architecture</p>
+<ul>
+<li>Primary processor executes key kernel functions, and schedules for all other processors</li>
+<li>Secondary processors provides services for the primary</li>
+<li>Think of the primary as the brain, and secondary as arms or legs</li>
+<li>Advantages:
+<ul>
+<li>Simple, and requires very little enhancement to a multiprogrammed uniprocessor system</li>
+<li>Conflict resolution for resources and synchronization is simplified since one processor has control</li>
+</ul></li>
+<li>Disadvantage:
+<ul>
+<li>Single point of failure: If the primary fails, the system fails</li>
+<li>Primary can become a performance bottleneck: If a lot of small processes are sent to schedule at the same time, it would take longer to distribute each task to a processor than it would take for that processor to complete that task</li>
+</ul></li>
+</ul></li>
+<li><p>Peer Architecture:</p>
+<ul>
+<li>Kernel can execute on any processor</li>
+<li>Each processor does self-scheduling from a pool of available processes</li>
+<li>Complicates the OS:
+<ul>
+<li>OS must ensure that two processors do not choose the same process, and that processes are completed before being removed from the queue</li>
+</ul></li>
+</ul></li>
+<li><p>Process Scheduling:</p>
+<ul>
+<li>In traditional multicore systems, processes are not dedicated to a single processor. Dynamic Assignment is most common.</li>
+<li>A single process queue is used for all processors to retrieve tasks from
+<ul>
+<li>If some priority scheme is used, there are multiple queues, one for each priority</li>
+</ul></li>
+</ul></li>
+<li><p>Thread Scheduling:</p>
+<ul>
+<li>Thread execution is separated from the rest of a process</li>
+<li>An application can be a set of threads that cooperate and execute concurrently (or in parallel) in the same memory address space</li>
+<li>On a uniprocessor (concurrent system), threads can be used as a program structuring aid, and allows overlap of I/O processing</li>
+<li>In a multiprocessor system, threads can be used to exploit true parallelism of an application
+<ul>
+<li>Dramatic gains in performance are possible in multiprocessor system due to this</li>
+</ul></li>
+<li>Four approaches to thread scheduling:
+<ul>
+<li>Load sharing: Threads are not assigned to a particular processor</li>
+<li>Gang Scheduling: A set of related threads are scheduled to run on a set of processors at the same time on a one-to-one basis</li>
+<li>Dedicated Processor Assignment: Provides implicit scheduling defined by the assignment of threads to processors</li>
+<li>Dynamic Scheduling: The number of threads in a process can be altered during the course of execution</li>
+</ul></li>
+</ul></li>
+<li><p>Load Sharing:</p>
+<ul>
+<li>Simplest approach and the one that carries over the most from uniprocessor environments</li>
+<li>Advantages:
+<ul>
+<li>Load is distributed evenly across all processors, ensuring that no processor is idle while there is work available to do</li>
+<li>No centralized scheduler required</li>
+<li>There is a global queue of threads that is easier to organize and access</li>
+</ul></li>
+<li>Disadvantages:
+<ul>
+<li>Central queue occupies a region of memory that must be accessed in a manner that enforces mutual exclusion (so multiple processors can’t take the same process)
+<ul>
+<li>Leads to performance bottleneck</li>
+</ul></li>
+<li>Preemptive threads are unlikely to resume execution on the same processor
+<ul>
+<li>Caching becomes less efficient, leading to another performance bottleneck</li>
+</ul></li>
+<li>If all threads are treated as a common pool of threads, it is unlikely that all of the threads of a program will gain access to processors at the same time
+<ul>
+<li>Decreases efficiency of parallel processes</li>
+<li>The process switches could seriously compromise performance</li>
+</ul></li>
+</ul></li>
+<li>Common implementations of Load sharing:
+<ul>
+<li>FCFS</li>
+<li>Smallest number of threads first</li>
+<li>Preemptive smallest number of threads first</li>
+</ul></li>
+</ul></li>
+<li><p>Gang/Group Scheduling:</p>
+<ul>
+<li>A set of related threads is scheduled to run on a set of processors at the same time on a one-to-one basis</li>
+<li>Can be uniform or weighted:
+<ul>
+<li>Uniform: As processes have no weight, all the threads in one process will execute before the threads of another process, alternating until completion</li>
+<li>Weighted: Processes are prioritized such that all of the threads of a higher priority process will execute until completion before another process executes</li>
+</ul></li>
+<li>Advantages:
+<ul>
+<li>Synchronization and blocking may be reduced, as there is less process switching</li>
+<li>Scheduling process overhead may be reduced</li>
+<li>Useful for medium/fine grained applications whose performance severely degrades when any part of the application is not running, while other parts are ready to run</li>
+</ul></li>
+<li>Disadvantage:
+<ul>
+<li>If there is a large process queue, a process will likely take longer to execute while waiting for processors to be freed for each of its threads</li>
+</ul></li>
+</ul></li>
+<li><p>Dedicated processor assignment:</p>
+<ul>
+<li>When an application is scheduled, each of its threads is assigned to a processor that remains dedicated to that thread until the application is completed</li>
+<li>If a thread of an application is blocked waiting for I/O or for synchronization with another thread then that thread’s processor remains idle</li>
+<li>Defense of this strategy:
+<ul>
+<li>In a highly parallel system with tens or hundreds of processors, processor utilization is no longer an important metric of a system</li>
+<li>The total avoidance of process switching during the lifetime of a process should result in a substantial speedup of that process</li>
+</ul></li>
+</ul></li>
+</ul>
+</section>
+<section id="dynamic-scheduling" class="level2">
+<h2 class="anchored" data-anchor-id="dynamic-scheduling">Dynamic Scheduling</h2>
+<ul>
+<li>This method allows an application to adjust the number of threads used during execution</li>
+<li>This allows the OS to adjust the load on processors to improve utilization by reallocating resources based on current workload</li>
+<li>When a job requests one or more processors (either when the job arrives for the first time, or because its requirements change):
+<ul>
+<li>If there are idle processors, use them to satisfy the request</li>
+<li>If there are no idle processors, and if the job making the request is a new arrival:
+<ul>
+<li>allocate a single processor by taking one away from any current job that currently holds more than one processor</li>
+</ul></li>
+<li>If any portion of the request cannot be satisfied (if all current processes only have a single processor), the new job remains outstanding until either a processor becomes available, or the job is rescinded</li>
+</ul></li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+<script src="site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>07 · Deadlock &amp; Starvation – CSC 345 — Operating Systems</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-de84f8d6bb715db06a919283c2d1e787.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-a3739dca1af5094c51609e276de28651.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+
+
+</head>
+
+<body class="nav-sidebar docked nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">CSC 345 — Operating Systems</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="./index.html" aria-current="page"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-lectures" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Lectures</span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-lectures">    
+        <li>
+    <a class="dropdown-item" href="./01-OS-Overview.html">
+ <span class="dropdown-text">01 · OS Overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./02-Processes.html">
+ <span class="dropdown-text">02 · Processes</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-Threads.html">
+ <span class="dropdown-text">03 · Threads</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./04-Multiprocessor-Scheduling.html">
+ <span class="dropdown-text">04 · Multiprocessor Scheduling</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./05-Uniprocessor-Scheduling.html">
+ <span class="dropdown-text">05 · Uniprocessor Scheduling</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./06-Concurrency-Mutual-Exclusion.html">
+ <span class="dropdown-text">06 · Concurrency &amp; Mutual Exclusion</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./07-Deadlock-and-Starvation.html">
+ <span class="dropdown-text">07 · Deadlock &amp; Starvation</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./08-Memory-Management.html">
+ <span class="dropdown-text">08 · Memory Management</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./09-OS-Security.html">
+ <span class="dropdown-text">09 · OS Security</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./10-Buffer-Overflow-Lab.html">
+ <span class="dropdown-text">10 · Buffer Overflow Lab</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./11-File-Management.html">
+ <span class="dropdown-text">11 · File Management</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-OS-Overview.html">Lectures</a></li><li class="breadcrumb-item"><a href="./07-Deadlock-and-Starvation.html">07 · Deadlock &amp; Starvation</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">CSC 345 — Operating Systems Notes</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Lectures</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-OS-Overview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">01 · OS Overview</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-Processes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">02 · Processes</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-Threads.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">03 · Threads</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-Multiprocessor-Scheduling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">04 · Multiprocessor Scheduling</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-Uniprocessor-Scheduling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">05 · Uniprocessor Scheduling</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-Concurrency-Mutual-Exclusion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">06 · Concurrency &amp; Mutual Exclusion</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-Deadlock-and-Starvation.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">07 · Deadlock &amp; Starvation</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-Memory-Management.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">08 · Memory Management</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-OS-Security.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">09 · OS Security</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-Buffer-Overflow-Lab.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">10 · Buffer Overflow Lab</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-File-Management.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">11 · File Management</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#concurrency-deadlock-and-starvation" id="toc-concurrency-deadlock-and-starvation" class="nav-link active" data-scroll-target="#concurrency-deadlock-and-starvation">Concurrency: Deadlock and Starvation</a></li>
+  <li><a href="#dining-philosophers-problem" id="toc-dining-philosophers-problem" class="nav-link" data-scroll-target="#dining-philosophers-problem">Dining Philosophers problem</a></li>
+  <li><a href="#deadlock" id="toc-deadlock" class="nav-link" data-scroll-target="#deadlock">Deadlock</a></li>
+  <li><a href="#system-model" id="toc-system-model" class="nav-link" data-scroll-target="#system-model">System Model</a></li>
+  <li><a href="#deadlock-with-semaphores" id="toc-deadlock-with-semaphores" class="nav-link" data-scroll-target="#deadlock-with-semaphores">Deadlock with Semaphores</a></li>
+  <li><a href="#resource-categories" id="toc-resource-categories" class="nav-link" data-scroll-target="#resource-categories">Resource Categories</a></li>
+  <li><a href="#reusable-resource-deadlock" id="toc-reusable-resource-deadlock" class="nav-link" data-scroll-target="#reusable-resource-deadlock">Reusable Resource Deadlock</a></li>
+  <li><a href="#consumable-resource-deadlock" id="toc-consumable-resource-deadlock" class="nav-link" data-scroll-target="#consumable-resource-deadlock">Consumable Resource Deadlock</a></li>
+  <li><a href="#resource-allocation-graph" id="toc-resource-allocation-graph" class="nav-link" data-scroll-target="#resource-allocation-graph">Resource Allocation Graph</a></li>
+  <li><a href="#deadlock-characterization" id="toc-deadlock-characterization" class="nav-link" data-scroll-target="#deadlock-characterization">Deadlock Characterization</a></li>
+  <li><a href="#some-basic-facts" id="toc-some-basic-facts" class="nav-link" data-scroll-target="#some-basic-facts">Some Basic Facts</a></li>
+  <li><a href="#methods-for-handling-deadlocks" id="toc-methods-for-handling-deadlocks" class="nav-link" data-scroll-target="#methods-for-handling-deadlocks">Methods for Handling Deadlocks</a></li>
+  <li><a href="#deadlock-prevention-strategy" id="toc-deadlock-prevention-strategy" class="nav-link" data-scroll-target="#deadlock-prevention-strategy">Deadlock Prevention Strategy</a></li>
+  <li><a href="#deadlock-condition-prevention" id="toc-deadlock-condition-prevention" class="nav-link" data-scroll-target="#deadlock-condition-prevention">Deadlock Condition Prevention</a></li>
+  <li><a href="#deadlock-avoidance" id="toc-deadlock-avoidance" class="nav-link" data-scroll-target="#deadlock-avoidance">Deadlock Avoidance</a></li>
+  <li><a href="#resource-allocation-denial" id="toc-resource-allocation-denial" class="nav-link" data-scroll-target="#resource-allocation-denial">Resource Allocation Denial</a></li>
+  <li><a href="#facts" id="toc-facts" class="nav-link" data-scroll-target="#facts">Facts</a></li>
+  <li><a href="#bankers-algorithm" id="toc-bankers-algorithm" class="nav-link" data-scroll-target="#bankers-algorithm">Banker’s Algorithm</a></li>
+  <li><a href="#data-structures-for-the-bankers-algorithm" id="toc-data-structures-for-the-bankers-algorithm" class="nav-link" data-scroll-target="#data-structures-for-the-bankers-algorithm">Data Structures for the Banker’s Algorithm</a></li>
+  <li><a href="#deadlock-avoidance-restrictions" id="toc-deadlock-avoidance-restrictions" class="nav-link" data-scroll-target="#deadlock-avoidance-restrictions">Deadlock Avoidance Restrictions</a></li>
+  <li><a href="#deadlock-detection" id="toc-deadlock-detection" class="nav-link" data-scroll-target="#deadlock-detection">Deadlock Detection</a></li>
+  <li><a href="#recovery-from-deadlock" id="toc-recovery-from-deadlock" class="nav-link" data-scroll-target="#recovery-from-deadlock">Recovery from Deadlock</a></li>
+  <li><a href="#integrated-deadlock-strategy" id="toc-integrated-deadlock-strategy" class="nav-link" data-scroll-target="#integrated-deadlock-strategy">Integrated Deadlock Strategy</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-OS-Overview.html">Lectures</a></li><li class="breadcrumb-item"><a href="./07-Deadlock-and-Starvation.html">07 · Deadlock &amp; Starvation</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">07 · Deadlock &amp; Starvation</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="concurrency-deadlock-and-starvation" class="level2">
+<h2 class="anchored" data-anchor-id="concurrency-deadlock-and-starvation">Concurrency: Deadlock and Starvation</h2>
+</section>
+<section id="dining-philosophers-problem" class="level2">
+<h2 class="anchored" data-anchor-id="dining-philosophers-problem">Dining Philosophers problem</h2>
+<ul>
+<li>N Philosophers sit at a round table with a bowl of rice in the middle</li>
+<li>They spend their lives alternating thinking and eating</li>
+<li>Between each neighbor is one chopstick</li>
+<li>They do not interact with their neighbors</li>
+<li>They need two chopsticks to eat</li>
+<li>They release the chopsticks when done.</li>
+<li>What rules should they follow to avoid deadlock?</li>
+</ul>
+</section>
+<section id="deadlock" class="level2">
+<h2 class="anchored" data-anchor-id="deadlock">Deadlock</h2>
+<ul>
+<li>The permanent blocking of a set of processes that either compete for system resources or communicate with each other.</li>
+<li>A set of processes is deadlocked when each process in the set is blocked awaiting an event that can only be triggered by another blocked process in the set</li>
+<li>In a general case, there is no efficient solution</li>
+</ul>
+</section>
+<section id="system-model" class="level2">
+<h2 class="anchored" data-anchor-id="system-model">System Model</h2>
+<ul>
+<li>Systems consist of a finite number of resources</li>
+<li>Consider resource types: R1, R2, …, Rm
+<ul>
+<li>Could be CPU cycles, memory space, I/O devices, etc</li>
+</ul></li>
+<li>Each resource type Ri has Wi instances</li>
+<li>Each process can do each of the following on a resource:
+<ul>
+<li>Request: process requests an instance of a resource</li>
+<li>Use: process uses the resource</li>
+<li>Release: process releases the resource</li>
+</ul></li>
+</ul>
+</section>
+<section id="deadlock-with-semaphores" class="level2">
+<h2 class="anchored" data-anchor-id="deadlock-with-semaphores">Deadlock with Semaphores</h2>
+<ul>
+<li>Data
+<ul>
+<li>A semaphore s1 initialized to 1</li>
+<li>A semaphore s2 initialized to 1</li>
+</ul></li>
+<li>Two Processes P1 and P2:
+<ul>
+<li><p><strong>P1:</strong></p>
+<pre><code>semWait(s1)
+semWait(s2)</code></pre></li>
+<li><p><strong>P2:</strong></p>
+<pre><code>semWait(s2)
+semWait(s1)</code></pre></li>
+</ul></li>
+<li>Both wait for each other to release a semaphore, which never happens</li>
+</ul>
+</section>
+<section id="resource-categories" class="level2">
+<h2 class="anchored" data-anchor-id="resource-categories">Resource Categories</h2>
+<ul>
+<li>Reusable: Can safely be used by only one process at a time and is not depleted by that use:
+<ul>
+<li>Processors, I/O channels, memory, storage, …</li>
+</ul></li>
+<li>Consumable:
+<ul>
+<li>A resource that can be created (produced) and destroyed (consumed) by processes:
+<ul>
+<li>Messages, signals, data, etc</li>
+</ul></li>
+</ul></li>
+</ul>
+</section>
+<section id="reusable-resource-deadlock" class="level2">
+<h2 class="anchored" data-anchor-id="reusable-resource-deadlock">Reusable Resource Deadlock</h2>
+<ul>
+<li>Space is available for allocation of 200 KB, and the following occurs:
+<ul>
+<li><p>P1: … request 80 KB … request 60 KB</p></li>
+<li><p>P2: … request 70 KB … request 80 KB</p></li>
+</ul></li>
+<li>Deadlock will occur if both processes are allowed to progress to their second request</li>
+</ul>
+</section>
+<section id="consumable-resource-deadlock" class="level2">
+<h2 class="anchored" data-anchor-id="consumable-resource-deadlock">Consumable Resource Deadlock</h2>
+<ul>
+<li><p>Consider a pair of processes, in which each process attempts to receive a message from the other process and then send a message to the other process: <strong>P1:</strong></p>
+<pre><code>...
+receive message from P2
+...
+send message to P2</code></pre>
+<p><strong>P2:</strong></p>
+<pre><code>...
+receive message from P1
+...
+send message to P1</code></pre></li>
+<li><p>Deadlock occurs if the Receive is blocking</p></li>
+</ul>
+</section>
+<section id="resource-allocation-graph" class="level2">
+<h2 class="anchored" data-anchor-id="resource-allocation-graph">Resource Allocation Graph</h2>
+<ul>
+<li>A directed graph that describes the allocation of resources</li>
+<li>A set of vertices V, and edges E</li>
+<li>V is partitioned into:
+<ul>
+<li>P = {P1, P2, …, Pn} is the set of processes</li>
+<li>R = {R1, R2, …, Rm} is the set of resources</li>
+</ul></li>
+<li>E is partitioned into:
+<ul>
+<li>Request edge: Pi -&gt; Rj
+<ul>
+<li>Pi is requesting an instance of resource Rj</li>
+</ul></li>
+<li>Assignment edge: Rj -&gt; Pi
+<ul>
+<li>Rj is assigned to Pi</li>
+</ul></li>
+</ul></li>
+</ul>
+</section>
+<section id="deadlock-characterization" class="level2">
+<h2 class="anchored" data-anchor-id="deadlock-characterization">Deadlock Characterization</h2>
+<ul>
+<li>Deadlocks can arise if four conditions are met simultaneously
+<ul>
+<li>Mutual Exclusion: Only one process at a time can use a resource</li>
+<li>Hold and Wait: A process holding at least one resource is waiting to acquire additional resources held by other processes</li>
+<li>No Preemption: A resource can be released only voluntarily by the process holding it, after that process has completed its task</li>
+<li>Circular Wait: There exists a set {P0, P1, …, Pn} of waiting processes such that P0 is waiting for a resource held by P1, P1 is waiting for a resource held by P2, …, Pn-1 is waiting for a resource held by Pn, and Pn is waiting for a resource held by P0</li>
+</ul></li>
+</ul>
+</section>
+<section id="some-basic-facts" class="level2">
+<h2 class="anchored" data-anchor-id="some-basic-facts">Some Basic Facts</h2>
+<ul>
+<li>If a graph contains no cycles, then no deadlock can occur</li>
+<li>If a graph contains a cycle:
+<ul>
+<li>If only one instance per resource type, then deadlock</li>
+<li>If several instances per resource type, possibility of deadlock</li>
+</ul></li>
+</ul>
+</section>
+<section id="methods-for-handling-deadlocks" class="level2">
+<h2 class="anchored" data-anchor-id="methods-for-handling-deadlocks">Methods for Handling Deadlocks</h2>
+<ul>
+<li>There is no single effective strategy that can deal with all deadlock types</li>
+<li>There are three common approaches:
+<ul>
+<li>Deadlock prevention:
+<ul>
+<li>Disallow one of the three necessary conditions for deadlock occurrence, or prevent circular wait condition from happening</li>
+</ul></li>
+<li>Deadlock detection:
+<ul>
+<li>Grant resource requests, when possible, but periodically check for the presence of deadlocks and take action to recover</li>
+</ul></li>
+<li>Deadlock Avoidance:
+<ul>
+<li>Do not grant a resource request if this allocation may lead to a deadlock</li>
+</ul></li>
+</ul></li>
+</ul>
+</section>
+<section id="deadlock-prevention-strategy" class="level2">
+<h2 class="anchored" data-anchor-id="deadlock-prevention-strategy">Deadlock Prevention Strategy</h2>
+<ul>
+<li>Design a system in such a way that the possibility of deadlock is excluded</li>
+<li>Two methods:
+<ul>
+<li>Indirect:
+<ul>
+<li>Prevent the occurrence of one of the three necessary conditions</li>
+</ul></li>
+<li>Direct:
+<ul>
+<li>Prevent the occurrence of circular wait condition</li>
+</ul></li>
+</ul></li>
+</ul>
+</section>
+<section id="deadlock-condition-prevention" class="level2">
+<h2 class="anchored" data-anchor-id="deadlock-condition-prevention">Deadlock Condition Prevention</h2>
+<ul>
+<li>Mutual Exclusion:
+<ul>
+<li>CANNOT be disallowed in general</li>
+<li>If access to a resource requires mutual exclusion, then mutual exclusion must be supported by the OS</li>
+<li>Some resources, such as files, may allow multiple accesses for reads but only exclusive access for writes</li>
+<li>Even in this case, deadlock can occur if more than one process requires write permission</li>
+</ul></li>
+<li>Hold and Wait:
+<ul>
+<li>Require that a process request all of its required resources at one time and blocking the process until all requests can be granted simultaneously</li>
+<li>This is not practical, as it is quite inefficient</li>
+</ul></li>
+<li>No Preemption:
+<ul>
+<li>If a process holding certain resources is denied a further request, that process must release its original resources and request them again</li>
+<li>OS may preempt the second process and require it to release its resources</li>
+</ul></li>
+<li>Circular Wait:
+<ul>
+<li>The circular wait condition can be prevented by defining a linear ordering of resource types</li>
+</ul></li>
+</ul>
+</section>
+<section id="deadlock-avoidance" class="level2">
+<h2 class="anchored" data-anchor-id="deadlock-avoidance">Deadlock Avoidance</h2>
+<ul>
+<li>Allows the three necessary conditions but makes judicious choices to assure that the deadlock point is never reached</li>
+<li>A decision is made dynamically whether the current resource allocation request will, if granted, potentially lead to a deadlock</li>
+<li>Requires knowledge of future process requests</li>
+</ul>
+</section>
+<section id="resource-allocation-denial" class="level2">
+<h2 class="anchored" data-anchor-id="resource-allocation-denial">Resource Allocation Denial</h2>
+<ul>
+<li>Referred to as the banker’s algorithm</li>
+<li>Definitions:
+<ul>
+<li>State of the system reflects the current allocation of resources to processes</li>
+<li>Safe state: The system can allocate resources to each thread (up to its maximum) in some order and still avoid deadlock (there is at least one sequence of resource allocations to processes that does not result in a deadlock)</li>
+<li>Unsafe state: A state that is not safe (may lead to deadlock)</li>
+</ul></li>
+</ul>
+</section>
+<section id="facts" class="level2">
+<h2 class="anchored" data-anchor-id="facts">Facts</h2>
+<ul>
+<li>If a system is in a safe state, there is no deadlock</li>
+<li>If a system is in an unsafe state, there may be a deadlock</li>
+<li>Avoidance ensures that a system will never enter an unsafe state</li>
+</ul>
+</section>
+<section id="bankers-algorithm" class="level2">
+<h2 class="anchored" data-anchor-id="bankers-algorithm">Banker’s Algorithm</h2>
+<ol type="1">
+<li>Multiple instances of resources</li>
+<li>Each process must have a priori claim maximum use</li>
+<li>When a process requests a resource, it may have to wait</li>
+<li>When a process gets all its resources, it must return them in a finite amount of time</li>
+</ol>
+</section>
+<section id="data-structures-for-the-bankers-algorithm" class="level2">
+<h2 class="anchored" data-anchor-id="data-structures-for-the-bankers-algorithm">Data Structures for the Banker’s Algorithm</h2>
+<ul>
+<li>Let n = number of processes and m = number of resource types</li>
+<li>Available: A vector of length m. If Available[j] = k, then there are k instances of resource type Rj available</li>
+<li>Max: An n x m matrix. If Max[i,j] = k, then process Pi may request at most k instances of resource type Rj</li>
+<li>Allocation: An n x m matrix. If Allocation[i,j] = k, then Pi is currently allocated k instances of resource type Rj</li>
+<li>Need: An n x m matrix. If Need[i,j] = k, then Pi may need k more instances of resource type Rj to complete its task
+<ul>
+<li>Need[i,j] = Max[i,j] - Allocation[i,j]</li>
+</ul></li>
+</ul>
+</section>
+<section id="deadlock-avoidance-restrictions" class="level2">
+<h2 class="anchored" data-anchor-id="deadlock-avoidance-restrictions">Deadlock Avoidance Restrictions</h2>
+<ul>
+<li>Maximum resource requirements for each process must be stated in advance</li>
+<li>Processes under consideration must be independent and with no synchronization requirements</li>
+<li>There must be a fixed number of resources to allocate</li>
+<li>No process may be terminated while holding resources</li>
+</ul>
+</section>
+<section id="deadlock-detection" class="level2">
+<h2 class="anchored" data-anchor-id="deadlock-detection">Deadlock Detection</h2>
+<ul>
+<li>Allows the system to enter a deadlock state</li>
+<li>Detection algorithm:
+<ul>
+<li>A check for deadlock can be made as frequently as each resource request, or less frequently, depending on how likely it is for a deadlock to occur</li>
+<li>The algorithm is relatively simple</li>
+<li>For a single instance of each resource type: maintain a wait-for graph (nodes are processes; Pi -&gt; Pj if Pi is waiting for Pj). Periodically search for a cycle — O(n^2)</li>
+<li>For multiple instances per resource type: use Available, Allocation, and Request matrices (similar to banker’s)</li>
+</ul></li>
+<li>Recovery scheme</li>
+</ul>
+</section>
+<section id="recovery-from-deadlock" class="level2">
+<h2 class="anchored" data-anchor-id="recovery-from-deadlock">Recovery from Deadlock</h2>
+<ul>
+<li>Process Termination:
+<ul>
+<li>Abort all deadlocked processes (simple but costly)</li>
+<li>Abort one process at a time until the deadlock cycle is eliminated</li>
+<li>Order to abort based on: priority, how long the process has computed, resources used, resources still needed, number of processes that would need to be terminated, whether interactive or batch</li>
+</ul></li>
+<li>Resource Preemption:
+<ul>
+<li>Selecting a victim: minimize cost</li>
+<li>Rollback: return to a safe state and restart the process from that state</li>
+<li>Starvation risk: the same process may always be selected as victim; include number of rollbacks in cost factor to prevent this</li>
+</ul></li>
+</ul>
+</section>
+<section id="integrated-deadlock-strategy" class="level2">
+<h2 class="anchored" data-anchor-id="integrated-deadlock-strategy">Integrated Deadlock Strategy</h2>
+<ul>
+<li>Rather than using a single strategy for all deadlock types, it can be more efficient to group resources into classes and apply the most appropriate strategy per class</li>
+<li>Classes of resources and their typical strategies:
+<ul>
+<li>Swappable space (secondary storage for swapping): Prevention via hold-and-wait (allocate all required resources at once)</li>
+<li>Process resources (devices, files): Avoidance is often effective since processes can declare resource needs in advance</li>
+<li>Main memory: Prevention by preemption (swap preempted process to secondary memory)</li>
+<li>Internal resources (I/O channels): Prevention via resource ordering</li>
+</ul></li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+<script src="site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

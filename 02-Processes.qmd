@@ -1,0 +1,251 @@
+---
+title: "02 · Processes"
+---
+
+## Processes
+
+- A program in execution
+  - A program in passive
+  - A process is active
+
+## The Process Model
+
+  - All runnable software on a computer, sometimes including the OS, is organized into a number of processes
+  - Conceptually, each process has its own CPU, but in reality, a physical CPU is swapping between processes (qucikly)
+
+  - Process Elements:
+    - Program Code
+      - Text section: The executable code
+    - Data associated with that program
+      - Stack section: LIFO data structure, a part of memory that is dynamically allocated during program runtime. Contains instructions, used for invoking functions, contains function parameters, return addresses, and local variables
+      - Heap section: Dynamically allocated memory region used for data that needs to persist beyond the scope of a single function. Memory is allocated and freed explicitly by the program (e.g., via malloc/free or new/delete)
+      - Data section: Global information for the process
+
+    - While the process is in progress, it can be charactarized by the following:
+      - Identifiers (PID)
+      - State
+      - Priority
+      - Program Counter Value
+      - Memory
+      - Context
+      - I/O status information
+      - Accounting information
+
+- Process Control Structures:
+  - The OS requires the following to control and manage processes
+    - Where the process is in memory
+    - Attributes of the process necessary to manage a process, also known as the process control block (PCB)
+  - The Process Control Block
+    - Contains all process elements
+    - The PCB allows a process to be interuppted and resume running at a later time as if the interruption never occurred
+    - Key tool that allows support for multiple processes, the most important data structure in the OS
+
+  - Parts of the PCB:
+    - Process Identification:
+      - Generally Numeric identifiers
+      - PID: Process Identification Number
+      - PPID: Parent Processes Identification Number
+      - User Identifier
+    - Process State
+      - A process can be in any of the five following state:
+        - New/Initialized: A process is being created
+        - Running: Instructions are being executed
+        - Wait/Blocked/Stopped: The process is waiting for some event
+        - Ready: The process is waiting to be assigned to the processor
+        - Terminated: The process has finished execution
+    - Extra information:
+      - User Visible Registers: A register that may be referenced by means of machine language that the processor executes while in user mode. Typical systems have 8 to 32 registers, though some have over 100
+      - Control and Status Registers
+        - Program Counter: Contains the address of the next instruction
+        - Condition Codes: Results of the most recent arithmetic or logical operation (status flags: Sign, carry, zero, overflow, etc)
+        - Status Information: Includes interrupt enabled/disabled flags, execution mode
+      - Stack Pointer: Each process has one or more LIFO stacks associated with it. A stack is used to store paramenters, calling addresses for procedure, and system calls. The Stack Pointer points to the top of this stack.
+
+    - Process Control Information
+      - Scheduling Information (sometimes paired with the process state)
+        - Process state, if paired
+        - Priority: One or more fields that define the importance or execution order in which processes should be taken. Sometimes several values are required such as default, current, highest-allowable
+        - Scheduling Values: Depends on the scheudling algorithm of the OS, examples include amount of time a process has been waiting, or the amount of time since the process's last execution
+        - Events: Identity of the event the process is awaiting before it can continue
+    - Data Structure Information
+      - Information involving how the current process fits into the context of all other running programs
+    - Interprocess Communication:
+      - Various flags, signals, or messages that may be associated with communication between two independent processes. Some or all of that information is maintained by the PCB.
+    - Privileges
+      - Processes are granted privileges in terms of memory that may be accessed and the types of instuctions that may be executed. In addition, privileges may apply to the use of certain system utilites and services.
+    - Resource management and utilization information
+
+  - Why is the PCB considered the most important data structure of the OS?
+    - Used to define the state of the OS
+    - Contains all the information about the process an OS may need
+      - All data is kept in one location, easier to access.
+  - What is the problem with PCBs?
+    - A bug in a single routine could damage all PCBs, which would destroy the system's ability to manage affected processes. It is a single point of failure.
+
+  - Process Image:
+    - Each process has associated with it a number of attributes that are used by the OS for process control
+    - The collection of program, data, stack, and attributes is referred to as the process image, or context of a process
+
+    - Contents of the process image:
+      - User Data: The modifiable part of User Space. That includes program data some user stack area, and programs that can be modified
+      - User Program: The program to be executed
+      - Stack: Each process has one or more LIFO stacks associated with it. A Stack is used to store parameters and calling address for procedures and system calls
+      - Attributes: PCB
+
+- Process Execution/Trace
+  - Process Trace: The behavior of an individual process by listing the sequence of instructions that execute for that process
+  - The behavior of the processor can be charactarized by showing how the trace of the various processes are interleaving
+
+  - Dispatcher: A small program that switches the processor from one process to another
+
+  - Suspended Processes:
+    - Swapping:
+      - Involves moving part, or all, of a process from main memory to disk
+      - When none of the process is in the Ready state, the OS swaps one of the blocked processes out on to disk in a suspended queue
+        - This is a queue of existing processes that have been temporarily kicked out of main memory or suspended
+        - The OS then brings in another process from the suspended queue or it honors a new-process request
+        - Swapping is an I/O operation, which has potential for making speed problems even worse. Since Disk I/O is much faster than other types of I/O (think user input), swapping usually increases performance
+
+    - Charactaristics of a Suspended Process:
+      - The process is not immediately available for execution
+      - Process was placed in a suspended state by an agent of some sort: the process itself, a parent proess, or the OS
+      - The process may or may not be waiting on some event
+      - The process may not be removed from this state until the agent that placed it there explicitly orders its removal
+
+    - Reasons for suspension:
+      - Swapping: The OS needs to release memory to bring in a process that is Ready
+      - OS reasons: The OS may suspend a background or utility process, or other processes that are suspected to cause problems
+      - Interactive User Requests: A user may wish to suspend the execution of a process for the purposes of debugging or in connection with use of resources
+      - Timing
+      - Parent process request
+
+- Implementation of the Process Model:
+  - To implement the process model, the OS maintains several tables
+  - The process table, with one entry per process (pcb) has several elements
+
+  - Process tables:
+    - These are the key to process management
+    - There must be some reference to memory, I/O, and files, directly or indirectly
+    - The tables themsevles are accessable to the OS, and are therefore subject to memory management
+
+  - Memory tables
+    - Used to keep track of both main (real) and secondary (virtual) memory
+    - Processes are maintained on secondary memory using some sort of virtual memory swapping mechanism
+    - Includes:
+      - Allocation of main and secondary memory to a process
+      - Information related to memory management (mostly in regards to virtual)
+      - Protection attributes of blocks of main or virtual memory
+
+  - I/O tables
+    - Used by the OS to manage the I/O devices and channels of the computer system
+    - At any given time, I/O devices may be available to a particular process
+    - If I/O is in operation, the OS needs to know:
+      - The status of the operation
+      - The location in main memory being used as the source or destination of the I/O transfer
+
+  - File tables
+    - Contains:
+      - Existence of files
+      - Location on storage devices
+      - Current status
+      - Other minor attributes
+    - Information may be maintained and used by a file management system, in this case, the OS has little or no knowledge of files
+
+- Process Creation:
+  - Processes are created through four main events:
+    - System Initalization: Turning the system on
+    - Execution of a process-creation system call by a running process
+    - A user request to create a new process
+    - Initalized by a batch job
+      - Batch job: system scheduled events (generally)
+
+  - Steps taken to create a process
+    - After the OS decides to create a new process:
+    1. Assign a unique process identifier to the new process
+    2. Allocate space for the new process
+    3. Initialize the PCB
+    4. Sets appropriate linkages to other processes
+    5. Creates or expands related data structures
+
+- Process Termination:
+
+  | Voluntary     | Involuntary              |
+  |---------------|--------------------------|
+  | Normal Exit   | Fatal Error              |
+  | Error Exit    | Killed by another process |
+
+  - Reasons for termination:
+    - Normal Completion: The process executes an OS service call to indicate that has completed running
+    - Time Limit Exceeded: The process has run longer than the specified total time limit
+    - Time Overrun: The process has waited longer than a specified amount of time for a certain event to occur
+    - Memory Unavailable: The process requires more memory than the system can provide
+    - Bounds Violation: The process tries to access a memory location that it is not allowed to access
+    - Protection Errors: The process attempts to use a resource such as a file that it is not allowed to use, or tries to use it in an improper fashion
+    - Arithmetic Errors: The process tries to perform a prohibited computation such as division by zero
+    - Data Misuse
+    - Parent Termination
+    - Parent Request
+    - I/O Failure
+    - Invalid Instructions: The process attempts to use an instruction reserved for the OS
+
+- Interrupts: Pause or ending execution of a running program (stopping current execution for some prioritized event)
+
+- Mechanisms for interrupting program execution:
+  - Interrupt: Caused by some function external to the current instruction. Used to react to untimed or asychronus events
+  - Trap: Associated with the execution of the current instruction. Used for handling errors or exceptions
+  - Supervisor Call: Explicitly requested function with no relation to the current instruction. Usually used to call OS functions.
+
+- Kernel:
+  - The "brain of the OS"
+  - Handles:
+  - Process Management
+    - Creation and Termination
+    - Scheduling and Dispatching
+    - Process Switching
+    - Manages PCBs
+    - Process synchronization and support for interprocess communication
+
+  - Memory Management
+    - Swapping
+    - Allocation of address space to process
+    - Page/segment management
+
+  - I/O Management
+    - Buffer management
+    - Allocation of I/O channels and buffers to processes
+
+  - Support Functions:
+    - Interrupt handling
+    - Accounting Information
+    - Monitoring
+
+  - Mode Switching
+    - If an interrupt is pending the processor:
+      - Sets the program counter (PC) to the memory address where the interrupt handling program starts
+      - Switch the user mode to kernel mode so that the interrupt processing code may include privileged instructions
+    - If there are no interrupts pending: Proceeds to the fetch stage and takes the next instruction of the current process
+
+  - Context Switch steps:
+    - Save the context of the current process
+    - Update the PCB of the currently Running process
+    - Move the PCB of this process to the appropriate queue (Ready or Blocked)
+    - Select the next process from the Ready queue
+    - Update the PCB of the selected process
+    - Update the memory management data structures
+    - Restore the context of the processor to that which existed at the time the selected process was last switched out
+
+  - Process Creation in Unix:
+    - Process creation is by means of the fork() kernel system call
+    - When a process issues a fork() request, the OS does the following:
+      - Allocate a slot in the process table for the new process
+      - Assign a unique PID to the child (new) process
+      - Make a copy of the process image of the parent, with the exception of shared memory
+      - Increment counters for any files owned by the parent, to reflect that an additional process now also owns those files
+      - Assign the child process to the Ready state
+      - Return the ID number of the child to the parent process, and a 0 value to the child process
+
+  - Following Creation:
+    - After creating the process, the kernel will do one of three things as part of the dispatcher routine
+      - Stay in the parent process. Control returns to user mode at the point the fork call of the parent.
+      - Transfer to the child process. The child process begins executing at the same point in the code as the parent, namely at the return from the fork call
+      - Transfer control to another process. Both parent and child are left in the Ready state.

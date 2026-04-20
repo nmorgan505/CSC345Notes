@@ -1,0 +1,186 @@
+---
+title: "09 · OS Security"
+---
+
+## Operating System Security
+
+## The Security Problem
+
+- System is secure if resources are used and accessed as intended under all circumstances.
+  - This is basically impossible to achieve.
+- Some terms:
+  - Intruder/Attacker: Someone attempting to breach security
+  - Threat: A potential security violation (suspected but not always verified)
+  - Attack: An attempt to breach security
+    - Can be accidental or malicious
+  - Vulnerability: A weakness in the system that can be exploited
+  - Easier to protect against accidental attacks than malicious ones
+
+## Security Violation Categories
+
+- Breach of confidentiality: Unauthorized access to sensitive data
+- Breach of integrity: Unauthorized modification of data
+- Breach of availability: Unauthorized destruction of data
+- Theft of service: Unauthorized use of system resources
+- Denial of service (DOS): Prevention of legitimate use
+
+## System Access Threats
+
+- System access threats fall into two general categories:
+  - Intruders: Individuals who attempt to gain unauthorized access to a system
+  - Malicious software: Programs that attempt to exploit system vulnerabilities
+
+## Intruder Types
+
+- Masquerader: An individual who is not authorized to use the computer and who penetrates a system's access controls to exploit a legitimate user's account
+  - Example: A hacker who steals a password to gain access to a system
+- Misfeasor: A legitimate user who accesses data, programs, or resources for which such access is not authorized, or who is authorized for such access, but misuses their privileges
+  - Example: An employee who accesses sensitive data for personal gain
+- Clandestine user: An individual who seizes supervisory control of the system and uses this control to evade auditing and access controls or to suppress audit collection
+  - Example: A hacker who gains root access to a system and disables auditing features
+
+## Security Violation Methods
+
+- Masquerading (breach authentication):
+  - Pretending to be an authorized user to escalate privileges
+- Replay attack:
+  - As is or with message modification
+- Man-in-the-middle attack, now normally called a On-Path attack:
+  - Intruder sits in data flow, masquerading as sender to receiver and vice versa
+- Session hijacking:
+  - Intercept an already established session to bypass authentication
+- Privilege escalation:
+  - Common attack with access beyond what a user or resource is supposed to have
+
+## Malicious Software
+
+- Programs that exploit vulnerabilities in a computer system
+- Also called malware
+- Can be split into two categories:
+  - Parasitic: Fragments of programs that cannot exist independently of some real application program, utility, or system program
+    - Viruses, logic bombs, and backdoors are examples
+  - Independent: Self contained programs that can be scheduled and run by the operating system
+    - Worms and bot programs are examples
+- There are a multitude of different types of malware, with many names
+- Trojan horse:
+  - Code segment that misuses its environment
+  - Exploits mechanisms for allowing programs written by users to be executed by other users
+  - Spyware, popup browser windows, covert channels
+  - Up to 80% of spam delivered by spyware-infected systems
+- Trap Door:
+  - Specific user identifier or password that circumvents normal security procedures
+  - Could be included in a compiler
+- Malware:
+  - Software designed to exploit, disable, or damage computers
+  - Spyware: Programs frequently installed with legitimate software to display ads and capture user data
+  - Ransomware: Locks up data via encryption and demands payment for decryption key
+- Others include trap doors, logic bombs
+- All try to violate the principle of least privilege
+- Goal frequently is to leave behind a Remote Access Tool (RAT) for repeated access
+
+## Principle of Least Privilege
+
+- A user should be given the minimum levels of access necessary to perform his/her job functions
+- This is a fundamental principle of computer security
+- Is used to limit the potential damage that can be done by a compromised account or system
+- "The purpose of this principle is to reduce the number of potential interactions among privileged programs to the minimum necessary to operate correctly, so that one may develop confidence that unintentional, unwanted, or improper uses of privilege do not occur"
+  - Jerome H. Saltzer describing a design principle for the Multics operating system in '74
+
+## Four Layer Model of Security
+
+- The four layers of security are:
+  - Physical security
+    - Attacks: console access, hardware-based attacks
+    - Countermeasures: locks, guards, vaults, device data encryption
+  - Network security
+    - Attacks: sniffing, spoofing, masquerading
+    - Countermeasures: encryption, authentication, filtering
+  - Operating system security
+    - Attacks: insecure defaults, platform vulnerabilities
+    - Countermeasures: patches, reconfiguration, hardening
+  - Application security
+    - Attacks: logic bugs, design flaws, code injection
+    - Countermeasures: sandboxing, software restrictions
+
+## Countermeasures
+
+- RFC 4949: Internet Security Glossary
+  - Defines intrusion detection as a security service that monitors and analyzes system events for the purpose of finding, and providing real-time or near real-time alerts of, attempts to access system resources in an unauthorized manner
+  - Intrusion detection systems (IDS) can be classified as:
+    - Host-based IDS (HIDS): Monitors a single host for suspicious activity
+    - Network-based IDS (NIDS): Monitors network traffic for suspicious activity for a network segment.
+
+## IDS components
+
+- Sensors
+  - Responsible for collecting data
+  - The input for a sensor may be any part of a system that could contain evidence of an intrusion
+  - Types of input to a sensor include network packets, log files, and system call traces
+- Analyzers
+  - Receive input from sensors or other analyzers
+  - Responsible for determining if an intrusion has occurred
+  - Must provide guidance about what actions to take as a result of the intrusion
+- User interface (UI)
+  - Enables a user to view output from the system or control the behavior of the system
+  - May equate to the manager, director, or console component
+
+## User Authentication
+
+- In most computer security contexts, user authentication is the fundamental building block and the primary line of defense
+- RFC 4949 defines user authentication as the process of verifying an identity claimed by or for a system entity
+- An authentication process consists of two steps:
+  - Identification: The entity presents an identifier to the system
+  - Verification: Presenting or generating authentication information that corroborate the binding between the entity and the identifier
+
+## Means of Authentication
+
+- Something you know: Passwords, PINs, answers to security questions
+- Something you have: Smart cards, tokens, key fobs
+- Something you are: Biometrics (fingerprints, retina scans)
+- Something you do: Behavioral biometrics (typing patterns, mouse movements)
+- Somewhere you are: Geolocation data (IP address, GPS coordinates)
+- Something that is in the user's environment: Surroundings/ambient sounds or ambient access points
+
+## Access control
+
+- Implements a security policy that specifies who or what may have access to each specific system resource, and the type of access that is permitted in each instance
+- Mediates between a user and system resources, such as applications, operating systems, firewalls, routers, files, and databases
+- A security administrator maintains an authorization database that specifies what type of access to which resources is allowed for this user
+  - The access control function consults this database to determine whether to grant access
+- An auditing function monitors and keeps record of user accesses to system resources
+
+## Cryptography as a Security Tool
+
+- Means to constrain potential senders (sources) and/or receivers (destinations) of messages
+  - Based on secret informations (keys)
+  - Enables:
+    - Confirmation of source
+    - Receipt only by certain destinations
+    - Trust relationship between sender and receiver
+- Note: symmetric cryptography based on transformation, asymmetric is based on mathematical functions
+  - Asymmetric is much more compute intensive
+  - Typically not used for bulk data encryption
+
+## Buffer Overflow
+
+- When more input is placed into a buffer than its capacity allows, which can overwrite other information and be exploited by attackers to crash systems or insert malicious code (more common) to gain control of the system
+  - Also known as buffer overrun
+
+- Stack overflow:
+  - A classic attack
+  - A type of buffer overflow that occurs in the call stack of a program
+  - Can occur when a program uses too much stack space, causing the stack to overflow into adjacent memory areas
+
+## Defense against Buffer Overflow
+
+- Compile-time:
+  - Programming language
+  - Safe Coding techniques
+  - use of safe libraries
+  - Stack protection
+    - Stack canaries
+
+- Runtime:
+  - Executable address space protection
+  - Address space layout randomization (ASLR)
+  - Guard pages

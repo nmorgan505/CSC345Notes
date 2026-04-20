@@ -1,0 +1,250 @@
+---
+title: "06 · Concurrency & Mutual Exclusion"
+---
+
+## Concurrency: Mutual Exclusion and Synchronization
+
+## Objectives
+
+- Describe the critical-section problem and illustrate a race condition
+- Illustrate hardware solutions to the critical-section problem using memory barriers, compare-and-swap, and test-and-set operations
+- Demonstrate how mutex locks, semaphores, monitors, and condition variables can be used to solve the critical-section problem
+
+## Background
+
+- OS design is concerned with management of process and threads:
+  - Multiprogramming:
+    - The management of multiple processes within a uniprocessor system
+  - Multiprocessing:
+    - The management of multiple processes within a multiprocessor system
+  - Distributed processing:
+    - The management of multiple processes executing on multiple, distributed computer systems
+- Processes can execute concurrently
+  - May be interrupted at any time, partially completing execution
+- Concurrent access to shared data may result in data inconsistency
+- Maintaining data consistency requires mechanisms to ensure the orderly execution of cooperating processes
+
+## Race Conditions
+
+- Occurs when multiple processes or threads read and write the same data items
+- The final result depends on the order of execution
+  - The "loser" of the race is the process that updates last and will determine the final value of variables
+
+- Ex:
+  - Process p0 and p1 are creating child processes using the fork() system call
+  - Race condition on kernel variable next_available_pid which represents the next available process ID
+  - Unless there is a mechanism to prevent p0 and p1 from accessing the variable next_available_pid at the same time, the same PID could be assigned to two different processes
+
+## Terms related to concurrency
+
+- Atomic Operations: A function or action implemented as a sequence of one or more instructions that appear to be indivisible; that is, no other process can see an intermediate state or be interrupt that operation. The sequence of instructions is guaranteed to execute as a group, or not execute at all, having no visible effect on system state. Atomicity guarantees isolation from concurrent processes.
+
+- Critical Section: A section of code within a process that requires access to shared resources and that must not be executed while another process is in a corresponding section of code.
+
+- Deadlock: A situation in which two or more processes are unable to proceed because each is waiting for the other to do something
+
+- Livelock: A situation in which two or more processes continuously change their state in response to changes in another process without doing any useful work.
+  - Ex: Two processes are attempting to acquire the same lock and continuously release and reacquire the lock without making progress
+
+- Mutual Exclusion: The requirement that when one process is in a critical section that accesses shared resources, no other process may be in a critical section that accesses any of the same resources
+
+- Starvation: A situation in which a runnable process is overlooked indefinitely by the scheduler, although it is ready to proceed, it is never selected.
+
+## The Critical Section Problem
+
+- Consider n processes in a system {p0, p1, p2, ... pn-1}
+- Each process has a critical section (CS) segment of code
+  - The processes may be changing common variables, updating tables, writing files, etc.
+  - When one process is in CS, no other process may be in its CS
+
+- CS problem: Design a protocol to solve the issues above
+
+- General Structure for a process pi:
+
+```
+while(1){
+[entry section]
+critical section
+[exit section]
+remainder section
+}
+```
+
+- Requirements:
+  - Mutual Exclusion: If process Pi is executing its critical section, then no other processes can be executing their CS
+  - Progress: If no process is executing its CS, and there exists some process that wishes to enter their CS, then the selection of the process that will enter the CS cannot be postponed indefinitely
+  - Bounded Waiting: A bound must exist on the number of times that other processes are allowed to enter their CS after a process has made a request to enter its CS and before that request is granted
+    - Assume that each process executes at a nonzero speed
+    - No assumption concerning relative speeds of the n processes
+
+## Software Solutions to the Critical Section Problem
+
+- Solution #1: Using a "turn" variable
+  - Two process solution
+  - Assumes atomic load and store machine-language instructions (cannot be interrupted)
+  - Processes Pi and Pj share one variable: int turn
+  - The variable turn indicates whose turn it is to enter the critical section
+  - Initially, turn is set to i
+
+  **Algorithm for Process Pi:**
+
+  ```
+  int turn = i;
+  while (1){
+  while (turn == j);  /* busy wait */
+  /* critical section */
+  turn = j;
+  /* remainder section */
+  }
+  ```
+
+  - Correctness:
+    - Mutual exclusion is preserved: Pi enters CS only if turn == i, and turn cannot be both i and j at the same time
+    - Progress requirement: Not satisfied — if Pi doesn't want the CS, Pj is still forced to wait
+    - Bounded-waiting: Satisfied
+
+- Solution #2: Using a flag array
+  - Processes share a vector: boolean flag[2]
+  - flag[i] = true implies that process Pi is ready to enter the critical section
+
+  **Algorithm for Process Pi:**
+
+  ```
+  bool flag[2] = {false, false};
+  while (1){
+  while (flag[j]);
+  flag[i] = true;
+  /* critical section */
+  flag[i] = false;
+  /* remainder section */
+  }
+  ```
+
+  - Correctness:
+    - Mutual exclusion: Not guaranteed — both processes could pass the while check before either sets their flag to true
+    - Progress: Not satisfied
+    - Bounded-waiting: Not satisfied
+
+- Solution #3: Peterson's Algorithm
+  - Two process solution using both int turn and boolean flag[2]
+  - The variable turn indicates whose turn it is to enter the critical section
+  - The flag array indicates if a process is ready to enter the critical section
+
+  **Algorithm for Process Pi:**
+
+  ```
+  int turn;
+  bool flag[2];
+  while (true){
+  flag[i] = true;
+  turn = j;
+  while (flag[j] && turn == j);
+  /* critical section */
+  flag[i] = false;
+  /* remainder section */
+  }
+  ```
+
+  - Provably meets all three CS requirements:
+    - Mutual exclusion: Pi enters CS only if either flag[j] = false or turn = i
+    - Progress: Satisfied
+    - Bounded-waiting: Satisfied
+
+## Peterson's Solution and Modern Architecture
+
+- Although useful for demonstrating an algorithm, Peterson's solution is not guaranteed to work on modern architectures
+- To improve performance, processors and/or compilers may reorder operations that have no dependencies
+- For single-threaded programs this is fine; for multithreaded programs the ordering may produce inconsistent or unexpected results
+- Example:
+  - Two threads share: bool flag = false; int x = 0;
+  - Thread 1: while (!flag); print x
+  - Thread 2: x = 100; flag = true
+  - Expected output: 100
+  - However, Thread 2's instructions may be reordered to: flag = true; x = 100
+  - This could cause Thread 1 to print 0 — a race condition
+
+## Memory Barriers
+
+- Memory models are the memory guarantees a computer architecture makes to application programs
+  - Strongly ordered: A memory modification of one processor is immediately visible to all other processors
+  - Weakly ordered: A memory modification of one processor may not be immediately visible to all other processors
+- A memory barrier is an instruction that forces any change in memory to be propagated (made visible) to all other processors
+- When a memory barrier instruction is performed, the system ensures that all loads and stores are completed before any subsequent load or store operations are performed
+
+- Memory Barrier Example (fixing the Peterson's reordering issue):
+  - Thread 1: while (!flag); memory_barrier(); print x
+  - Thread 2: x = 100; memory_barrier(); flag = true
+  - Thread 1 is guaranteed that flag is loaded before x
+  - Thread 2 ensures the assignment to x occurs before the assignment to flag
+
+## Synchronization Hardware
+
+- Many systems provide hardware support for implementing the critical section code
+- Uniprocessors: could disable interrupts (generally too inefficient on multiprocessor systems)
+- Two key hardware instructions:
+  - Test-and-Set
+  - Compare-and-Swap
+
+- Test-and-Set instruction:
+  - Executed atomically
+  - Returns the original value of the passed parameter
+  - Sets the new value of the passed parameter to true
+  - Solution: Shared Boolean variable lock, initialized to false
+
+  ```
+  while (test_and_set(&lock));  /* busy wait */
+  /* critical section */
+  lock = false;
+  /* remainder section */
+  ```
+
+- Compare-and-Swap instruction:
+  - Executed atomically
+  - Returns the original value of the passed parameter value
+  - Sets the variable value to new_value, but only if *value == expected (the swap takes place only under this condition)
+  - Solution: Shared integer lock initialized to 0
+
+  ```
+  while (compare_and_swap(&lock, 0, 1) != 0);  /* busy wait */
+  /* critical section */
+  lock = 0;
+  /* remainder section */
+  ```
+
+## Mutex Locks
+
+- Boolean variable indicating if the lock is available or not
+- Protect a critical section by:
+  - First acquiring the lock: acquire()
+  - Then releasing the lock: release()
+- Calls to acquire() and release() must be atomic
+- Usually implemented via hardware atomic instructions such as compare-and-swap
+- This solution requires busy waiting — referred to as a spinlock
+
+- **Solution to the CS Problem Using Mutex Locks:**
+
+  ```
+  while (true) {
+    acquire lock
+    critical section
+    release lock
+    remainder section
+  }
+  ```
+
+## Semaphores
+
+- A semaphore may be initialized to a nonnegative integer value
+- The semWait operation decrements the semaphore value
+- The semSignal operation increments the semaphore value
+- Implementation must be atomic (can be implemented in hardware or software)
+  - Software schemes such as Dekker's or Peterson's algorithms can be used
+  - Hardware-supported mutual exclusion schemes are another alternative
+
+- Binary Semaphore: Value is restricted to 0 or 1 (essentially a mutex lock)
+- Counting Semaphore: Value can range over an unrestricted domain
+
+- Strong vs. Weak Semaphores:
+  - A queue is used to hold processes waiting on the semaphore
+  - Strong semaphore: Processes are released from the queue in FIFO order
+  - Weak semaphore: No specific order for release is specified

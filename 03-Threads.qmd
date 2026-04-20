@@ -1,0 +1,176 @@
+---
+title: "03 · Threads"
+---
+
+## Review
+
+- PCB vs Process Image:
+  - PCB: Data Structure maintained by the OS for every process
+    - Contains essential information about the process such as process state, program counter, register info, memory management info, accounting info, I/O status, and CPU scheduling
+  - Process Image:
+    - The entire collection of information that makes up what is being executed by a process
+      - Includes code, data, and the process stack
+
+- Multiprogramming:
+  - When multiprogramming is used, CPU utilization can be improved
+    - If the average process computes only 30% of the time it is sitting in memory, then we can have three processes in memory at once, and the CPU should be busy all of the time.
+    - This is unrealistic at best, however, since it assumes that all processes will never be waiting for I/O at the same time
+  - It is better to view multiprogramming from a probabilistic standpoint.
+    - Suppose that a process spends a fraction of its time (p) waiting for I/O
+    - With multiple processes in memory at once, the probability that all processes are waiting for I/O is p ^ n (n is number of processes)
+    - CPU Utilization = 1 - p^n
+
+  - Suppose that a computer has 8 GB of memory, with the OS and its tables taking up 2 GB, and each process also taking 2 GB, what is the CPU utilization with 80% chance a process is waiting? .488
+    - What is the new CPU utilization if 8GB of memory are added? .79
+    - What is the new utilization if another 8GB are added? .914
+
+## Threads
+
+- Charactaristics of processes:
+  - Resource Ownership:
+    - Processes include virtual memory space to hold a process image
+    - The OS performs a protection function to prevent unwanted interference between processes with respect to resources
+  - Scheduling/Execution:
+    - Follows an execution path that may be interleaed with other processes (multiprogramming)
+    - A process has an execution state and a dispatch priority, and is the entity that is scheduled and dispatched by the OS.
+
+- A process is a whole
+  - The unit of resource ownership
+- A thread is a lightweight part of the process
+  - The unit of dispatching of a process is called a thread, or lightweight process
+
+- Multithreading: The ability of an OS to support multiple concurrent paths of execution in a single process
+  - All threads in a multithreaded process with share code, data, and files from a process, but have their own (smaller) registers, stack, and program counter
+
+- Single Thread Approach: A single thread of execution per process, in which the concept of a thread is not recognized.
+  - Example: MS-DOS
+
+- The process in a multithreaded environment is defined as "the unit of resource allocation and unit of protection"
+  - Things associated with the process:
+    - the virtual address space that holds the process image
+    - protected access to resources
+      - processors
+      - files
+      - I/O resources
+
+    - Things associated with the thread:
+      - An execution state
+      - Saved thread context
+      - An execution stack
+      - Some per-thread static storage for local variables (register set)
+      - Access to the memory and resources of its process, shared with all threads of that process
+
+  - Benefits of using threads:
+    - Takes less time to create and terminate
+    - Switching between two threads takes less time than switching between processes
+    - Threads enhance efficiency of interprocess communication
+
+## Multicore Programming
+
+- Multicore processessing is the ability for multiple cores on a CPU to execute a process (or threads)
+- Provides opportunity to increase efficiency, but comes with some drawbacks:
+  - Dividing activites between cores
+  - Balancing work between cores
+  - Dividing data
+  - Data dependency
+  - Testing and debugging
+- Two types of multicore programming
+  - Parallel processing: implies a system can perform more than one task simultaneously
+  - Concurrent processing: More than one task makes progress at a time in a single core or single core processor, allowed by the scheduler
+
+## Back to Threads
+
+- Scheduling: In an OS that supports Threads, scheduling and dispatching is done on a thread by thread basis as opposed to a process by process basis
+  - Most state information dealing with execution is maintained in thread level data structures instead of process level data structures; however:
+    - Suspending a process involves suspending all the threads involved
+    - Termination of a process terminates all threads in a process
+
+- Thread execution states:
+  - Process level states: Ready, Blocked, Suspended, Running, Terminated, New
+  - Threads level states: Running, Ready, Blocked
+  - Thread operations associated with a change of states: Spawn, Block, Unblock, Finish
+
+- Thread Synchronization
+  - It is necessary to synchronize the activities of the various threads
+    - All threads of a process share the same address space and resources
+    - Any alteration of a resource by one thread affects other threads in the same process, so timing it of significant importance
+
+## Types of Threads
+
+  - User Level Threads (ULTs)
+    - All thread management is done by the application
+    - The kernel is not aware of the existence of threads
+      - Advantages of ULTs:
+        - Thread switching does not require kernel mode privileges
+        - Scheduling is application specific
+        - ULTs can run on any OS.
+      - Disadvantages of ULTs:
+        - In a typical OS, many system calls are blocking (have to wait for an event). As a result, when a ULT executes a system call, not only is that thread blocked, but all of the threads within that process are blocked as well.
+        - In a pure ULT strategy, a multithreaded application cannot take advantage of multiprocessing. A kernel only assigns one process to a single processor at a time, therefore only a single thread within a process can execute at a time.
+      - Overcoming ULT Disadvantages:
+        - Jacketing: Convert blocking system calls into non-blocking system calls
+        - Writing an application as multiple processes (so they can use multiple processors) rather than multiple threads, though this does eliminate the core advantage of threads
+
+  - Kernel Level Threads (KLTs)
+    - Thread management is does by the kernel
+    - There is no thread management code in the application level, but an application programming interface (API) is used to interact with the kernel thread facility
+      - Windows is an OS that uses the KLT approach
+    - Advantages of the KLT approach:
+      - The kernel can simultaneously schedule multiple threads from the same process across multiple cores
+      - If one thread of a process is blocked, the kernel can schedule another thread from the same process
+      - Kernel routines themselves can be multithreaded
+    - Disadvantage of the KLT approach:
+      - The transfer of control from one thread to anther within the same process requires a mode switch (similar to a context switch), which when overperformed can cause a system to become inefficient
+
+  - Combined approach: Thread creation is done completely in the user space, as is the bulk of scheduling and synchronization of threads within an application, while the kernel space is used for processor/core assignment
+
+- Thread Libraries
+  - Thread libraries provide a programmer with an API for creating and managing threads
+  - Ways of implementation:
+    - Libraries entirely in user space (pthreads)
+    - Kernel-level libraries supported by the OS
+
+  - Pthreads:
+    - Stored in user space, interfaces with the kernel
+    - A POSIX standard (IEEE 1003.1c) API for thread creation and synchronization
+    - Common in UNIX OS
+
+  - pthread_create: fuction used to create a thread
+    - int pthread_create(pthread_t *tid, pthread_attr_t *attr, func *f, void *arg);
+      - returns 0 if everything works, nonzero on error
+
+  - pthread_exit: Terminates a thread
+    - void pthread_exit(void *thread_return)
+
+  - pthread_join: Main thread waits for another thread to terminate
+    - int pthread_join(pthread_t tid, void **thread_return)
+
+  - pthread_yield: Release the CPU and allows another thread to run
+  - pthread_attr_init: create and initialize a thread's attribute structure
+  - pthread_attr_destroy: remove a thread's attribute structure
+
+- Fork-Join Parallelism: Multiple threads (tasks/jobs) are forked, execute individually, and join back up
+  - General Algorithm for fork-join strategy:
+
+    ```
+    if problem is small enough:
+        solve the problem directly
+
+    else: (problem is large or can be broken down)
+        subtask1 = fork(new Task(subset of problem))
+        subtask2 = fork(new Task(subset of problem))
+
+        result1 = join(subtask1)
+        result2 = join(subtask2)
+
+        return result1 combined with result2
+    ```
+
+## Threading Issues (in programming)
+
+- The semantics of fork() and exec() can change in a multithreaded program:
+  - Does fork() duplicate only the calling thread or all threads?
+    - Linux (POSIX): Child process is created with a single thread
+    - Solaris: Either single threaded child or duplication of all threads is allowed
+
+  - Exec works as normal, replace the running process with the called process, including all threads

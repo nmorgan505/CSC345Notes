@@ -1,0 +1,67 @@
+project:
+  type: website
+  output-dir: _site
+
+website:
+  title: "CSC 345 — Operating Systems"
+  navbar:
+    background: primary
+    left:
+      - href: index.qmd
+        text: Home
+    right:
+      - text: "Lectures"
+        menu:
+          - text: "01 · OS Overview"
+            href: 01-OS-Overview.qmd
+          - text: "02 · Processes"
+            href: 02-Processes.qmd
+          - text: "03 · Threads"
+            href: 03-Threads.qmd
+          - text: "04 · Multiprocessor Scheduling"
+            href: 04-Multiprocessor-Scheduling.qmd
+          - text: "05 · Uniprocessor Scheduling"
+            href: 05-Uniprocessor-Scheduling.qmd
+          - text: "06 · Concurrency & Mutual Exclusion"
+            href: 06-Concurrency-Mutual-Exclusion.qmd
+          - text: "07 · Deadlock & Starvation"
+            href: 07-Deadlock-and-Starvation.qmd
+          - text: "08 · Memory Management"
+            href: 08-Memory-Management.qmd
+          - text: "09 · OS Security"
+            href: 09-OS-Security.qmd
+          - text: "10 · Buffer Overflow Lab"
+            href: 10-Buffer-Overflow-Lab.qmd
+          - text: "11 · File Management"
+            href: 11-File-Management.qmd
+  sidebar:
+    style: docked
+    search: true
+    contents:
+      - index.qmd
+      - section: "Lectures"
+        contents:
+          - 01-OS-Overview.qmd
+          - 02-Processes.qmd
+          - 03-Threads.qmd
+          - 04-Multiprocessor-Scheduling.qmd
+          - 05-Uniprocessor-Scheduling.qmd
+          - 06-Concurrency-Mutual-Exclusion.qmd
+          - 07-Deadlock-and-Starvation.qmd
+          - 08-Memory-Management.qmd
+          - 09-OS-Security.qmd
+          - 10-Buffer-Overflow-Lab.qmd
+          - 11-File-Management.qmd
+
+format:
+  html:
+    theme:
+      - cosmo
+      - custom.scss
+    toc: true
+    toc-depth: 3
+    toc-title: "On this page"
+    smooth-scroll: true
+    highlight-style: github
+    code-copy: true
+    code-overflow: scroll
