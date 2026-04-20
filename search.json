@@ -1,0 +1,1321 @@
+[
+  {
+    "objectID": "07-Deadlock-and-Starvation.html#dining-philosophers-problem",
+    "href": "07-Deadlock-and-Starvation.html#dining-philosophers-problem",
+    "title": "07 · Deadlock & Starvation",
+    "section": "Dining Philosophers problem",
+    "text": "Dining Philosophers problem\n\nN Philosophers sit at a round table with a bowl of rice in the middle\nThey spend their lives alternating thinking and eating\nBetween each neighbor is one chopstick\nThey do not interact with their neighbors\nThey need two chopsticks to eat\nThey release the chopsticks when done.\nWhat rules should they follow to avoid deadlock?",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "07 · Deadlock & Starvation"
+    ]
+  },
+  {
+    "objectID": "07-Deadlock-and-Starvation.html#deadlock",
+    "href": "07-Deadlock-and-Starvation.html#deadlock",
+    "title": "07 · Deadlock & Starvation",
+    "section": "Deadlock",
+    "text": "Deadlock\n\nThe permanent blocking of a set of processes that either compete for system resources or communicate with each other.\nA set of processes is deadlocked when each process in the set is blocked awaiting an event that can only be triggered by another blocked process in the set\nIn a general case, there is no efficient solution",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "07 · Deadlock & Starvation"
+    ]
+  },
+  {
+    "objectID": "07-Deadlock-and-Starvation.html#system-model",
+    "href": "07-Deadlock-and-Starvation.html#system-model",
+    "title": "07 · Deadlock & Starvation",
+    "section": "System Model",
+    "text": "System Model\n\nSystems consist of a finite number of resources\nConsider resource types: R1, R2, …, Rm\n\nCould be CPU cycles, memory space, I/O devices, etc\n\nEach resource type Ri has Wi instances\nEach process can do each of the following on a resource:\n\nRequest: process requests an instance of a resource\nUse: process uses the resource\nRelease: process releases the resource",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "07 · Deadlock & Starvation"
+    ]
+  },
+  {
+    "objectID": "07-Deadlock-and-Starvation.html#deadlock-with-semaphores",
+    "href": "07-Deadlock-and-Starvation.html#deadlock-with-semaphores",
+    "title": "07 · Deadlock & Starvation",
+    "section": "Deadlock with Semaphores",
+    "text": "Deadlock with Semaphores\n\nData\n\nA semaphore s1 initialized to 1\nA semaphore s2 initialized to 1\n\nTwo Processes P1 and P2:\n\nP1:\nsemWait(s1)\nsemWait(s2)\nP2:\nsemWait(s2)\nsemWait(s1)\n\nBoth wait for each other to release a semaphore, which never happens",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "07 · Deadlock & Starvation"
+    ]
+  },
+  {
+    "objectID": "07-Deadlock-and-Starvation.html#resource-categories",
+    "href": "07-Deadlock-and-Starvation.html#resource-categories",
+    "title": "07 · Deadlock & Starvation",
+    "section": "Resource Categories",
+    "text": "Resource Categories\n\nReusable: Can safely be used by only one process at a time and is not depleted by that use:\n\nProcessors, I/O channels, memory, storage, …\n\nConsumable:\n\nA resource that can be created (produced) and destroyed (consumed) by processes:\n\nMessages, signals, data, etc",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "07 · Deadlock & Starvation"
+    ]
+  },
+  {
+    "objectID": "07-Deadlock-and-Starvation.html#reusable-resource-deadlock",
+    "href": "07-Deadlock-and-Starvation.html#reusable-resource-deadlock",
+    "title": "07 · Deadlock & Starvation",
+    "section": "Reusable Resource Deadlock",
+    "text": "Reusable Resource Deadlock\n\nSpace is available for allocation of 200 KB, and the following occurs:\n\nP1: … request 80 KB … request 60 KB\nP2: … request 70 KB … request 80 KB\n\nDeadlock will occur if both processes are allowed to progress to their second request",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "07 · Deadlock & Starvation"
+    ]
+  },
+  {
+    "objectID": "07-Deadlock-and-Starvation.html#consumable-resource-deadlock",
+    "href": "07-Deadlock-and-Starvation.html#consumable-resource-deadlock",
+    "title": "07 · Deadlock & Starvation",
+    "section": "Consumable Resource Deadlock",
+    "text": "Consumable Resource Deadlock\n\nConsider a pair of processes, in which each process attempts to receive a message from the other process and then send a message to the other process: P1:\n...\nreceive message from P2\n...\nsend message to P2\nP2:\n...\nreceive message from P1\n...\nsend message to P1\nDeadlock occurs if the Receive is blocking",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "07 · Deadlock & Starvation"
+    ]
+  },
+  {
+    "objectID": "07-Deadlock-and-Starvation.html#resource-allocation-graph",
+    "href": "07-Deadlock-and-Starvation.html#resource-allocation-graph",
+    "title": "07 · Deadlock & Starvation",
+    "section": "Resource Allocation Graph",
+    "text": "Resource Allocation Graph\n\nA directed graph that describes the allocation of resources\nA set of vertices V, and edges E\nV is partitioned into:\n\nP = {P1, P2, …, Pn} is the set of processes\nR = {R1, R2, …, Rm} is the set of resources\n\nE is partitioned into:\n\nRequest edge: Pi -&gt; Rj\n\nPi is requesting an instance of resource Rj\n\nAssignment edge: Rj -&gt; Pi\n\nRj is assigned to Pi",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "07 · Deadlock & Starvation"
+    ]
+  },
+  {
+    "objectID": "07-Deadlock-and-Starvation.html#deadlock-characterization",
+    "href": "07-Deadlock-and-Starvation.html#deadlock-characterization",
+    "title": "07 · Deadlock & Starvation",
+    "section": "Deadlock Characterization",
+    "text": "Deadlock Characterization\n\nDeadlocks can arise if four conditions are met simultaneously\n\nMutual Exclusion: Only one process at a time can use a resource\nHold and Wait: A process holding at least one resource is waiting to acquire additional resources held by other processes\nNo Preemption: A resource can be released only voluntarily by the process holding it, after that process has completed its task\nCircular Wait: There exists a set {P0, P1, …, Pn} of waiting processes such that P0 is waiting for a resource held by P1, P1 is waiting for a resource held by P2, …, Pn-1 is waiting for a resource held by Pn, and Pn is waiting for a resource held by P0",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "07 · Deadlock & Starvation"
+    ]
+  },
+  {
+    "objectID": "07-Deadlock-and-Starvation.html#some-basic-facts",
+    "href": "07-Deadlock-and-Starvation.html#some-basic-facts",
+    "title": "07 · Deadlock & Starvation",
+    "section": "Some Basic Facts",
+    "text": "Some Basic Facts\n\nIf a graph contains no cycles, then no deadlock can occur\nIf a graph contains a cycle:\n\nIf only one instance per resource type, then deadlock\nIf several instances per resource type, possibility of deadlock",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "07 · Deadlock & Starvation"
+    ]
+  },
+  {
+    "objectID": "07-Deadlock-and-Starvation.html#methods-for-handling-deadlocks",
+    "href": "07-Deadlock-and-Starvation.html#methods-for-handling-deadlocks",
+    "title": "07 · Deadlock & Starvation",
+    "section": "Methods for Handling Deadlocks",
+    "text": "Methods for Handling Deadlocks\n\nThere is no single effective strategy that can deal with all deadlock types\nThere are three common approaches:\n\nDeadlock prevention:\n\nDisallow one of the three necessary conditions for deadlock occurrence, or prevent circular wait condition from happening\n\nDeadlock detection:\n\nGrant resource requests, when possible, but periodically check for the presence of deadlocks and take action to recover\n\nDeadlock Avoidance:\n\nDo not grant a resource request if this allocation may lead to a deadlock",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "07 · Deadlock & Starvation"
+    ]
+  },
+  {
+    "objectID": "07-Deadlock-and-Starvation.html#deadlock-prevention-strategy",
+    "href": "07-Deadlock-and-Starvation.html#deadlock-prevention-strategy",
+    "title": "07 · Deadlock & Starvation",
+    "section": "Deadlock Prevention Strategy",
+    "text": "Deadlock Prevention Strategy\n\nDesign a system in such a way that the possibility of deadlock is excluded\nTwo methods:\n\nIndirect:\n\nPrevent the occurrence of one of the three necessary conditions\n\nDirect:\n\nPrevent the occurrence of circular wait condition",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "07 · Deadlock & Starvation"
+    ]
+  },
+  {
+    "objectID": "07-Deadlock-and-Starvation.html#deadlock-condition-prevention",
+    "href": "07-Deadlock-and-Starvation.html#deadlock-condition-prevention",
+    "title": "07 · Deadlock & Starvation",
+    "section": "Deadlock Condition Prevention",
+    "text": "Deadlock Condition Prevention\n\nMutual Exclusion:\n\nCANNOT be disallowed in general\nIf access to a resource requires mutual exclusion, then mutual exclusion must be supported by the OS\nSome resources, such as files, may allow multiple accesses for reads but only exclusive access for writes\nEven in this case, deadlock can occur if more than one process requires write permission\n\nHold and Wait:\n\nRequire that a process request all of its required resources at one time and blocking the process until all requests can be granted simultaneously\nThis is not practical, as it is quite inefficient\n\nNo Preemption:\n\nIf a process holding certain resources is denied a further request, that process must release its original resources and request them again\nOS may preempt the second process and require it to release its resources\n\nCircular Wait:\n\nThe circular wait condition can be prevented by defining a linear ordering of resource types",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "07 · Deadlock & Starvation"
+    ]
+  },
+  {
+    "objectID": "07-Deadlock-and-Starvation.html#deadlock-avoidance",
+    "href": "07-Deadlock-and-Starvation.html#deadlock-avoidance",
+    "title": "07 · Deadlock & Starvation",
+    "section": "Deadlock Avoidance",
+    "text": "Deadlock Avoidance\n\nAllows the three necessary conditions but makes judicious choices to assure that the deadlock point is never reached\nA decision is made dynamically whether the current resource allocation request will, if granted, potentially lead to a deadlock\nRequires knowledge of future process requests",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "07 · Deadlock & Starvation"
+    ]
+  },
+  {
+    "objectID": "07-Deadlock-and-Starvation.html#resource-allocation-denial",
+    "href": "07-Deadlock-and-Starvation.html#resource-allocation-denial",
+    "title": "07 · Deadlock & Starvation",
+    "section": "Resource Allocation Denial",
+    "text": "Resource Allocation Denial\n\nReferred to as the banker’s algorithm\nDefinitions:\n\nState of the system reflects the current allocation of resources to processes\nSafe state: The system can allocate resources to each thread (up to its maximum) in some order and still avoid deadlock (there is at least one sequence of resource allocations to processes that does not result in a deadlock)\nUnsafe state: A state that is not safe (may lead to deadlock)",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "07 · Deadlock & Starvation"
+    ]
+  },
+  {
+    "objectID": "07-Deadlock-and-Starvation.html#facts",
+    "href": "07-Deadlock-and-Starvation.html#facts",
+    "title": "07 · Deadlock & Starvation",
+    "section": "Facts",
+    "text": "Facts\n\nIf a system is in a safe state, there is no deadlock\nIf a system is in an unsafe state, there may be a deadlock\nAvoidance ensures that a system will never enter an unsafe state",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "07 · Deadlock & Starvation"
+    ]
+  },
+  {
+    "objectID": "07-Deadlock-and-Starvation.html#bankers-algorithm",
+    "href": "07-Deadlock-and-Starvation.html#bankers-algorithm",
+    "title": "07 · Deadlock & Starvation",
+    "section": "Banker’s Algorithm",
+    "text": "Banker’s Algorithm\n\nMultiple instances of resources\nEach process must have a priori claim maximum use\nWhen a process requests a resource, it may have to wait\nWhen a process gets all its resources, it must return them in a finite amount of time",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "07 · Deadlock & Starvation"
+    ]
+  },
+  {
+    "objectID": "07-Deadlock-and-Starvation.html#data-structures-for-the-bankers-algorithm",
+    "href": "07-Deadlock-and-Starvation.html#data-structures-for-the-bankers-algorithm",
+    "title": "07 · Deadlock & Starvation",
+    "section": "Data Structures for the Banker’s Algorithm",
+    "text": "Data Structures for the Banker’s Algorithm\n\nLet n = number of processes and m = number of resource types\nAvailable: A vector of length m. If Available[j] = k, then there are k instances of resource type Rj available\nMax: An n x m matrix. If Max[i,j] = k, then process Pi may request at most k instances of resource type Rj\nAllocation: An n x m matrix. If Allocation[i,j] = k, then Pi is currently allocated k instances of resource type Rj\nNeed: An n x m matrix. If Need[i,j] = k, then Pi may need k more instances of resource type Rj to complete its task\n\nNeed[i,j] = Max[i,j] - Allocation[i,j]",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "07 · Deadlock & Starvation"
+    ]
+  },
+  {
+    "objectID": "07-Deadlock-and-Starvation.html#deadlock-avoidance-restrictions",
+    "href": "07-Deadlock-and-Starvation.html#deadlock-avoidance-restrictions",
+    "title": "07 · Deadlock & Starvation",
+    "section": "Deadlock Avoidance Restrictions",
+    "text": "Deadlock Avoidance Restrictions\n\nMaximum resource requirements for each process must be stated in advance\nProcesses under consideration must be independent and with no synchronization requirements\nThere must be a fixed number of resources to allocate\nNo process may be terminated while holding resources",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "07 · Deadlock & Starvation"
+    ]
+  },
+  {
+    "objectID": "07-Deadlock-and-Starvation.html#deadlock-detection",
+    "href": "07-Deadlock-and-Starvation.html#deadlock-detection",
+    "title": "07 · Deadlock & Starvation",
+    "section": "Deadlock Detection",
+    "text": "Deadlock Detection\n\nAllows the system to enter a deadlock state\nDetection algorithm:\n\nA check for deadlock can be made as frequently as each resource request, or less frequently, depending on how likely it is for a deadlock to occur\nThe algorithm is relatively simple\nFor a single instance of each resource type: maintain a wait-for graph (nodes are processes; Pi -&gt; Pj if Pi is waiting for Pj). Periodically search for a cycle — O(n^2)\nFor multiple instances per resource type: use Available, Allocation, and Request matrices (similar to banker’s)\n\nRecovery scheme",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "07 · Deadlock & Starvation"
+    ]
+  },
+  {
+    "objectID": "07-Deadlock-and-Starvation.html#recovery-from-deadlock",
+    "href": "07-Deadlock-and-Starvation.html#recovery-from-deadlock",
+    "title": "07 · Deadlock & Starvation",
+    "section": "Recovery from Deadlock",
+    "text": "Recovery from Deadlock\n\nProcess Termination:\n\nAbort all deadlocked processes (simple but costly)\nAbort one process at a time until the deadlock cycle is eliminated\nOrder to abort based on: priority, how long the process has computed, resources used, resources still needed, number of processes that would need to be terminated, whether interactive or batch\n\nResource Preemption:\n\nSelecting a victim: minimize cost\nRollback: return to a safe state and restart the process from that state\nStarvation risk: the same process may always be selected as victim; include number of rollbacks in cost factor to prevent this",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "07 · Deadlock & Starvation"
+    ]
+  },
+  {
+    "objectID": "07-Deadlock-and-Starvation.html#integrated-deadlock-strategy",
+    "href": "07-Deadlock-and-Starvation.html#integrated-deadlock-strategy",
+    "title": "07 · Deadlock & Starvation",
+    "section": "Integrated Deadlock Strategy",
+    "text": "Integrated Deadlock Strategy\n\nRather than using a single strategy for all deadlock types, it can be more efficient to group resources into classes and apply the most appropriate strategy per class\nClasses of resources and their typical strategies:\n\nSwappable space (secondary storage for swapping): Prevention via hold-and-wait (allocate all required resources at once)\nProcess resources (devices, files): Avoidance is often effective since processes can declare resource needs in advance\nMain memory: Prevention by preemption (swap preempted process to secondary memory)\nInternal resources (I/O channels): Prevention via resource ordering",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "07 · Deadlock & Starvation"
+    ]
+  },
+  {
+    "objectID": "05-Uniprocessor-Scheduling.html#types-of-scheduling",
+    "href": "05-Uniprocessor-Scheduling.html#types-of-scheduling",
+    "title": "05 · Uniprocessor Scheduling",
+    "section": "Types of Scheduling",
+    "text": "Types of Scheduling\n\nLong-term Scheduling: The decision to add to the pool of processes to be run\nMedium-term Scheduling: The decision to add to the number of processes that are partially or fully in memory\nShort-term Scheduling: The decision as to which available processes will be executed by the processor\nI/O Scheduling: The decision as to which process’s pending I/O request shall be handled by an available I/O device",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "05 · Uniprocessor Scheduling"
+    ]
+  },
+  {
+    "objectID": "05-Uniprocessor-Scheduling.html#the-main-goal-of-scheduling",
+    "href": "05-Uniprocessor-Scheduling.html#the-main-goal-of-scheduling",
+    "title": "05 · Uniprocessor Scheduling",
+    "section": "The Main goal of Scheduling",
+    "text": "The Main goal of Scheduling\n\nAim to assign processes to be executed by the processor in a way that meets system objectives such as response time, throughput, and processor efficiency",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "05 · Uniprocessor Scheduling"
+    ]
+  },
+  {
+    "objectID": "05-Uniprocessor-Scheduling.html#scheduling-criteria-user-oriented",
+    "href": "05-Uniprocessor-Scheduling.html#scheduling-criteria-user-oriented",
+    "title": "05 · Uniprocessor Scheduling",
+    "section": "Scheduling Criteria: User Oriented",
+    "text": "Scheduling Criteria: User Oriented\n\nPerformance related\n\nTurnaround Time: The interval of time between process creation and its completion. Includes actual execution time, plus time spent waiting for resources, including the processor. This is generally used for batch jobs.\nResponse Time: For an interactive process, this is the time from the submission of a request until the response begins to be received. Often a process can begin to produce some output to the user while continuing to process the request. Thus, this is a better measure than turnaround time from a User’s point of view. This is generally for time sensitive / real-time systems such as websites\nDeadlines: When process completion deadlines can be specified, the scheduling discipline should subordinate other goals to that of maximizing the percentage of deadlines met\n\nOther\n\nPredictability: A given job should run in about the same amount of time and at about the same cost, regardless of the load on the system",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "05 · Uniprocessor Scheduling"
+    ]
+  },
+  {
+    "objectID": "05-Uniprocessor-Scheduling.html#scheduling-criteria-system-oriented",
+    "href": "05-Uniprocessor-Scheduling.html#scheduling-criteria-system-oriented",
+    "title": "05 · Uniprocessor Scheduling",
+    "section": "Scheduling Criteria: System Oriented",
+    "text": "Scheduling Criteria: System Oriented\n\nPerformance related:\n\nThroughput: The scheudling policy should attempt to maximize the number of processes completed per unit of time. This is a measure of how much work is being performed. This clearly depends on the average amount of time a process takes, but is also influenced by the scheudling policy used.\nProcessor Utilization: This is the percentage of time that the processor is busy. For expensive shared systems, this is a significant criterion. In single user systems, and some other systems (such as real time), this criteria is less important than others\n\nOther:\n\nFairness: In absence of guidance from the user, or other system supplied guidance, processes should be treated the same, and no process should suffer starvation (lack of resources).\nPriority Enforcement: When processes are assigned priorities, the scheudling policy should favor high priority processes.\nResource Balancing: The scheduling policy should keep the resources of the system busy. Processes that will underutilize stressed resources should be favored. This criteria mostly refers to long and medium term scheudling",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "05 · Uniprocessor Scheduling"
+    ]
+  },
+  {
+    "objectID": "05-Uniprocessor-Scheduling.html#long-term-scheduler",
+    "href": "05-Uniprocessor-Scheduling.html#long-term-scheduler",
+    "title": "05 · Uniprocessor Scheduling",
+    "section": "Long Term Scheduler",
+    "text": "Long Term Scheduler\n\nDetermines what programs are admitted to the system for processing\nControls the degree of multiprogramming\n\nThe more processes that are created, the smaller the percentage of time that each process can be executed\nMay be limited to provide satisfactory services to the current set of processes\n\nCreates processes from a queue when it can, but must decide:\n\nWhen the OS can take on one or more additional processes\nWhich jobs to accept and turn into processes\n\nCan be first come, first served\nCan be dictated by priority, expected execution time, I/O requirements",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "05 · Uniprocessor Scheduling"
+    ]
+  },
+  {
+    "objectID": "05-Uniprocessor-Scheduling.html#medium-term-scheduler",
+    "href": "05-Uniprocessor-Scheduling.html#medium-term-scheduler",
+    "title": "05 · Uniprocessor Scheduling",
+    "section": "Medium Term Scheduler",
+    "text": "Medium Term Scheduler\n\nPart of Admit and Swapping functions\nSwapping decisions are based on need for resources and to manage the degree of multiprogramming\n\nConsiders the resources needed of the swapped out (suspended) process",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "05 · Uniprocessor Scheduling"
+    ]
+  },
+  {
+    "objectID": "05-Uniprocessor-Scheduling.html#short-term-scheduler",
+    "href": "05-Uniprocessor-Scheduling.html#short-term-scheduler",
+    "title": "05 · Uniprocessor Scheduling",
+    "section": "Short Term Scheduler",
+    "text": "Short Term Scheduler\n\nKnown as the dispatcher\nExecutes the most frequently\nMakes the fine-grained decision of which process to execute next\nInvoked when an even occurs that may lead to the blocking of the current process, or that may provide an opportunity to preempt a currently running process in favor of another\n\nExamples:\n\nclock interrupts\nI/O interrupts\nOS system calls\nSignals (i.e. Semaphores (discussed later))",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "05 · Uniprocessor Scheduling"
+    ]
+  },
+  {
+    "objectID": "05-Uniprocessor-Scheduling.html#short-term-scheduler-criteria",
+    "href": "05-Uniprocessor-Scheduling.html#short-term-scheduler-criteria",
+    "title": "05 · Uniprocessor Scheduling",
+    "section": "Short Term Scheduler Criteria",
+    "text": "Short Term Scheduler Criteria\n\nPerformance:\n\nQuantitative\nEasily measured\nThroughput/Response time",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "05 · Uniprocessor Scheduling"
+    ]
+  },
+  {
+    "objectID": "05-Uniprocessor-Scheduling.html#process-behavior",
+    "href": "05-Uniprocessor-Scheduling.html#process-behavior",
+    "title": "05 · Uniprocessor Scheduling",
+    "section": "Process Behavior",
+    "text": "Process Behavior\n\nProcesses alternate bursts of computing with I/O requests\n\nSome processes spend most of their time computing: CPU bound\nSome processes spend most of their time waiting for I/O: I/O bound\n\nThere are generally more small-medium cpu bursts than long",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "05 · Uniprocessor Scheduling"
+    ]
+  },
+  {
+    "objectID": "05-Uniprocessor-Scheduling.html#cpu-scheduler",
+    "href": "05-Uniprocessor-Scheduling.html#cpu-scheduler",
+    "title": "05 · Uniprocessor Scheduling",
+    "section": "CPU Scheduler",
+    "text": "CPU Scheduler\n\nThe CPU scheduler selects from among processes in the ready queue and allocates a CPU core (uniprocessor) to one of them\n\nQueue can be ordered by burst time, priority, execution time, etc.\n\nCPU Scheduler can make 4 choices based on process states:\n\nSwitch from running to waiting\nSwitch from running to ready\nSwitch from waiting to ready\nTerminate the process",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "05 · Uniprocessor Scheduling"
+    ]
+  },
+  {
+    "objectID": "05-Uniprocessor-Scheduling.html#selection-function",
+    "href": "05-Uniprocessor-Scheduling.html#selection-function",
+    "title": "05 · Uniprocessor Scheduling",
+    "section": "Selection Function",
+    "text": "Selection Function\n\nDetermines which process, among ready processes, is selected for next execution\nMay be based on priority, resource management, or execution charactaristcs of the process\n\nIf based on charactaristcs, the important quanitites are:\n\nw: Time spent waiting in the system\ne: Time spent in execution\ns: Total serivce time required by the process, including e: generally this quantity must be estimated or supplied by the user",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "05 · Uniprocessor Scheduling"
+    ]
+  },
+  {
+    "objectID": "05-Uniprocessor-Scheduling.html#preemptive-scheduling-and-nonpreemptive-scheduling",
+    "href": "05-Uniprocessor-Scheduling.html#preemptive-scheduling-and-nonpreemptive-scheduling",
+    "title": "05 · Uniprocessor Scheduling",
+    "section": "Preemptive Scheduling and Nonpreemptive Scheduling",
+    "text": "Preemptive Scheduling and Nonpreemptive Scheduling\n\nNonpreemptive scheduling: Once the CPU has been allocated to a process, the process keeps the CPU until it either releases by switching to waiting, or is terminated\nAnything else is preemptive\nVirtually all modern OS (like windows, mac, etc) use preemptive scheduling",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "05 · Uniprocessor Scheduling"
+    ]
+  },
+  {
+    "objectID": "05-Uniprocessor-Scheduling.html#preemptive-scheduling-and-race-conditions",
+    "href": "05-Uniprocessor-Scheduling.html#preemptive-scheduling-and-race-conditions",
+    "title": "05 · Uniprocessor Scheduling",
+    "section": "Preemptive Scheduling and Race conditions",
+    "text": "Preemptive Scheduling and Race conditions\n\nPreemptive scheduling can result in race conditions when data is shared between several processes\nConsider a case where two processes share the same data. While one process is updating the data, it is preempted so that the second process can run. The second process then tries to read the data, but it is in an inconsistent state. ← Race condition",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "05 · Uniprocessor Scheduling"
+    ]
+  },
+  {
+    "objectID": "05-Uniprocessor-Scheduling.html#dispatcher-latency",
+    "href": "05-Uniprocessor-Scheduling.html#dispatcher-latency",
+    "title": "05 · Uniprocessor Scheduling",
+    "section": "Dispatcher Latency",
+    "text": "Dispatcher Latency\n\nDispatcher latency: The time it takes for the dispatcher to stop one process from running and start running another process",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "05 · Uniprocessor Scheduling"
+    ]
+  },
+  {
+    "objectID": "05-Uniprocessor-Scheduling.html#scheduling-algorithm-goals-to-be-filled-in-later",
+    "href": "05-Uniprocessor-Scheduling.html#scheduling-algorithm-goals-to-be-filled-in-later",
+    "title": "05 · Uniprocessor Scheduling",
+    "section": "Scheduling Algorithm Goals: To be filled in later",
+    "text": "Scheduling Algorithm Goals: To be filled in later",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "05 · Uniprocessor Scheduling"
+    ]
+  },
+  {
+    "objectID": "05-Uniprocessor-Scheduling.html#scheduling-metrics",
+    "href": "05-Uniprocessor-Scheduling.html#scheduling-metrics",
+    "title": "05 · Uniprocessor Scheduling",
+    "section": "Scheduling Metrics",
+    "text": "Scheduling Metrics\n\nCPU Utilization\nThroughput\nTurnaround time\nWaiting time: amount of time a process waits before executing\nResponse time",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "05 · Uniprocessor Scheduling"
+    ]
+  },
+  {
+    "objectID": "05-Uniprocessor-Scheduling.html#scheduling-algorithms",
+    "href": "05-Uniprocessor-Scheduling.html#scheduling-algorithms",
+    "title": "05 · Uniprocessor Scheduling",
+    "section": "Scheduling Algorithms",
+    "text": "Scheduling Algorithms\n\nFirst-Come, First-Served (FCFS):\n\nThe simplest CPU-Scheduling Algorithm\nProcesses are assigned to the CPU in the order they arrive in the ready queue\nNonpreemptive algorithm: Once a process is in the running state, it continues until it is blocked or terminated\nAverage W: W = (T1 + T2 + T3 + … Tn) / n\nConvoy effect: Short processes behind long processes have a higher average wait time\n\nShortest Job First (SJF):\n\nAssociate each process with length of its next CPU burst\n\nUse these lengths to schedule the process with the shortest time\n\nSJF is optimal for nonpreemptive methods: gives minimum average waiting time for a given set of processes\nHow do we determine the length of the next CPU burst?\n\nAsk the user\nestimate\nThis is why this method is hard to implement\n\nPreemptive version of the algorithm is Shortest Remaining Time First (SRTF)\n\nShortest Remaining Time First (SRTF):\n\nLike SJF, but if a shorter job arrives, the current job is preempted\n\nRound Robin (RR):\n\nPreemptive\nEach process gets a small unit of CPU time (time quantum q), usually 10-100 ms. After this time has elapsed the process is preempted and added to the end of the ready queue.\nIf there are n processes in the ready queue and the time quantum is q, then each process gets 1/n of the CPU time in chunks of at most q time units at once. No process waits more than (n-1)q time units.\nTimer interrupts every q to dispatch next process\nLarge q: Becomes much like FCFS\nSmall q: dispatcher latency increases and decreases efficiency\n\nPriority Scheduling:\n\nA priority number (integer) is associated with each process\nThe CPU is allocated to the process(es) with the highest priority (the smaller int is higher priority)\n\nPreemptive or Nonpreemptive\n\nSRTF is used if multiple processes of the same priority arrive and it is preemptive\nSJF is used for multiple processes of the same priorirty and it is non preemptive\nProblem: Starvation - Low priority processes may never execute\n\nSolution: Aging - As time progresses, increase the priority of a process\n\nMultilevel queues:\n\nWith priority scheduling, we have a seperate queue for each priority\nSchedule each process from its related priority queue\n\nPrioritization based on process type:\n\nHighest priority: Real-time processes\nSystem processes\nInteractive processes\nLowest priority: Batch processes",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "05 · Uniprocessor Scheduling"
+    ]
+  },
+  {
+    "objectID": "06-Concurrency-Mutual-Exclusion.html#objectives",
+    "href": "06-Concurrency-Mutual-Exclusion.html#objectives",
+    "title": "06 · Concurrency & Mutual Exclusion",
+    "section": "Objectives",
+    "text": "Objectives\n\nDescribe the critical-section problem and illustrate a race condition\nIllustrate hardware solutions to the critical-section problem using memory barriers, compare-and-swap, and test-and-set operations\nDemonstrate how mutex locks, semaphores, monitors, and condition variables can be used to solve the critical-section problem",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "06 · Concurrency & Mutual Exclusion"
+    ]
+  },
+  {
+    "objectID": "06-Concurrency-Mutual-Exclusion.html#background",
+    "href": "06-Concurrency-Mutual-Exclusion.html#background",
+    "title": "06 · Concurrency & Mutual Exclusion",
+    "section": "Background",
+    "text": "Background\n\nOS design is concerned with management of process and threads:\n\nMultiprogramming:\n\nThe management of multiple processes within a uniprocessor system\n\nMultiprocessing:\n\nThe management of multiple processes within a multiprocessor system\n\nDistributed processing:\n\nThe management of multiple processes executing on multiple, distributed computer systems\n\n\nProcesses can execute concurrently\n\nMay be interrupted at any time, partially completing execution\n\nConcurrent access to shared data may result in data inconsistency\nMaintaining data consistency requires mechanisms to ensure the orderly execution of cooperating processes",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "06 · Concurrency & Mutual Exclusion"
+    ]
+  },
+  {
+    "objectID": "06-Concurrency-Mutual-Exclusion.html#race-conditions",
+    "href": "06-Concurrency-Mutual-Exclusion.html#race-conditions",
+    "title": "06 · Concurrency & Mutual Exclusion",
+    "section": "Race Conditions",
+    "text": "Race Conditions\n\nOccurs when multiple processes or threads read and write the same data items\nThe final result depends on the order of execution\n\nThe “loser” of the race is the process that updates last and will determine the final value of variables\n\nEx:\n\nProcess p0 and p1 are creating child processes using the fork() system call\nRace condition on kernel variable next_available_pid which represents the next available process ID\nUnless there is a mechanism to prevent p0 and p1 from accessing the variable next_available_pid at the same time, the same PID could be assigned to two different processes",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "06 · Concurrency & Mutual Exclusion"
+    ]
+  },
+  {
+    "objectID": "06-Concurrency-Mutual-Exclusion.html#terms-related-to-concurrency",
+    "href": "06-Concurrency-Mutual-Exclusion.html#terms-related-to-concurrency",
+    "title": "06 · Concurrency & Mutual Exclusion",
+    "section": "Terms related to concurrency",
+    "text": "Terms related to concurrency\n\nAtomic Operations: A function or action implemented as a sequence of one or more instructions that appear to be indivisible; that is, no other process can see an intermediate state or be interrupt that operation. The sequence of instructions is guaranteed to execute as a group, or not execute at all, having no visible effect on system state. Atomicity guarantees isolation from concurrent processes.\nCritical Section: A section of code within a process that requires access to shared resources and that must not be executed while another process is in a corresponding section of code.\nDeadlock: A situation in which two or more processes are unable to proceed because each is waiting for the other to do something\nLivelock: A situation in which two or more processes continuously change their state in response to changes in another process without doing any useful work.\n\nEx: Two processes are attempting to acquire the same lock and continuously release and reacquire the lock without making progress\n\nMutual Exclusion: The requirement that when one process is in a critical section that accesses shared resources, no other process may be in a critical section that accesses any of the same resources\nStarvation: A situation in which a runnable process is overlooked indefinitely by the scheduler, although it is ready to proceed, it is never selected.",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "06 · Concurrency & Mutual Exclusion"
+    ]
+  },
+  {
+    "objectID": "06-Concurrency-Mutual-Exclusion.html#the-critical-section-problem",
+    "href": "06-Concurrency-Mutual-Exclusion.html#the-critical-section-problem",
+    "title": "06 · Concurrency & Mutual Exclusion",
+    "section": "The Critical Section Problem",
+    "text": "The Critical Section Problem\n\nConsider n processes in a system {p0, p1, p2, … pn-1}\nEach process has a critical section (CS) segment of code\n\nThe processes may be changing common variables, updating tables, writing files, etc.\nWhen one process is in CS, no other process may be in its CS\n\nCS problem: Design a protocol to solve the issues above\nGeneral Structure for a process pi:\n\nwhile(1){\n[entry section]\ncritical section\n[exit section]\nremainder section\n}\n\nRequirements:\n\nMutual Exclusion: If process Pi is executing its critical section, then no other processes can be executing their CS\nProgress: If no process is executing its CS, and there exists some process that wishes to enter their CS, then the selection of the process that will enter the CS cannot be postponed indefinitely\nBounded Waiting: A bound must exist on the number of times that other processes are allowed to enter their CS after a process has made a request to enter its CS and before that request is granted\n\nAssume that each process executes at a nonzero speed\nNo assumption concerning relative speeds of the n processes",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "06 · Concurrency & Mutual Exclusion"
+    ]
+  },
+  {
+    "objectID": "06-Concurrency-Mutual-Exclusion.html#software-solutions-to-the-critical-section-problem",
+    "href": "06-Concurrency-Mutual-Exclusion.html#software-solutions-to-the-critical-section-problem",
+    "title": "06 · Concurrency & Mutual Exclusion",
+    "section": "Software Solutions to the Critical Section Problem",
+    "text": "Software Solutions to the Critical Section Problem\n\nSolution #1: Using a “turn” variable\n\nTwo process solution\nAssumes atomic load and store machine-language instructions (cannot be interrupted)\nProcesses Pi and Pj share one variable: int turn\nThe variable turn indicates whose turn it is to enter the critical section\nInitially, turn is set to i\n\nAlgorithm for Process Pi:\nint turn = i;\nwhile (1){\nwhile (turn == j);  /* busy wait */\n/* critical section */\nturn = j;\n/* remainder section */\n}\n\nCorrectness:\n\nMutual exclusion is preserved: Pi enters CS only if turn == i, and turn cannot be both i and j at the same time\nProgress requirement: Not satisfied — if Pi doesn’t want the CS, Pj is still forced to wait\nBounded-waiting: Satisfied\n\n\nSolution #2: Using a flag array\n\nProcesses share a vector: boolean flag[2]\nflag[i] = true implies that process Pi is ready to enter the critical section\n\nAlgorithm for Process Pi:\nbool flag[2] = {false, false};\nwhile (1){\nwhile (flag[j]);\nflag[i] = true;\n/* critical section */\nflag[i] = false;\n/* remainder section */\n}\n\nCorrectness:\n\nMutual exclusion: Not guaranteed — both processes could pass the while check before either sets their flag to true\nProgress: Not satisfied\nBounded-waiting: Not satisfied\n\n\nSolution #3: Peterson’s Algorithm\n\nTwo process solution using both int turn and boolean flag[2]\nThe variable turn indicates whose turn it is to enter the critical section\nThe flag array indicates if a process is ready to enter the critical section\n\nAlgorithm for Process Pi:\nint turn;\nbool flag[2];\nwhile (true){\nflag[i] = true;\nturn = j;\nwhile (flag[j] && turn == j);\n/* critical section */\nflag[i] = false;\n/* remainder section */\n}\n\nProvably meets all three CS requirements:\n\nMutual exclusion: Pi enters CS only if either flag[j] = false or turn = i\nProgress: Satisfied\nBounded-waiting: Satisfied",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "06 · Concurrency & Mutual Exclusion"
+    ]
+  },
+  {
+    "objectID": "06-Concurrency-Mutual-Exclusion.html#petersons-solution-and-modern-architecture",
+    "href": "06-Concurrency-Mutual-Exclusion.html#petersons-solution-and-modern-architecture",
+    "title": "06 · Concurrency & Mutual Exclusion",
+    "section": "Peterson’s Solution and Modern Architecture",
+    "text": "Peterson’s Solution and Modern Architecture\n\nAlthough useful for demonstrating an algorithm, Peterson’s solution is not guaranteed to work on modern architectures\nTo improve performance, processors and/or compilers may reorder operations that have no dependencies\nFor single-threaded programs this is fine; for multithreaded programs the ordering may produce inconsistent or unexpected results\nExample:\n\nTwo threads share: bool flag = false; int x = 0;\nThread 1: while (!flag); print x\nThread 2: x = 100; flag = true\nExpected output: 100\nHowever, Thread 2’s instructions may be reordered to: flag = true; x = 100\nThis could cause Thread 1 to print 0 — a race condition",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "06 · Concurrency & Mutual Exclusion"
+    ]
+  },
+  {
+    "objectID": "06-Concurrency-Mutual-Exclusion.html#memory-barriers",
+    "href": "06-Concurrency-Mutual-Exclusion.html#memory-barriers",
+    "title": "06 · Concurrency & Mutual Exclusion",
+    "section": "Memory Barriers",
+    "text": "Memory Barriers\n\nMemory models are the memory guarantees a computer architecture makes to application programs\n\nStrongly ordered: A memory modification of one processor is immediately visible to all other processors\nWeakly ordered: A memory modification of one processor may not be immediately visible to all other processors\n\nA memory barrier is an instruction that forces any change in memory to be propagated (made visible) to all other processors\nWhen a memory barrier instruction is performed, the system ensures that all loads and stores are completed before any subsequent load or store operations are performed\nMemory Barrier Example (fixing the Peterson’s reordering issue):\n\nThread 1: while (!flag); memory_barrier(); print x\nThread 2: x = 100; memory_barrier(); flag = true\nThread 1 is guaranteed that flag is loaded before x\nThread 2 ensures the assignment to x occurs before the assignment to flag",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "06 · Concurrency & Mutual Exclusion"
+    ]
+  },
+  {
+    "objectID": "06-Concurrency-Mutual-Exclusion.html#synchronization-hardware",
+    "href": "06-Concurrency-Mutual-Exclusion.html#synchronization-hardware",
+    "title": "06 · Concurrency & Mutual Exclusion",
+    "section": "Synchronization Hardware",
+    "text": "Synchronization Hardware\n\nMany systems provide hardware support for implementing the critical section code\nUniprocessors: could disable interrupts (generally too inefficient on multiprocessor systems)\nTwo key hardware instructions:\n\nTest-and-Set\nCompare-and-Swap\n\nTest-and-Set instruction:\n\nExecuted atomically\nReturns the original value of the passed parameter\nSets the new value of the passed parameter to true\nSolution: Shared Boolean variable lock, initialized to false\n\nwhile (test_and_set(&lock));  /* busy wait */\n/* critical section */\nlock = false;\n/* remainder section */\nCompare-and-Swap instruction:\n\nExecuted atomically\nReturns the original value of the passed parameter value\nSets the variable value to new_value, but only if *value == expected (the swap takes place only under this condition)\nSolution: Shared integer lock initialized to 0\n\nwhile (compare_and_swap(&lock, 0, 1) != 0);  /* busy wait */\n/* critical section */\nlock = 0;\n/* remainder section */",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "06 · Concurrency & Mutual Exclusion"
+    ]
+  },
+  {
+    "objectID": "06-Concurrency-Mutual-Exclusion.html#mutex-locks",
+    "href": "06-Concurrency-Mutual-Exclusion.html#mutex-locks",
+    "title": "06 · Concurrency & Mutual Exclusion",
+    "section": "Mutex Locks",
+    "text": "Mutex Locks\n\nBoolean variable indicating if the lock is available or not\nProtect a critical section by:\n\nFirst acquiring the lock: acquire()\nThen releasing the lock: release()\n\nCalls to acquire() and release() must be atomic\nUsually implemented via hardware atomic instructions such as compare-and-swap\nThis solution requires busy waiting — referred to as a spinlock\nSolution to the CS Problem Using Mutex Locks:\nwhile (true) {\n  acquire lock\n  critical section\n  release lock\n  remainder section\n}",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "06 · Concurrency & Mutual Exclusion"
+    ]
+  },
+  {
+    "objectID": "06-Concurrency-Mutual-Exclusion.html#semaphores",
+    "href": "06-Concurrency-Mutual-Exclusion.html#semaphores",
+    "title": "06 · Concurrency & Mutual Exclusion",
+    "section": "Semaphores",
+    "text": "Semaphores\n\nA semaphore may be initialized to a nonnegative integer value\nThe semWait operation decrements the semaphore value\nThe semSignal operation increments the semaphore value\nImplementation must be atomic (can be implemented in hardware or software)\n\nSoftware schemes such as Dekker’s or Peterson’s algorithms can be used\nHardware-supported mutual exclusion schemes are another alternative\n\nBinary Semaphore: Value is restricted to 0 or 1 (essentially a mutex lock)\nCounting Semaphore: Value can range over an unrestricted domain\nStrong vs. Weak Semaphores:\n\nA queue is used to hold processes waiting on the semaphore\nStrong semaphore: Processes are released from the queue in FIFO order\nWeak semaphore: No specific order for release is specified",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "06 · Concurrency & Mutual Exclusion"
+    ]
+  },
+  {
+    "objectID": "10-Buffer-Overflow-Lab.html",
+    "href": "10-Buffer-Overflow-Lab.html",
+    "title": "10 · Buffer Overflow Lab",
+    "section": "",
+    "text": "Install required packages:\nsudo apt install gdb pip gcc-multilib\nsudo apt install python3-pwntools",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "10 · Buffer Overflow Lab"
+    ]
+  },
+  {
+    "objectID": "10-Buffer-Overflow-Lab.html#setup",
+    "href": "10-Buffer-Overflow-Lab.html#setup",
+    "title": "10 · Buffer Overflow Lab",
+    "section": "",
+    "text": "Install required packages:\nsudo apt install gdb pip gcc-multilib\nsudo apt install python3-pwntools",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "10 · Buffer Overflow Lab"
+    ]
+  },
+  {
+    "objectID": "10-Buffer-Overflow-Lab.html#disable-aslr",
+    "href": "10-Buffer-Overflow-Lab.html#disable-aslr",
+    "title": "10 · Buffer Overflow Lab",
+    "section": "Disable ASLR",
+    "text": "Disable ASLR\nAddress Space Layout Randomization must be disabled for this demo to be predictable:\necho 0 | sudo tee /proc/sys/kernel/randomize_va_space",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "10 · Buffer Overflow Lab"
+    ]
+  },
+  {
+    "objectID": "10-Buffer-Overflow-Lab.html#part-1-basic-buffer-overflow",
+    "href": "10-Buffer-Overflow-Lab.html#part-1-basic-buffer-overflow",
+    "title": "10 · Buffer Overflow Lab",
+    "section": "Part 1 — Basic Buffer Overflow",
+    "text": "Part 1 — Basic Buffer Overflow\nCreate the following vulnerable program (vulnerable.c):\n#include &lt;stdio.h&gt;\n#include &lt;string.h&gt;\n\nvoid vulnerable_function(char *input) {\n    char buffer[64];\n    strcpy(buffer, input);\n    printf(\"Buffer content: %s\\n\", buffer);\n}\n\nint main(int argc, char *argv[]) {\n    if (argc != 2) {\n        printf(\"Usage: %s &lt;input&gt;\\n\", argv[0]);\n        return 1;\n    }\n    vulnerable_function(argv[1]);\n    return 0;\n}\nCompile (disabling stack protections):\ngcc -fno-stack-protector -z execstack -no-pie -m32 -g vulnerable.c -o vulnerable\nRun with normal input (safe):\n./vulnerable \"Hello Students\"\nTrigger the overflow — this causes a segmentation fault:\n./vulnerable $(python -c 'print \"A\" * 100')",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "10 · Buffer Overflow Lab"
+    ]
+  },
+  {
+    "objectID": "10-Buffer-Overflow-Lab.html#part-2-weaponizing-the-overflow",
+    "href": "10-Buffer-Overflow-Lab.html#part-2-weaponizing-the-overflow",
+    "title": "10 · Buffer Overflow Lab",
+    "section": "Part 2 — Weaponizing the Overflow",
+    "text": "Part 2 — Weaponizing the Overflow\nNew vulnerable program with setuid (vulnerable_root.c):\n#include &lt;stdio.h&gt;\n#include &lt;string.h&gt;\n#include &lt;unistd.h&gt;\n\nvoid vulnerable_function(char *input) {\n    char buffer[64];\n    strcpy(buffer, input);\n    printf(\"Buffer content: %s\\n\", buffer);\n}\n\nint main(int argc, char *argv[]) {\n    if (argc != 2) {\n        printf(\"Usage: %s &lt;input&gt;\\n\", argv[0]);\n        return 1;\n    }\n    setuid(0);\n    vulnerable_function(argv[1]);\n    return 0;\n}\nCompile:\ngcc -fno-stack-protector -z execstack -no-pie -m32 -g vulnerable_root.c -o vulnerable_root",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "10 · Buffer Overflow Lab"
+    ]
+  },
+  {
+    "objectID": "10-Buffer-Overflow-Lab.html#find-the-buffer-offset",
+    "href": "10-Buffer-Overflow-Lab.html#find-the-buffer-offset",
+    "title": "10 · Buffer Overflow Lab",
+    "section": "Find the Buffer Offset",
+    "text": "Find the Buffer Offset\nUse pwntools cyclic patterns to find the exact offset:\npython3 -c 'from pwn import *; print(cyclic_find(0x6161616c))'\nUse GDB to locate EIP and confirm the offset:\ngdb -q ./vulnerable_root\n(gdb) run $(python -c 'print \"A\" * 100')\n# Note the segmentation fault and check EIP\n# Adjust the input size until you find the exact offset",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "10 · Buffer Overflow Lab"
+    ]
+  },
+  {
+    "objectID": "04-Multiprocessor-Scheduling.html",
+    "href": "04-Multiprocessor-Scheduling.html",
+    "title": "04 · Multiprocessor Scheduling",
+    "section": "",
+    "text": "Classifications of Multiprocessor Systems:\n\nLoosely Coupled/Distributed Microprocessors or cluster processors:\n\nConsists of a collection of relatively autonomous systems, each processor having its own main memory and I/O channels\n\nFunctionally specialized processor:\n\nThere is a primary, general-purpose processor\nSpecialized processors are generally controlled by the primary processor, and provide services to it\n\nTightly Coupled Multiprocessors:\n\nConsists of a set of processors that share common main memory and are under the integrated control of the OS\nSymmetrical MultiProcessing (SMP) is the most common modern example of this\n\n\nSynchronization granularity in processes\n\n\n\n\n\n\n\n\nGrain Size\nDescription\nSync Interval (instructions)\n\n\n\n\nFine\nParallelism inherent in a single instruction stream\n&lt; 20\n\n\nMedium\nParallel processing or multitasking within a single application\n20 – 200\n\n\nCoarse\nMultiprocessing of concurrent processes in a multiprogrammed env.\n200 – 2,000\n\n\nVery Coarse\nDistributed processes across network nodes\n2,000 – 1M\n\n\nIndependent\nMultiple unrelated processes\nN/A\n\n\n\nIndependent Parallelism\n\nNo explicit synchronization between processes\n\nEach process represents a separate, independent job or application\nTypically used in time-sharing systems where each user is (generally) performing an independent job\n\nMultiprocessor provides the same service as a multiprogrammed uniprocessor\nBecause there are multiple processors, average user response time is lower\n\nCoarse/Very Coarse:\n\nThere is synchronization between processes, but at a very low level\nEasily handled as a set of concurrent processes running on a multiprogrammed processor\nCan be supported on a multiprocessor with little to no change in user software\n\nMedium-Grained Parallelism\n\nSingle application can be effectively implemented as a collection of threads within a single process\n\nProgrammer must explicitly specify the potential parallelism in code\nThere needs to be a high-degree of coordination and interaction among threads of an application\n\nBecause the various threads of an application interact so frequently, scheduling decisions concerning one thread may affect the performance of the entire application\n\nThink of if a single thread gets blocked, and the others don’t wait, which could cause data inconsistency\n\n\nFine-Grained Parallelism\n\nRepresents a much more complex use of parallelism than is found in the use of threads in code\nMostly OS/Scheduler, or hardware based\n\nDesign issues:\n\nThe approach taken to scheduling depends on a couple of things:\n\nThe granularity of applications\nSpeed of applications\nThe number of processors you have available\n\nScheduling on a multiprocessor involves three interrelated issues:\n\nThe dispatching of a process (separate but linked to the assignment of a process)\nAssignment of processes to processors\nUse of multiprogramming on an individual proccesor/core\n\n\nAssignment of processes to a processor:\n\nAssuming all processors are equal, it is simplest to treat processors like a pooled resource and assign processes to processors as needed\n\nDynamic Assignment\n\nIf a process is permanently assigned to a processor from activation to termination\n\nStatic Assignment\nEach processor has its own short term assignment queue\nThe advantage is that there may be less overhead in the scheduling function\nAllows for group/gang scheduling\nDisadvantage:\n\nLoad imbalance: One processor could be idle, with an empty queue, while another processor has a backlog\nThe simplest solution is to provide a common queue of processes shared across all processors, or use dynamic load balancing\n\n\n\nThere are two methods of process assignment to a processor used for both static and dynamic methods:\n\nPrimary/Secondary Architecture\nPeer Assignment\n\nPrimary Secondary Architecture\n\nPrimary processor executes key kernel functions, and schedules for all other processors\nSecondary processors provides services for the primary\nThink of the primary as the brain, and secondary as arms or legs\nAdvantages:\n\nSimple, and requires very little enhancement to a multiprogrammed uniprocessor system\nConflict resolution for resources and synchronization is simplified since one processor has control\n\nDisadvantage:\n\nSingle point of failure: If the primary fails, the system fails\nPrimary can become a performance bottleneck: If a lot of small processes are sent to schedule at the same time, it would take longer to distribute each task to a processor than it would take for that processor to complete that task\n\n\nPeer Architecture:\n\nKernel can execute on any processor\nEach processor does self-scheduling from a pool of available processes\nComplicates the OS:\n\nOS must ensure that two processors do not choose the same process, and that processes are completed before being removed from the queue\n\n\nProcess Scheduling:\n\nIn traditional multicore systems, processes are not dedicated to a single processor. Dynamic Assignment is most common.\nA single process queue is used for all processors to retrieve tasks from\n\nIf some priority scheme is used, there are multiple queues, one for each priority\n\n\nThread Scheduling:\n\nThread execution is separated from the rest of a process\nAn application can be a set of threads that cooperate and execute concurrently (or in parallel) in the same memory address space\nOn a uniprocessor (concurrent system), threads can be used as a program structuring aid, and allows overlap of I/O processing\nIn a multiprocessor system, threads can be used to exploit true parallelism of an application\n\nDramatic gains in performance are possible in multiprocessor system due to this\n\nFour approaches to thread scheduling:\n\nLoad sharing: Threads are not assigned to a particular processor\nGang Scheduling: A set of related threads are scheduled to run on a set of processors at the same time on a one-to-one basis\nDedicated Processor Assignment: Provides implicit scheduling defined by the assignment of threads to processors\nDynamic Scheduling: The number of threads in a process can be altered during the course of execution\n\n\nLoad Sharing:\n\nSimplest approach and the one that carries over the most from uniprocessor environments\nAdvantages:\n\nLoad is distributed evenly across all processors, ensuring that no processor is idle while there is work available to do\nNo centralized scheduler required\nThere is a global queue of threads that is easier to organize and access\n\nDisadvantages:\n\nCentral queue occupies a region of memory that must be accessed in a manner that enforces mutual exclusion (so multiple processors can’t take the same process)\n\nLeads to performance bottleneck\n\nPreemptive threads are unlikely to resume execution on the same processor\n\nCaching becomes less efficient, leading to another performance bottleneck\n\nIf all threads are treated as a common pool of threads, it is unlikely that all of the threads of a program will gain access to processors at the same time\n\nDecreases efficiency of parallel processes\nThe process switches could seriously compromise performance\n\n\nCommon implementations of Load sharing:\n\nFCFS\nSmallest number of threads first\nPreemptive smallest number of threads first\n\n\nGang/Group Scheduling:\n\nA set of related threads is scheduled to run on a set of processors at the same time on a one-to-one basis\nCan be uniform or weighted:\n\nUniform: As processes have no weight, all the threads in one process will execute before the threads of another process, alternating until completion\nWeighted: Processes are prioritized such that all of the threads of a higher priority process will execute until completion before another process executes\n\nAdvantages:\n\nSynchronization and blocking may be reduced, as there is less process switching\nScheduling process overhead may be reduced\nUseful for medium/fine grained applications whose performance severely degrades when any part of the application is not running, while other parts are ready to run\n\nDisadvantage:\n\nIf there is a large process queue, a process will likely take longer to execute while waiting for processors to be freed for each of its threads\n\n\nDedicated processor assignment:\n\nWhen an application is scheduled, each of its threads is assigned to a processor that remains dedicated to that thread until the application is completed\nIf a thread of an application is blocked waiting for I/O or for synchronization with another thread then that thread’s processor remains idle\nDefense of this strategy:\n\nIn a highly parallel system with tens or hundreds of processors, processor utilization is no longer an important metric of a system\nThe total avoidance of process switching during the lifetime of a process should result in a substantial speedup of that process",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "04 · Multiprocessor Scheduling"
+    ]
+  },
+  {
+    "objectID": "04-Multiprocessor-Scheduling.html#multiprocessormulticore-scheduling",
+    "href": "04-Multiprocessor-Scheduling.html#multiprocessormulticore-scheduling",
+    "title": "04 · Multiprocessor Scheduling",
+    "section": "",
+    "text": "Classifications of Multiprocessor Systems:\n\nLoosely Coupled/Distributed Microprocessors or cluster processors:\n\nConsists of a collection of relatively autonomous systems, each processor having its own main memory and I/O channels\n\nFunctionally specialized processor:\n\nThere is a primary, general-purpose processor\nSpecialized processors are generally controlled by the primary processor, and provide services to it\n\nTightly Coupled Multiprocessors:\n\nConsists of a set of processors that share common main memory and are under the integrated control of the OS\nSymmetrical MultiProcessing (SMP) is the most common modern example of this\n\n\nSynchronization granularity in processes\n\n\n\n\n\n\n\n\nGrain Size\nDescription\nSync Interval (instructions)\n\n\n\n\nFine\nParallelism inherent in a single instruction stream\n&lt; 20\n\n\nMedium\nParallel processing or multitasking within a single application\n20 – 200\n\n\nCoarse\nMultiprocessing of concurrent processes in a multiprogrammed env.\n200 – 2,000\n\n\nVery Coarse\nDistributed processes across network nodes\n2,000 – 1M\n\n\nIndependent\nMultiple unrelated processes\nN/A\n\n\n\nIndependent Parallelism\n\nNo explicit synchronization between processes\n\nEach process represents a separate, independent job or application\nTypically used in time-sharing systems where each user is (generally) performing an independent job\n\nMultiprocessor provides the same service as a multiprogrammed uniprocessor\nBecause there are multiple processors, average user response time is lower\n\nCoarse/Very Coarse:\n\nThere is synchronization between processes, but at a very low level\nEasily handled as a set of concurrent processes running on a multiprogrammed processor\nCan be supported on a multiprocessor with little to no change in user software\n\nMedium-Grained Parallelism\n\nSingle application can be effectively implemented as a collection of threads within a single process\n\nProgrammer must explicitly specify the potential parallelism in code\nThere needs to be a high-degree of coordination and interaction among threads of an application\n\nBecause the various threads of an application interact so frequently, scheduling decisions concerning one thread may affect the performance of the entire application\n\nThink of if a single thread gets blocked, and the others don’t wait, which could cause data inconsistency\n\n\nFine-Grained Parallelism\n\nRepresents a much more complex use of parallelism than is found in the use of threads in code\nMostly OS/Scheduler, or hardware based\n\nDesign issues:\n\nThe approach taken to scheduling depends on a couple of things:\n\nThe granularity of applications\nSpeed of applications\nThe number of processors you have available\n\nScheduling on a multiprocessor involves three interrelated issues:\n\nThe dispatching of a process (separate but linked to the assignment of a process)\nAssignment of processes to processors\nUse of multiprogramming on an individual proccesor/core\n\n\nAssignment of processes to a processor:\n\nAssuming all processors are equal, it is simplest to treat processors like a pooled resource and assign processes to processors as needed\n\nDynamic Assignment\n\nIf a process is permanently assigned to a processor from activation to termination\n\nStatic Assignment\nEach processor has its own short term assignment queue\nThe advantage is that there may be less overhead in the scheduling function\nAllows for group/gang scheduling\nDisadvantage:\n\nLoad imbalance: One processor could be idle, with an empty queue, while another processor has a backlog\nThe simplest solution is to provide a common queue of processes shared across all processors, or use dynamic load balancing\n\n\n\nThere are two methods of process assignment to a processor used for both static and dynamic methods:\n\nPrimary/Secondary Architecture\nPeer Assignment\n\nPrimary Secondary Architecture\n\nPrimary processor executes key kernel functions, and schedules for all other processors\nSecondary processors provides services for the primary\nThink of the primary as the brain, and secondary as arms or legs\nAdvantages:\n\nSimple, and requires very little enhancement to a multiprogrammed uniprocessor system\nConflict resolution for resources and synchronization is simplified since one processor has control\n\nDisadvantage:\n\nSingle point of failure: If the primary fails, the system fails\nPrimary can become a performance bottleneck: If a lot of small processes are sent to schedule at the same time, it would take longer to distribute each task to a processor than it would take for that processor to complete that task\n\n\nPeer Architecture:\n\nKernel can execute on any processor\nEach processor does self-scheduling from a pool of available processes\nComplicates the OS:\n\nOS must ensure that two processors do not choose the same process, and that processes are completed before being removed from the queue\n\n\nProcess Scheduling:\n\nIn traditional multicore systems, processes are not dedicated to a single processor. Dynamic Assignment is most common.\nA single process queue is used for all processors to retrieve tasks from\n\nIf some priority scheme is used, there are multiple queues, one for each priority\n\n\nThread Scheduling:\n\nThread execution is separated from the rest of a process\nAn application can be a set of threads that cooperate and execute concurrently (or in parallel) in the same memory address space\nOn a uniprocessor (concurrent system), threads can be used as a program structuring aid, and allows overlap of I/O processing\nIn a multiprocessor system, threads can be used to exploit true parallelism of an application\n\nDramatic gains in performance are possible in multiprocessor system due to this\n\nFour approaches to thread scheduling:\n\nLoad sharing: Threads are not assigned to a particular processor\nGang Scheduling: A set of related threads are scheduled to run on a set of processors at the same time on a one-to-one basis\nDedicated Processor Assignment: Provides implicit scheduling defined by the assignment of threads to processors\nDynamic Scheduling: The number of threads in a process can be altered during the course of execution\n\n\nLoad Sharing:\n\nSimplest approach and the one that carries over the most from uniprocessor environments\nAdvantages:\n\nLoad is distributed evenly across all processors, ensuring that no processor is idle while there is work available to do\nNo centralized scheduler required\nThere is a global queue of threads that is easier to organize and access\n\nDisadvantages:\n\nCentral queue occupies a region of memory that must be accessed in a manner that enforces mutual exclusion (so multiple processors can’t take the same process)\n\nLeads to performance bottleneck\n\nPreemptive threads are unlikely to resume execution on the same processor\n\nCaching becomes less efficient, leading to another performance bottleneck\n\nIf all threads are treated as a common pool of threads, it is unlikely that all of the threads of a program will gain access to processors at the same time\n\nDecreases efficiency of parallel processes\nThe process switches could seriously compromise performance\n\n\nCommon implementations of Load sharing:\n\nFCFS\nSmallest number of threads first\nPreemptive smallest number of threads first\n\n\nGang/Group Scheduling:\n\nA set of related threads is scheduled to run on a set of processors at the same time on a one-to-one basis\nCan be uniform or weighted:\n\nUniform: As processes have no weight, all the threads in one process will execute before the threads of another process, alternating until completion\nWeighted: Processes are prioritized such that all of the threads of a higher priority process will execute until completion before another process executes\n\nAdvantages:\n\nSynchronization and blocking may be reduced, as there is less process switching\nScheduling process overhead may be reduced\nUseful for medium/fine grained applications whose performance severely degrades when any part of the application is not running, while other parts are ready to run\n\nDisadvantage:\n\nIf there is a large process queue, a process will likely take longer to execute while waiting for processors to be freed for each of its threads\n\n\nDedicated processor assignment:\n\nWhen an application is scheduled, each of its threads is assigned to a processor that remains dedicated to that thread until the application is completed\nIf a thread of an application is blocked waiting for I/O or for synchronization with another thread then that thread’s processor remains idle\nDefense of this strategy:\n\nIn a highly parallel system with tens or hundreds of processors, processor utilization is no longer an important metric of a system\nThe total avoidance of process switching during the lifetime of a process should result in a substantial speedup of that process",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "04 · Multiprocessor Scheduling"
+    ]
+  },
+  {
+    "objectID": "04-Multiprocessor-Scheduling.html#dynamic-scheduling",
+    "href": "04-Multiprocessor-Scheduling.html#dynamic-scheduling",
+    "title": "04 · Multiprocessor Scheduling",
+    "section": "Dynamic Scheduling",
+    "text": "Dynamic Scheduling\n\nThis method allows an application to adjust the number of threads used during execution\nThis allows the OS to adjust the load on processors to improve utilization by reallocating resources based on current workload\nWhen a job requests one or more processors (either when the job arrives for the first time, or because its requirements change):\n\nIf there are idle processors, use them to satisfy the request\nIf there are no idle processors, and if the job making the request is a new arrival:\n\nallocate a single processor by taking one away from any current job that currently holds more than one processor\n\nIf any portion of the request cannot be satisfied (if all current processes only have a single processor), the new job remains outstanding until either a processor becomes available, or the job is rescinded",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "04 · Multiprocessor Scheduling"
+    ]
+  },
+  {
+    "objectID": "09-OS-Security.html#the-security-problem",
+    "href": "09-OS-Security.html#the-security-problem",
+    "title": "09 · OS Security",
+    "section": "The Security Problem",
+    "text": "The Security Problem\n\nSystem is secure if resources are used and accessed as intended under all circumstances.\n\nThis is basically impossible to achieve.\n\nSome terms:\n\nIntruder/Attacker: Someone attempting to breach security\nThreat: A potential security violation (suspected but not always verified)\nAttack: An attempt to breach security\n\nCan be accidental or malicious\n\nVulnerability: A weakness in the system that can be exploited\nEasier to protect against accidental attacks than malicious ones",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "09 · OS Security"
+    ]
+  },
+  {
+    "objectID": "09-OS-Security.html#security-violation-categories",
+    "href": "09-OS-Security.html#security-violation-categories",
+    "title": "09 · OS Security",
+    "section": "Security Violation Categories",
+    "text": "Security Violation Categories\n\nBreach of confidentiality: Unauthorized access to sensitive data\nBreach of integrity: Unauthorized modification of data\nBreach of availability: Unauthorized destruction of data\nTheft of service: Unauthorized use of system resources\nDenial of service (DOS): Prevention of legitimate use",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "09 · OS Security"
+    ]
+  },
+  {
+    "objectID": "09-OS-Security.html#system-access-threats",
+    "href": "09-OS-Security.html#system-access-threats",
+    "title": "09 · OS Security",
+    "section": "System Access Threats",
+    "text": "System Access Threats\n\nSystem access threats fall into two general categories:\n\nIntruders: Individuals who attempt to gain unauthorized access to a system\nMalicious software: Programs that attempt to exploit system vulnerabilities",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "09 · OS Security"
+    ]
+  },
+  {
+    "objectID": "09-OS-Security.html#intruder-types",
+    "href": "09-OS-Security.html#intruder-types",
+    "title": "09 · OS Security",
+    "section": "Intruder Types",
+    "text": "Intruder Types\n\nMasquerader: An individual who is not authorized to use the computer and who penetrates a system’s access controls to exploit a legitimate user’s account\n\nExample: A hacker who steals a password to gain access to a system\n\nMisfeasor: A legitimate user who accesses data, programs, or resources for which such access is not authorized, or who is authorized for such access, but misuses their privileges\n\nExample: An employee who accesses sensitive data for personal gain\n\nClandestine user: An individual who seizes supervisory control of the system and uses this control to evade auditing and access controls or to suppress audit collection\n\nExample: A hacker who gains root access to a system and disables auditing features",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "09 · OS Security"
+    ]
+  },
+  {
+    "objectID": "09-OS-Security.html#security-violation-methods",
+    "href": "09-OS-Security.html#security-violation-methods",
+    "title": "09 · OS Security",
+    "section": "Security Violation Methods",
+    "text": "Security Violation Methods\n\nMasquerading (breach authentication):\n\nPretending to be an authorized user to escalate privileges\n\nReplay attack:\n\nAs is or with message modification\n\nMan-in-the-middle attack, now normally called a On-Path attack:\n\nIntruder sits in data flow, masquerading as sender to receiver and vice versa\n\nSession hijacking:\n\nIntercept an already established session to bypass authentication\n\nPrivilege escalation:\n\nCommon attack with access beyond what a user or resource is supposed to have",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "09 · OS Security"
+    ]
+  },
+  {
+    "objectID": "09-OS-Security.html#malicious-software",
+    "href": "09-OS-Security.html#malicious-software",
+    "title": "09 · OS Security",
+    "section": "Malicious Software",
+    "text": "Malicious Software\n\nPrograms that exploit vulnerabilities in a computer system\nAlso called malware\nCan be split into two categories:\n\nParasitic: Fragments of programs that cannot exist independently of some real application program, utility, or system program\n\nViruses, logic bombs, and backdoors are examples\n\nIndependent: Self contained programs that can be scheduled and run by the operating system\n\nWorms and bot programs are examples\n\n\nThere are a multitude of different types of malware, with many names\nTrojan horse:\n\nCode segment that misuses its environment\nExploits mechanisms for allowing programs written by users to be executed by other users\nSpyware, popup browser windows, covert channels\nUp to 80% of spam delivered by spyware-infected systems\n\nTrap Door:\n\nSpecific user identifier or password that circumvents normal security procedures\nCould be included in a compiler\n\nMalware:\n\nSoftware designed to exploit, disable, or damage computers\nSpyware: Programs frequently installed with legitimate software to display ads and capture user data\nRansomware: Locks up data via encryption and demands payment for decryption key\n\nOthers include trap doors, logic bombs\nAll try to violate the principle of least privilege\nGoal frequently is to leave behind a Remote Access Tool (RAT) for repeated access",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "09 · OS Security"
+    ]
+  },
+  {
+    "objectID": "09-OS-Security.html#principle-of-least-privilege",
+    "href": "09-OS-Security.html#principle-of-least-privilege",
+    "title": "09 · OS Security",
+    "section": "Principle of Least Privilege",
+    "text": "Principle of Least Privilege\n\nA user should be given the minimum levels of access necessary to perform his/her job functions\nThis is a fundamental principle of computer security\nIs used to limit the potential damage that can be done by a compromised account or system\n“The purpose of this principle is to reduce the number of potential interactions among privileged programs to the minimum necessary to operate correctly, so that one may develop confidence that unintentional, unwanted, or improper uses of privilege do not occur”\n\nJerome H. Saltzer describing a design principle for the Multics operating system in ’74",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "09 · OS Security"
+    ]
+  },
+  {
+    "objectID": "09-OS-Security.html#four-layer-model-of-security",
+    "href": "09-OS-Security.html#four-layer-model-of-security",
+    "title": "09 · OS Security",
+    "section": "Four Layer Model of Security",
+    "text": "Four Layer Model of Security\n\nThe four layers of security are:\n\nPhysical security\n\nAttacks: console access, hardware-based attacks\nCountermeasures: locks, guards, vaults, device data encryption\n\nNetwork security\n\nAttacks: sniffing, spoofing, masquerading\nCountermeasures: encryption, authentication, filtering\n\nOperating system security\n\nAttacks: insecure defaults, platform vulnerabilities\nCountermeasures: patches, reconfiguration, hardening\n\nApplication security\n\nAttacks: logic bugs, design flaws, code injection\nCountermeasures: sandboxing, software restrictions",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "09 · OS Security"
+    ]
+  },
+  {
+    "objectID": "09-OS-Security.html#countermeasures",
+    "href": "09-OS-Security.html#countermeasures",
+    "title": "09 · OS Security",
+    "section": "Countermeasures",
+    "text": "Countermeasures\n\nRFC 4949: Internet Security Glossary\n\nDefines intrusion detection as a security service that monitors and analyzes system events for the purpose of finding, and providing real-time or near real-time alerts of, attempts to access system resources in an unauthorized manner\nIntrusion detection systems (IDS) can be classified as:\n\nHost-based IDS (HIDS): Monitors a single host for suspicious activity\nNetwork-based IDS (NIDS): Monitors network traffic for suspicious activity for a network segment.",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "09 · OS Security"
+    ]
+  },
+  {
+    "objectID": "09-OS-Security.html#ids-components",
+    "href": "09-OS-Security.html#ids-components",
+    "title": "09 · OS Security",
+    "section": "IDS components",
+    "text": "IDS components\n\nSensors\n\nResponsible for collecting data\nThe input for a sensor may be any part of a system that could contain evidence of an intrusion\nTypes of input to a sensor include network packets, log files, and system call traces\n\nAnalyzers\n\nReceive input from sensors or other analyzers\nResponsible for determining if an intrusion has occurred\nMust provide guidance about what actions to take as a result of the intrusion\n\nUser interface (UI)\n\nEnables a user to view output from the system or control the behavior of the system\nMay equate to the manager, director, or console component",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "09 · OS Security"
+    ]
+  },
+  {
+    "objectID": "09-OS-Security.html#user-authentication",
+    "href": "09-OS-Security.html#user-authentication",
+    "title": "09 · OS Security",
+    "section": "User Authentication",
+    "text": "User Authentication\n\nIn most computer security contexts, user authentication is the fundamental building block and the primary line of defense\nRFC 4949 defines user authentication as the process of verifying an identity claimed by or for a system entity\nAn authentication process consists of two steps:\n\nIdentification: The entity presents an identifier to the system\nVerification: Presenting or generating authentication information that corroborate the binding between the entity and the identifier",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "09 · OS Security"
+    ]
+  },
+  {
+    "objectID": "09-OS-Security.html#means-of-authentication",
+    "href": "09-OS-Security.html#means-of-authentication",
+    "title": "09 · OS Security",
+    "section": "Means of Authentication",
+    "text": "Means of Authentication\n\nSomething you know: Passwords, PINs, answers to security questions\nSomething you have: Smart cards, tokens, key fobs\nSomething you are: Biometrics (fingerprints, retina scans)\nSomething you do: Behavioral biometrics (typing patterns, mouse movements)\nSomewhere you are: Geolocation data (IP address, GPS coordinates)\nSomething that is in the user’s environment: Surroundings/ambient sounds or ambient access points",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "09 · OS Security"
+    ]
+  },
+  {
+    "objectID": "09-OS-Security.html#access-control",
+    "href": "09-OS-Security.html#access-control",
+    "title": "09 · OS Security",
+    "section": "Access control",
+    "text": "Access control\n\nImplements a security policy that specifies who or what may have access to each specific system resource, and the type of access that is permitted in each instance\nMediates between a user and system resources, such as applications, operating systems, firewalls, routers, files, and databases\nA security administrator maintains an authorization database that specifies what type of access to which resources is allowed for this user\n\nThe access control function consults this database to determine whether to grant access\n\nAn auditing function monitors and keeps record of user accesses to system resources",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "09 · OS Security"
+    ]
+  },
+  {
+    "objectID": "09-OS-Security.html#cryptography-as-a-security-tool",
+    "href": "09-OS-Security.html#cryptography-as-a-security-tool",
+    "title": "09 · OS Security",
+    "section": "Cryptography as a Security Tool",
+    "text": "Cryptography as a Security Tool\n\nMeans to constrain potential senders (sources) and/or receivers (destinations) of messages\n\nBased on secret informations (keys)\nEnables:\n\nConfirmation of source\nReceipt only by certain destinations\nTrust relationship between sender and receiver\n\n\nNote: symmetric cryptography based on transformation, asymmetric is based on mathematical functions\n\nAsymmetric is much more compute intensive\nTypically not used for bulk data encryption",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "09 · OS Security"
+    ]
+  },
+  {
+    "objectID": "09-OS-Security.html#buffer-overflow",
+    "href": "09-OS-Security.html#buffer-overflow",
+    "title": "09 · OS Security",
+    "section": "Buffer Overflow",
+    "text": "Buffer Overflow\n\nWhen more input is placed into a buffer than its capacity allows, which can overwrite other information and be exploited by attackers to crash systems or insert malicious code (more common) to gain control of the system\n\nAlso known as buffer overrun\n\nStack overflow:\n\nA classic attack\nA type of buffer overflow that occurs in the call stack of a program\nCan occur when a program uses too much stack space, causing the stack to overflow into adjacent memory areas",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "09 · OS Security"
+    ]
+  },
+  {
+    "objectID": "09-OS-Security.html#defense-against-buffer-overflow",
+    "href": "09-OS-Security.html#defense-against-buffer-overflow",
+    "title": "09 · OS Security",
+    "section": "Defense against Buffer Overflow",
+    "text": "Defense against Buffer Overflow\n\nCompile-time:\n\nProgramming language\nSafe Coding techniques\nuse of safe libraries\nStack protection\n\nStack canaries\n\n\nRuntime:\n\nExecutable address space protection\nAddress space layout randomization (ASLR)\nGuard pages",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "09 · OS Security"
+    ]
+  },
+  {
+    "objectID": "03-Threads.html",
+    "href": "03-Threads.html",
+    "title": "03 · Threads",
+    "section": "",
+    "text": "PCB vs Process Image:\n\nPCB: Data Structure maintained by the OS for every process\n\nContains essential information about the process such as process state, program counter, register info, memory management info, accounting info, I/O status, and CPU scheduling\n\nProcess Image:\n\nThe entire collection of information that makes up what is being executed by a process\n\nIncludes code, data, and the process stack\n\n\n\nMultiprogramming:\n\nWhen multiprogramming is used, CPU utilization can be improved\n\nIf the average process computes only 30% of the time it is sitting in memory, then we can have three processes in memory at once, and the CPU should be busy all of the time.\nThis is unrealistic at best, however, since it assumes that all processes will never be waiting for I/O at the same time\n\nIt is better to view multiprogramming from a probabilistic standpoint.\n\nSuppose that a process spends a fraction of its time (p) waiting for I/O\nWith multiple processes in memory at once, the probability that all processes are waiting for I/O is p ^ n (n is number of processes)\nCPU Utilization = 1 - p^n\n\nSuppose that a computer has 8 GB of memory, with the OS and its tables taking up 2 GB, and each process also taking 2 GB, what is the CPU utilization with 80% chance a process is waiting? .488\n\nWhat is the new CPU utilization if 8GB of memory are added? .79\nWhat is the new utilization if another 8GB are added? .914",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "03 · Threads"
+    ]
+  },
+  {
+    "objectID": "03-Threads.html#review",
+    "href": "03-Threads.html#review",
+    "title": "03 · Threads",
+    "section": "",
+    "text": "PCB vs Process Image:\n\nPCB: Data Structure maintained by the OS for every process\n\nContains essential information about the process such as process state, program counter, register info, memory management info, accounting info, I/O status, and CPU scheduling\n\nProcess Image:\n\nThe entire collection of information that makes up what is being executed by a process\n\nIncludes code, data, and the process stack\n\n\n\nMultiprogramming:\n\nWhen multiprogramming is used, CPU utilization can be improved\n\nIf the average process computes only 30% of the time it is sitting in memory, then we can have three processes in memory at once, and the CPU should be busy all of the time.\nThis is unrealistic at best, however, since it assumes that all processes will never be waiting for I/O at the same time\n\nIt is better to view multiprogramming from a probabilistic standpoint.\n\nSuppose that a process spends a fraction of its time (p) waiting for I/O\nWith multiple processes in memory at once, the probability that all processes are waiting for I/O is p ^ n (n is number of processes)\nCPU Utilization = 1 - p^n\n\nSuppose that a computer has 8 GB of memory, with the OS and its tables taking up 2 GB, and each process also taking 2 GB, what is the CPU utilization with 80% chance a process is waiting? .488\n\nWhat is the new CPU utilization if 8GB of memory are added? .79\nWhat is the new utilization if another 8GB are added? .914",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "03 · Threads"
+    ]
+  },
+  {
+    "objectID": "03-Threads.html#threads",
+    "href": "03-Threads.html#threads",
+    "title": "03 · Threads",
+    "section": "Threads",
+    "text": "Threads\n\nCharactaristics of processes:\n\nResource Ownership:\n\nProcesses include virtual memory space to hold a process image\nThe OS performs a protection function to prevent unwanted interference between processes with respect to resources\n\nScheduling/Execution:\n\nFollows an execution path that may be interleaed with other processes (multiprogramming)\nA process has an execution state and a dispatch priority, and is the entity that is scheduled and dispatched by the OS.\n\n\nA process is a whole\n\nThe unit of resource ownership\n\nA thread is a lightweight part of the process\n\nThe unit of dispatching of a process is called a thread, or lightweight process\n\nMultithreading: The ability of an OS to support multiple concurrent paths of execution in a single process\n\nAll threads in a multithreaded process with share code, data, and files from a process, but have their own (smaller) registers, stack, and program counter\n\nSingle Thread Approach: A single thread of execution per process, in which the concept of a thread is not recognized.\n\nExample: MS-DOS\n\nThe process in a multithreaded environment is defined as “the unit of resource allocation and unit of protection”\n\nThings associated with the process:\n\nthe virtual address space that holds the process image\nprotected access to resources\n\nprocessors\nfiles\nI/O resources\n\nThings associated with the thread:\n\nAn execution state\nSaved thread context\nAn execution stack\nSome per-thread static storage for local variables (register set)\nAccess to the memory and resources of its process, shared with all threads of that process\n\n\nBenefits of using threads:\n\nTakes less time to create and terminate\nSwitching between two threads takes less time than switching between processes\nThreads enhance efficiency of interprocess communication",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "03 · Threads"
+    ]
+  },
+  {
+    "objectID": "03-Threads.html#multicore-programming",
+    "href": "03-Threads.html#multicore-programming",
+    "title": "03 · Threads",
+    "section": "Multicore Programming",
+    "text": "Multicore Programming\n\nMulticore processessing is the ability for multiple cores on a CPU to execute a process (or threads)\nProvides opportunity to increase efficiency, but comes with some drawbacks:\n\nDividing activites between cores\nBalancing work between cores\nDividing data\nData dependency\nTesting and debugging\n\nTwo types of multicore programming\n\nParallel processing: implies a system can perform more than one task simultaneously\nConcurrent processing: More than one task makes progress at a time in a single core or single core processor, allowed by the scheduler",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "03 · Threads"
+    ]
+  },
+  {
+    "objectID": "03-Threads.html#back-to-threads",
+    "href": "03-Threads.html#back-to-threads",
+    "title": "03 · Threads",
+    "section": "Back to Threads",
+    "text": "Back to Threads\n\nScheduling: In an OS that supports Threads, scheduling and dispatching is done on a thread by thread basis as opposed to a process by process basis\n\nMost state information dealing with execution is maintained in thread level data structures instead of process level data structures; however:\n\nSuspending a process involves suspending all the threads involved\nTermination of a process terminates all threads in a process\n\n\nThread execution states:\n\nProcess level states: Ready, Blocked, Suspended, Running, Terminated, New\nThreads level states: Running, Ready, Blocked\nThread operations associated with a change of states: Spawn, Block, Unblock, Finish\n\nThread Synchronization\n\nIt is necessary to synchronize the activities of the various threads\n\nAll threads of a process share the same address space and resources\nAny alteration of a resource by one thread affects other threads in the same process, so timing it of significant importance",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "03 · Threads"
+    ]
+  },
+  {
+    "objectID": "03-Threads.html#types-of-threads",
+    "href": "03-Threads.html#types-of-threads",
+    "title": "03 · Threads",
+    "section": "Types of Threads",
+    "text": "Types of Threads\n\nUser Level Threads (ULTs)\n\nAll thread management is done by the application\nThe kernel is not aware of the existence of threads\n\nAdvantages of ULTs:\n\nThread switching does not require kernel mode privileges\nScheduling is application specific\nULTs can run on any OS.\n\nDisadvantages of ULTs:\n\nIn a typical OS, many system calls are blocking (have to wait for an event). As a result, when a ULT executes a system call, not only is that thread blocked, but all of the threads within that process are blocked as well.\nIn a pure ULT strategy, a multithreaded application cannot take advantage of multiprocessing. A kernel only assigns one process to a single processor at a time, therefore only a single thread within a process can execute at a time.\n\nOvercoming ULT Disadvantages:\n\nJacketing: Convert blocking system calls into non-blocking system calls\nWriting an application as multiple processes (so they can use multiple processors) rather than multiple threads, though this does eliminate the core advantage of threads\n\n\n\nKernel Level Threads (KLTs)\n\nThread management is does by the kernel\nThere is no thread management code in the application level, but an application programming interface (API) is used to interact with the kernel thread facility\n\nWindows is an OS that uses the KLT approach\n\nAdvantages of the KLT approach:\n\nThe kernel can simultaneously schedule multiple threads from the same process across multiple cores\nIf one thread of a process is blocked, the kernel can schedule another thread from the same process\nKernel routines themselves can be multithreaded\n\nDisadvantage of the KLT approach:\n\nThe transfer of control from one thread to anther within the same process requires a mode switch (similar to a context switch), which when overperformed can cause a system to become inefficient\n\n\nCombined approach: Thread creation is done completely in the user space, as is the bulk of scheduling and synchronization of threads within an application, while the kernel space is used for processor/core assignment\nThread Libraries\n\nThread libraries provide a programmer with an API for creating and managing threads\nWays of implementation:\n\nLibraries entirely in user space (pthreads)\nKernel-level libraries supported by the OS\n\nPthreads:\n\nStored in user space, interfaces with the kernel\nA POSIX standard (IEEE 1003.1c) API for thread creation and synchronization\nCommon in UNIX OS\n\npthread_create: fuction used to create a thread\n\nint pthread_create(pthread_t tid, pthread_attr_t attr, func f, void arg);\n\nreturns 0 if everything works, nonzero on error\n\n\npthread_exit: Terminates a thread\n\nvoid pthread_exit(void *thread_return)\n\npthread_join: Main thread waits for another thread to terminate\n\nint pthread_join(pthread_t tid, void **thread_return)\n\npthread_yield: Release the CPU and allows another thread to run\npthread_attr_init: create and initialize a thread’s attribute structure\npthread_attr_destroy: remove a thread’s attribute structure\n\nFork-Join Parallelism: Multiple threads (tasks/jobs) are forked, execute individually, and join back up\n\nGeneral Algorithm for fork-join strategy:\nif problem is small enough:\n    solve the problem directly\n\nelse: (problem is large or can be broken down)\n    subtask1 = fork(new Task(subset of problem))\n    subtask2 = fork(new Task(subset of problem))\n\n    result1 = join(subtask1)\n    result2 = join(subtask2)\n\n    return result1 combined with result2",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "03 · Threads"
+    ]
+  },
+  {
+    "objectID": "03-Threads.html#threading-issues-in-programming",
+    "href": "03-Threads.html#threading-issues-in-programming",
+    "title": "03 · Threads",
+    "section": "Threading Issues (in programming)",
+    "text": "Threading Issues (in programming)\n\nThe semantics of fork() and exec() can change in a multithreaded program:\n\nDoes fork() duplicate only the calling thread or all threads?\n\nLinux (POSIX): Child process is created with a single thread\nSolaris: Either single threaded child or duplication of all threads is allowed\n\nExec works as normal, replace the running process with the called process, including all threads",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "03 · Threads"
+    ]
+  },
+  {
+    "objectID": "08-Memory-Management.html",
+    "href": "08-Memory-Management.html",
+    "title": "08 · Memory Management",
+    "section": "",
+    "text": "Program has to be brought from disk to memory and placed in a process to run\nThis allocation should be as efficient as possible to accommodate both the OS and other processes.\nMust allocate memory to ensure reasonable supply of ready processes",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "08 · Memory Management"
+    ]
+  },
+  {
+    "objectID": "08-Memory-Management.html#memory-management-background",
+    "href": "08-Memory-Management.html#memory-management-background",
+    "title": "08 · Memory Management",
+    "section": "",
+    "text": "Program has to be brought from disk to memory and placed in a process to run\nThis allocation should be as efficient as possible to accommodate both the OS and other processes.\nMust allocate memory to ensure reasonable supply of ready processes",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "08 · Memory Management"
+    ]
+  },
+  {
+    "objectID": "08-Memory-Management.html#requirements-of-memory-management",
+    "href": "08-Memory-Management.html#requirements-of-memory-management",
+    "title": "08 · Memory Management",
+    "section": "Requirements of Memory Management",
+    "text": "Requirements of Memory Management\n\nRelocation\nProtection\nSharing\nLogical Organization\nPhysical Organization",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "08 · Memory Management"
+    ]
+  },
+  {
+    "objectID": "08-Memory-Management.html#relocation",
+    "href": "08-Memory-Management.html#relocation",
+    "title": "08 · Memory Management",
+    "section": "Relocation",
+    "text": "Relocation\n\nProgrammers typically do not know in advance which other programs will be resident in main memory at the time of execution of their program\nActive processes need to be able to be swapped in and out of main memory in order to maximize processor utilization\nSpecifying that a process must be placed in the same memory region when it is swapped back in would be limiting",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "08 · Memory Management"
+    ]
+  },
+  {
+    "objectID": "08-Memory-Management.html#protection",
+    "href": "08-Memory-Management.html#protection",
+    "title": "08 · Memory Management",
+    "section": "Protection",
+    "text": "Protection\n\nNeed to ensure that a process can access only those addresses in its address space\nWe can provide this protection by using a pair of base and limit registers to define the logical address space of a process",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "08 · Memory Management"
+    ]
+  },
+  {
+    "objectID": "08-Memory-Management.html#hardware-address-protection",
+    "href": "08-Memory-Management.html#hardware-address-protection",
+    "title": "08 · Memory Management",
+    "section": "Hardware Address Protection",
+    "text": "Hardware Address Protection\n\nCPU must check (at runtime) every memory access generated in user mode to be sure it is between base and limit for that user\nThe instructions to load the relocation and limit registers are privileged",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "08 · Memory Management"
+    ]
+  },
+  {
+    "objectID": "08-Memory-Management.html#sharing",
+    "href": "08-Memory-Management.html#sharing",
+    "title": "08 · Memory Management",
+    "section": "Sharing",
+    "text": "Sharing\n\nAdvantageous to allow each process access to the same copy of the program rather than have their own separate copy\nMemory management must allow controlled access to shared areas of memory without compromising protection\nMechanisms used to support relocation support sharing capabilities",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "08 · Memory Management"
+    ]
+  },
+  {
+    "objectID": "08-Memory-Management.html#logical-organization",
+    "href": "08-Memory-Management.html#logical-organization",
+    "title": "08 · Memory Management",
+    "section": "Logical Organization",
+    "text": "Logical Organization\n\nThe main memory is organized as a linear, or one dimensional address space, consisting of a sequence of bytes, but:\n\nPrograms are written in modules\nModules can be written and compiled independently\nDifferent degrees of protection given to modules (read only, execute only)\nSharing on a module level corresponds to the way of viewing the problem",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "08 · Memory Management"
+    ]
+  },
+  {
+    "objectID": "08-Memory-Management.html#physical-organization",
+    "href": "08-Memory-Management.html#physical-organization",
+    "title": "08 · Memory Management",
+    "section": "Physical Organization",
+    "text": "Physical Organization\n\nComputer memory is organized into at least two levels:\n\nMain memory (RAM)\nSecondary storage (disk)\n\nThe flow of information between main memory and secondary memory is a major system concern\nThe responsibility for this flow should not be assigned to the individual programmer because:\n\nMemory available for a program plus its data may be insufficient\nOverlaying allows various modules to be assigned the same region of memory but is time consuming to the program\nProgrammer does not know how much space will be available",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "08 · Memory Management"
+    ]
+  },
+  {
+    "objectID": "08-Memory-Management.html#types-of-partitioning",
+    "href": "08-Memory-Management.html#types-of-partitioning",
+    "title": "08 · Memory Management",
+    "section": "Types of Partitioning",
+    "text": "Types of Partitioning\n\nFixed: Main memory is divided into a number of static partitions at system generation time. A process may be loaded into a partition of equal or greater size\n\nDisadvantages:\n\nA program may not fit into a partition\nProgram needs to be designed with the use of overlays\nMain memory utilization is inefficient\nInternal fragmentation:\n\nWasted space due to the block of data loaded being smaller than the partition\n\nThe number of partitions specified at system generation time limits the number of active processes in the system\nSmall jobs will not utilize partition space efficiently\n\n\nDynamic: Partitions are created dynamically, so that each process is loaded into a partition of exactly the size of that process.\n\nWas used by IBM’s mainframe OS OS/MVT\nIssues:\n\nExternal Fragmentation:\n\nMemory becomes more and more fragmented\nMemory utilization declines\n\nCompaction:\n\nTechnique for overcoming external fragmentation\nOS shifts processes so that they are contiguous\nFree memory is together in one block\nTime consuming and wastes CPU time\n\n\nUses 3 placement algorithms:\n\nBest-fit\nFirst-fit\nNext-fit\n\n\nSimple Paging: Main memory is divided into a number of equal size frames. Each process is divided into a number of equal size pages of the same length as frames. A process is loaded by loading all of its pages into available, if not necessarily contiguous, frames.\n\nPages are chunks of a process\nFrames are available chunks of memory\nThe method uses a “Page Table”\n\nMaintained by the OS for each process\nContains the frame location for each page in the process\nProcessor must know how to access for the current process\nUsed by the processor to translate logical addresses into physical addresses\nKept in main memory\n\nAddress Translation Scheme is used to convert logical address into physical address\n\nAddress generated by the CPU is divided into:\n\nPage number (p): used as an index into a page table which contains base address of each page in physical memory\nPage Offset (d): Combined with the base address to define the physical memory address that is sent to the memory unit.\n\n\n\nSimple Segmentation: Each process is divided into a number of segments. A process is loaded by loading all of its segments into dynamic partitions that need not be contiguous\n\nSegments may vary in length\nThere is a maximum length\nAddressing consists of two parts:\n\nSegment number\nAn Offset\n\nSimilar to dynamic partitioning\nEliminates internal fragmentation\n\nExercises: 1:\n\nConsider a simple paging system with a page size of 2,048 bytes.\n\n\nWhat is the worst amount (in bytes) of internal fragmentation that can occur?\nWhat is the average amount (in bytes) of internal fragmentation that can occur?\n\n\n2: - Consider a simple paging system with a page size of 2048 bytes. A process P of size 31577 bytes needs to be loaded. 1. How many frames (or pages) are needed for process P? 2. What amount (in bytes) of internal fragmentation will occur?\n3: - Assuming a 1 KB page size, what are the page numbers and offsets for the following address references? (provided as decimal values such as (page.offset)) 1. 1000 2. 3085\n\nVirtual memory paging: As with simple paging, except that it is not necessary to load all of the pages of a process. Nonresident pages that are needed are brought in later automatically.\nVirtual memory segmentation: As with simple segmentation, except that it is not necessary to load all of the segments of a process. Nonresident segments that are needed are brought in later automatically.",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "08 · Memory Management"
+    ]
+  },
+  {
+    "objectID": "08-Memory-Management.html#fragmentation",
+    "href": "08-Memory-Management.html#fragmentation",
+    "title": "08 · Memory Management",
+    "section": "Fragmentation",
+    "text": "Fragmentation\n\nExternal Fragmentation:\n\nTotal memory space exists to satisfy a request, but is not contiguous\n\nInternal Fragmentation:\n\nAllocated memory may be slightly larger than requested memory; this size difference is memory internal to a partition, but not being used\n\nFirst fit analysis reveals that given N blocks of allocated memory, 0.5 N blocks will be lost to fragmentation.",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "08 · Memory Management"
+    ]
+  },
+  {
+    "objectID": "08-Memory-Management.html#buddy-system",
+    "href": "08-Memory-Management.html#buddy-system",
+    "title": "08 · Memory Management",
+    "section": "Buddy System",
+    "text": "Buddy System\n\nComprised of fixed and dynamic partitioning schemes\nSpace available for allocation is treated as a single block\nMemory blocks are available in size 2^k words, L &lt;= k &lt;= U where:\n\n2^L = smallest block that is allocated\n2^U = largest block that is allocated; usually, 2^U is the size of the entire memory available for allocation\n\nRequested block sizes are rounded up to the nearest power of 2",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "08 · Memory Management"
+    ]
+  },
+  {
+    "objectID": "08-Memory-Management.html#virtual-memory",
+    "href": "08-Memory-Management.html#virtual-memory",
+    "title": "08 · Memory Management",
+    "section": "Virtual Memory",
+    "text": "Virtual Memory\n\nVirtual memory is the separation of user logic memory from physical memory.\nImportance:\n\nOnly part of the program needs to be in memory for execution\nLogical address space can therefore be much larger than physical memory\nAllows more efficient process creation\nLess I/O needed to load or swap processes\nMore programs can be running concurrently\n\nVirtual Memory Address Spaces:\n\nUsually starts at address 0, contiguous addresses until the end of available space\nMeanwhile physical memory is divided into frames\nThe physical page frames assigned to a process may not be contiguous\nMemory management unit (MMU) maps logical to physical\n\nVirtual memory can be implemented via:\n\nDemand paging:\n\nLoad pages only as they are needed\nIf we want to run a process, we can either:\n\nLoad the entire process into memory at once\nOnly bring in pages as needed\n\nThis is more efficient, but complex\n\n\nDemand paging is similar to paging system with swapping\n\nDemand segmentation\n\nValid-Invalid Bit:\n\nEach page table entry has a valid-invalid bit (v = in memory, i = not in memory)\nInitially set to i on all entries\nIf the MMU encounters i during address translation, a page fault is triggered\n\nPage Fault Handling:\n\nTrap to the OS\nSave user registers and process state\nDetermine the interrupt was a page fault\nCheck the page reference is legal; determine disk location\nIssue a disk read to a free frame\nAllocate CPU to another process while waiting\nReceive disk I/O interrupt when complete\nRestore registers and page table; resume interrupted instruction\n\nEffective Access Time (EAT):\n\nEAT = (1 - p) * memory access + p * (page fault overhead + swap page out + swap page in)\nWhere p = page fault rate (0 &lt;= p &lt;= 1)\n\nCopy-on-Write (COW):\n\nAllows parent and child processes to initially share the same pages in memory\nIf either process modifies a shared page, only then is the page copied\nAllows more efficient process creation since only modified pages are copied",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "08 · Memory Management"
+    ]
+  },
+  {
+    "objectID": "08-Memory-Management.html#page-replacement-algorithms",
+    "href": "08-Memory-Management.html#page-replacement-algorithms",
+    "title": "08 · Memory Management",
+    "section": "Page Replacement Algorithms",
+    "text": "Page Replacement Algorithms\n\nWhen no free frame is available, the OS must replace a page\nGoal: minimize the number of page faults\nFIFO (First-In, First-Out):\n\nReplace the oldest page in memory\nSimple to implement\nSuffers from Belady’s Anomaly: adding more frames can sometimes cause more page faults, not fewer\n\nOptimal Algorithm (OPT):\n\nReplace the page that will not be used for the longest period of time in the future\nGuarantees the minimum number of page faults\nCannot be implemented in practice (requires future knowledge)\nUsed as a benchmark to evaluate other algorithms\n\nLeast Recently Used (LRU):\n\nReplace the page that has not been used for the longest time in the past\nUses past knowledge as an approximation of future behavior\nGenerally a good algorithm; does not suffer from Belady’s Anomaly\nMore complex to implement than FIFO\n\nCounting Algorithms (less common):\n\nLeast Frequently Used (LFU): replace page with smallest reference count\nMost Frequently Used (MFU): replace page with largest reference count (reasoning: smallest count was likely just brought in)",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "08 · Memory Management"
+    ]
+  },
+  {
+    "objectID": "08-Memory-Management.html#thrashing",
+    "href": "08-Memory-Management.html#thrashing",
+    "title": "08 · Memory Management",
+    "section": "Thrashing",
+    "text": "Thrashing\n\nIf a process does not have enough frames, the page-fault rate becomes very high\nThe process spends more time paging than executing\nLeads to very low CPU utilization\nOS may respond by increasing multiprogramming, making the problem worse\nOccurs when: total size of localities &gt; total memory size",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "08 · Memory Management"
+    ]
+  },
+  {
+    "objectID": "08-Memory-Management.html#secondary-storage",
+    "href": "08-Memory-Management.html#secondary-storage",
+    "title": "08 · Memory Management",
+    "section": "Secondary Storage",
+    "text": "Secondary Storage\n\nHard Disk Drives:\n\nPlatters range from .86” to 14” (historically)\n3.5”, 2.5” and 1.8” are the most common sizes\nRange from 30GB to 12TB, and growing\nTransfer rates reach theoretical rates of 6 Gb/sec, but are more realistically around 1 Gb/s\nSeek time ranges from 3ms to 12ms, where 9ms is common on desktop drives\nLatency is the time it takes for the disk to spin\nAverage latency = 1/2 the time it takes for a full rotation\nHDDs spin platters of magnetic material at high speeds under a read-write head\nTransfer rate is the rate at which data flows between the disk and a computer\nPositioning/Access time is the time taken to move the disk arm to the desired cylinder (seek) and time for the desired sector to rotate under the disk head (rotational latency)\nHead crash results when the read-write head touches the platter\n\nThis is really bad\n\nDisk Performance Parameters:\n\nThe actual details of disk I/O operation depend on:\n\nComputer System (hardware)\nOperating System\nNature of the I/O channel and disk controller\n\nOn a moveable-head system, the time it takes to position the head at the track is known as seek time\nThe time it takes for the beginning of the sector to reach the head is known as rotational delay, or latency\nThe sum of the seek time and the rotational delay is known as the access time\n\nSeek time:\n\nThe time required to move the disk arm to the required track\nThree key components of seek time:\n\nStartup time: The time it takes to accelerate the arm to its maximum speed\nSettling time: The time after positioning the head over the target track until track identification is confirmed\n\nTypical seek time is under 10ms\n\nRotational Delay:\n\nThe time required for the addressed area of the disk to rotate into a position where it is accessible by the read-write head\nDisk rotates at speeds ranging from 3600 to 15000 RPM\n\nTransfer time:\n\nThe transfer time to or from the disk depends on the disk rotation speed\n\nPerformance:\n\nAverage access time is the sum of the average seek time and latency\n\nFor fast disks, 3ms + 2ms = 5ms\nFor slow disks, 9ms + ~5.56ms = 14.56ms\n\n\nExample:\n\nTo transfer a 4KB block of data on a 7200 RPM disk with a 5ms average seek time, 1 Gb/sec transfer rate with a .1ms controller overhead:\n\n5ms + 4.17ms + transfer time =\nTransfer time = 4 KB / 1 Gb/sec * 8Gb/GB * 1 GB / 1024^2KB = 32/(1024^2) = 0.00003051758 s or .031 ms\nAverage I/O time for 4KB block = 9.27ms + .031ms = 9.301ms\n\n\nOther Nonvolatile Memory:\n\nIf disk-drive like, then called solid-state disks (SSD)\nOther forms include USB drives (thumb drives, flash drives), DRAM disk replacements, surface mounted motherboards, and main storage in devices like smartphones and tablets\nCan be more reliable than HDDs\nMore expensive per GB\nGenerally less capacity, but much faster\nNo moving parts, so no seek time or rotational latency\n\nHDD Scheduling:\n\nThe OS is responsible for using hardware efficiently — for disk drives, this means having a fast access time and disk bandwidth\n\nMinimize seek time\n\nseek time ~= seek distance\n\n\nDisk Bandwidth is the total number of bytes transferred, divided by the total time between the first request for service and the completion of the last transfer\nWe can improve both the access time and the bandwidth by managing the order in which storage I/O requests are serviced\nThere are many sources of disk I/O requests:\n\nUser processes\nSystem processes\nOS\n\nI/O request includes mode, disk address, memory address, and number of sectors to transfer\nOS maintains a queue of requests\nIdle disk can immediately work on I/O request, but busy disk means work must queue\n\nThis means we must use optimization algorithms to determine the order in which to service requests\n\nIn the past, the OS was responsible for queue management and disk drive head scheduling, but now it is usually built into the storage devices or controllers.\n\n\nHard Drive Algorithms:\n\nQueue of requests: 98, 183, 37, 122, 14, 124, 65, 67\nAssume the disk head is at 53\nThe disk is divided into 200 cylinders, numbered 0-199\nFCFS (FIFO):\n\nFirst Come First Serve\nThe requests are serviced in the order they arrive\nMeasure the total distance traveled by the disk head as a check of efficiency\n\nSCAN:\n\nThe disk arm starts at one end of the disk and moves toward the other end, servicing requests until it reaches the other end, then reverses direction and services requests on the way back\nAlso called the elevator algorithm\n\nC-SCAN:\n\nProvides a more uniform wait time than SCAN\nThe head moves from one end of the disk to the other, servicing requests as it goes.\n\nWhen it reaches the end, it immediately returns to the beginning of the disk, without servicing any requests on the return trip\n\nTreats the cylinders as a circular list that wraps around from the last cylinder to the first one.\n\nN-Step-SCAN:\n\nSegments the disk request queue into subqueues of length N\nSubqueues are processed one at a time, using SCAN\nWhile a queue is being processed, new requests must be added to some other queue\nIf fewer than N requests are available at the end of the scan, all of them are processed with the next scan\n\nFSCAN:\n\nUses two subqueues\nWhen a scan begins, all of the requests are in one of the queues, with the other empty\nDuring SCAN, all new requests are put into the other queue\nService of new requests is deferred until all of the old requests have been processed\n\nShortest Service Time First (SSTF):\n\nSelect the disk I/O request that requires the least movement of the disk arm from its current position\nAlways choose the minimum seek time\nCommon and has natural appeal, but can cause starvation\nSCAN and C-SCAN perform better for systems under heavy disk load and have less starvation\n\nChoosing an Algorithm:\n\nSSTF is common and has a natural appeal with good performance\nSCAN and C-SCAN perform better for systems that place a heavy load on the disk\n\nGenerally less starvation\n\nTo avoid starvation, Linux implements deadline scheduler\n\nMaintains separate read and write queues, gives read priority\nBecause processes more likely to block on read than write\n\n\nTrack: A circular path on disk where data is recorded, structured like rings on a tree, where tracks are labeled starting from 0 on the outside and increasing as you move toward the center of the disk\nCylinder: A stack of tracks\nSector: A portion of a track, usually 512 bytes, but modern disks can have larger sectors, such as 4KB. These are grouped into blocks\n\nAverage Latency Computation:\n\nAverage latency = 1/2 * (1/RPM) * 60 seconds/minute\n\nFor a 7200 RPM disk: average latency = 1/2 * (1/7200) * 60 = 4.17ms\n\n\nEquations to consider:\n\nRotational Latency = (60,000ms / x RPM)\nAverage Rotational Latency = 1/2 * Rotational Latency\nTransfer Time (ms) = (Block Size (GB)) / (Transfer Rate (GB/s)) * (8Gb/s / 1 GB/s) * (1000ms / 1s) = Rotational Latency / # of sectors\nTotal Transfer Time = Avg Seek + Controller Overhead + Transfer Time\nAverage Access Time = Average Seek Time + Average Rotational Latency + Average Transfer Time\nAverage I/O time = Average Access Time + (amount to transfer / transfer rate) + controller overhead\nTransfer rate (bytes/ms) = total track size (bytes) / one disk rev (ms)\nTotal Capacity of cylinder = # of platters * # of platter sides used * total capacity of a track\nTotal capacity of a track = capacity of cylinder * number of cylinders\nTotal capacity of a track = (sector size) * (sectors/track)\nTime to transfer x amount of data = (x bytes) / (transfer rate in bytes/ms)\nAvg time to locate and transfer a single sector (ms) = (avg seek time) + (avg rotational latency) + (1/RPM/60000)\nAvg time to transfer x random sectors (ms) = (x # of sectors) * (avg time to locate and transfer a single sector)\nAvg time to transfer x consecutive sectors (ms) = Average seek time + avg rotational latency + (x * sector size) / (transfer rate in bytes/ms) + controller overhead\n\nExercises:\n\nConsider a disk queue holding requests to the following cylinders in the listed order: 110, 22, 3, 11, 75, 180, 100, 85, 60, 23 What is the order that the requests are serviced, assuming the disk head is at cylinder 90 and moving upward through the cylinders, using:\nThe FCFS scheduling algorithm\nThe SCAN scheduling algorithm\nThe C-SCAN scheduling algorithm\nThe SSTF scheduling algorithm\nConsider a disk with 10,000 RPM, an average seek time of 8ms, and 500 sectors per track:\nWhat is the average time to read a random sector from the disk?\nWhat is the average time to read 100 consecutive sectors from the disk?",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "08 · Memory Management"
+    ]
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "CSC 345 — Operating Systems Notes",
+    "section": "",
+    "text": "Course notes for CSC 345 Operating Systems at Louisiana Tech University. Textbook: Operating System Concepts, Silberschatz, 10th Edition.\n\n\n\n\n#\nTopic\nDescription\n\n\n\n\n01\nOS Overview\nWhat an OS is, its roles (Referee/Illusionist/Glue), OS services, history of OS phases, memory hierarchy, virtual memory, fault tolerance, and multicore considerations.\n\n\n02\nProcesses\nProcess model, process states, the Process Control Block (PCB), context switching, process creation/termination, interrupts, and the kernel’s role.\n\n\n03\nThreads\nThreads vs. processes, multithreading benefits, User-Level Threads (ULTs) vs. Kernel-Level Threads (KLTs), pthreads API, fork-join parallelism, and multicore programming.\n\n\n04\nMultiprocessor Scheduling\nSMP, synchronization granularity, primary/secondary vs. peer architectures, load sharing, gang scheduling, dedicated assignment, and dynamic scheduling.\n\n\n05\nUniprocessor Scheduling\nFCFS, SJF, SRTF, Round Robin, and Priority Scheduling — with criteria, metrics, and preemption concepts.\n\n\n06\nConcurrency & Mutual Exclusion\nRace conditions, critical section problem, Peterson’s Algorithm, hardware solutions (test-and-set, compare-and-swap), mutex locks, and semaphores.\n\n\n07\nDeadlock & Starvation\nDining philosophers, deadlock conditions, resource allocation graphs, Banker’s Algorithm, deadlock detection, and recovery strategies.\n\n\n08\nMemory Management\nFixed/dynamic partitioning, paging, segmentation, virtual memory, demand paging, page replacement (FIFO, OPT, LRU), thrashing, and disk scheduling.\n\n\n09\nOS Security\nSecurity violations, intruder types, malware, principle of least privilege, four-layer security model, IDS, user authentication, access control, and cryptography.\n\n\n10\nBuffer Overflow Lab\nStep-by-step lab demo for exploiting a stack buffer overflow using GDB and pwntools.\n\n\n11\nFile Management\n(Notes pending — Lecture #12)\n\n\n\n\n\nUse the sidebar or Lectures menu in the navbar to navigate between topics. Each page has a table of contents on the right for quick in-page navigation.",
+    "crumbs": [
+      "Home",
+      "CSC 345 — Operating Systems Notes"
+    ]
+  },
+  {
+    "objectID": "01-OS-Overview.html",
+    "href": "01-OS-Overview.html",
+    "title": "01 · OS Overview",
+    "section": "",
+    "text": "The computer system can be divided into four main parts:\n\nHardware: Provide basic computing resources, and does basic calculation at request\nOperating System: Controls and coordinates use of hardware among various applications and users\nApplication Programs: Defines ways in which the system resources are used to solve computing problems of the user\n\nExamples: word processors, compilers, browsers, database systems and so on\n\nUsers: Humans, machines, or other computers, that can control another computer\n\nWhat is a system?\n\nA complex unit formed of many, often diverse, parts subject to a common plan, or serving a common purpose\n\nWhat is an Operating System?\n\nA complex program that acts an intermediary, or interface, between users and hardware\nAn OS turns awful hardware interfaces into clean, and clear abstractions for programs and users\n\nGoals:\n\nExecuting user programs and making solving user problems easier\nMaking a computer convenient to use\nUse hardware efficiently\n\nRoles an OS plays:\n\nReferee: Manages shared resources (and makes sure they’re used appropriately)\n\nShared Resources: Memory, CPU, disk, networks\n\nIllusionist: Every running program (process) has infinite memory and exclusive access to the CPU\nGlue: Offers a set of common services/applications independent of hardware on a system",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "01 · OS Overview"
+    ]
+  },
+  {
+    "objectID": "01-OS-Overview.html#a-computer-system",
+    "href": "01-OS-Overview.html#a-computer-system",
+    "title": "01 · OS Overview",
+    "section": "",
+    "text": "The computer system can be divided into four main parts:\n\nHardware: Provide basic computing resources, and does basic calculation at request\nOperating System: Controls and coordinates use of hardware among various applications and users\nApplication Programs: Defines ways in which the system resources are used to solve computing problems of the user\n\nExamples: word processors, compilers, browsers, database systems and so on\n\nUsers: Humans, machines, or other computers, that can control another computer\n\nWhat is a system?\n\nA complex unit formed of many, often diverse, parts subject to a common plan, or serving a common purpose\n\nWhat is an Operating System?\n\nA complex program that acts an intermediary, or interface, between users and hardware\nAn OS turns awful hardware interfaces into clean, and clear abstractions for programs and users\n\nGoals:\n\nExecuting user programs and making solving user problems easier\nMaking a computer convenient to use\nUse hardware efficiently\n\nRoles an OS plays:\n\nReferee: Manages shared resources (and makes sure they’re used appropriately)\n\nShared Resources: Memory, CPU, disk, networks\n\nIllusionist: Every running program (process) has infinite memory and exclusive access to the CPU\nGlue: Offers a set of common services/applications independent of hardware on a system",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "01 · OS Overview"
+    ]
+  },
+  {
+    "objectID": "01-OS-Overview.html#os-services",
+    "href": "01-OS-Overview.html#os-services",
+    "title": "01 · OS Overview",
+    "section": "OS Services",
+    "text": "OS Services\n\nProgram development\nProgram execution\nAccess to input/output (I/O)\nControlled access to files\nSystem access\nError detection and response\nAccounting",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "01 · OS Overview"
+    ]
+  },
+  {
+    "objectID": "01-OS-Overview.html#reasons-an-os-may-evolve",
+    "href": "01-OS-Overview.html#reasons-an-os-may-evolve",
+    "title": "01 · OS Overview",
+    "section": "Reasons an OS May Evolve",
+    "text": "Reasons an OS May Evolve\n\nNew types of hardware\nHardware upgrades\nNew features\nFixes",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "01 · OS Overview"
+    ]
+  },
+  {
+    "objectID": "01-OS-Overview.html#history-of-operating-systems",
+    "href": "01-OS-Overview.html#history-of-operating-systems",
+    "title": "01 · OS Overview",
+    "section": "History of Operating Systems",
+    "text": "History of Operating Systems\n\nOperating Systems have gone through four major phases:\n\nSerial Processing\nSimple Batch Systems\nMultiprogrammed batch systems\nTime sharing systems\n\nSerial Processing (1945-1955)\n\nEarliest Computers:\n\nNo OS\n\nProgrammers interacted directly with computer hardware\n\nUsers had to interact with computers in “series”\nProblems:\n\nScheduling\nMost installations used a hard-copy sign-up sheet to reserve computer time\nTimes could run long or short, resulted in wasted computer time\nSet-up time: A considerable amount of time was just the time required to set up a “program” to run\n\n\n\nSimple Batch Systems (1955-1965):\n\nEarly computers were expensive, so it was important to maximize processor utilization\nThe central idea behind the simple batch processing system scheme is the use of a piece of software called a monitor\nMonitor:\n\nThe user no longer directly interacts with the processor\nJob is submitted to the computer operator who batches them together and places them on an input device\nProgram brnaches back to the monitor when finished\n\nOverhead:\n\nProcessor time alternates between execution of user programs and execution of the monitor\nSacrifices:\n\nA portion of main memory is now given to the monitor\nSome processor time is used by the monitor\n\n\n\nMultiprogrammed batch systems (1965-1980):\n\nIssues with prior systems:\n\nI/O devices are slow compared to a processor\nProcessor is often left idle, even with automatic job sequencing\nExample:\n\nRead one record from a file: 15 us\nExecute 100 instructions: 1 us\nWrite out records to a file: 15 us\nPercent CPU utilization: 1/31 = .032 or 3.2%\n\n\nUniprogramming: The processor spends a certain amount of time until it reaches and I/O instruction; it must wait until that I/O instruction concludes before continuing\nMultiprogramming:\n\nThere must be enough memory to hold the OS (our monitor) and one user program\nWhen one job is waiting for I/O, the processor can switch to the other job, which is likely not waiting for I/O\nAllows for multitasking\nMemory can be expanded to hold some number of programs that there is time to switch between\nGoal: Maximize processor utilization\n\nTime Sharing Systems (up to current):\n\nCan be used to handle many interactive jobs\nProcessor time can be shared across users\nMultiple users can simultaneously access the system through terminals, with the OS interleaving the execution of each user program in short bursts\nGoal: Minimize user response time",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "01 · OS Overview"
+    ]
+  },
+  {
+    "objectID": "01-OS-Overview.html#processes",
+    "href": "01-OS-Overview.html#processes",
+    "title": "01 · OS Overview",
+    "section": "Processes",
+    "text": "Processes\n\nFundamental to the structure of operating systems\n\nIt can be defined as:\n\nA program in execution\nAn instance of a running program\nThe entitiy that can be assigned to, and executed on a processor\nA unit of activity charactarized by a single thread of execution, a current state, and an associate set of system resources\n\nComponents of a process (“process state”):\n\nAn executable program\nThe associated data needed by the program (variables, workspace, buffers)\nThe execution context\n\nThe internal data by which the OS is able to supervicse and control the process\nIncludes the contents of various process registers\nIncludes information such as the priority of a process, and whether or not the process is waiting for execution, or waiting on I/O\n\n\nProcess Management:\n\nThe entire process state at any instant is contained in its “context”\nIf there are any new features designed, they can be incorporated into the OS by expanding its context",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "01 · OS Overview"
+    ]
+  },
+  {
+    "objectID": "01-OS-Overview.html#memory",
+    "href": "01-OS-Overview.html#memory",
+    "title": "01 · OS Overview",
+    "section": "Memory",
+    "text": "Memory\n\nThe Memory Hierarchy\n\nThere are three main constraints to memory:\n\nQuantity\nSpeed\nCost\n\nIf you have capacity, applications will likely be developed to use it\nMemory must be able to keep up with the processor\nCost of memory must be reasonable in relationsip to other components\nTradeoffs:\n\nFaster Access Time: Higher cost per bit, generally smaller capacity\nGreater Capacity: Lower cost per bit, generally slower\n\nHierarchy Structure:\n\nInboard memory: Registers, Cache, Main Memory\nOutboard memory: SSDs, Hard Drives/Magnetic Discs, CD/DVD\nOff-line Storage: Magnetic Tapes\nGoing down the hierarchy:\n\nDecrease cost per bit\nIncrease capacity\nIncrease access time\nDecrease frequency of access to the memory by the processor\n\n\nPrincipal of Locality:\n\nMemory references by the processor tend to cluster\nData is organized so that the percentage of access to each successively lower level is substantially less than that of the level above\nCan be applied across more than two levels of memory\n\n\nCache memory\n\nInvisible to the OS, all hardware\nAll hardware interactions\nProcessor must access memory for every instruction cycle (at least once)\n\nExecution is limited by memory cycle type as a result of this\n\nCache memory exploits the principal of locality by introducing small, fast memory, which is quicker to access and read than RAM\nDesign\n\nCache Size: Small caches have significant positive impact on performance since they keep important instructions closer to the CPU\nBlock Size: Size of a unit of data exchanged between main memory and the cache\nMapping Functions: Determine where in cache a block of information will occupy\nReplacement Algorithms: Chooses which block to replace when a new block is loaded into the cache\n\nLeast Recently Used (LRU) Algorithm: An effective strategy to replace a block that has been in the cache the longest with no references to it\n\nAll algorithms have to have hardware mechanisms to identify the LRU block, this is why more advanced algorithms are harder, or impractical to implement\n\n\nWrite policies\nNumber of levels: The more levels of cache there are, the slower access to main memory is, but low levels of small cache sizes still increase performance\n\n\nResponsibilities of the OS\n\nMemory Management:\n\nProcess Isolation\nAutomatic allocation and management\nSupport for modular programming\nProtection and access control\nLong term storage\n\nVirtual Memory:\n\nA facility that allows programs to address memory from a logical point of view without regard to physical main memory\nProtects systems from runaway programs by tricking a process into believing it has exclusive access to physical memory\nConcieved to meet the requirement of having multiple user jobs reside in main memory concurrently\n\nInformation protection and security\n\nMain issues (CIA Triad):\n\nConfidentiality: Only authenticated users can access information\nIntegrity: Only authorized users should be able to modify information\nAccessability/Availablity: Authenticated users should be able to access information reliably\n\nThe nature of any threat to an orgainzation varies based on the organization’s circumstances (The threats at one place are different than at another)\nIn most threats, the problem involves controlling access to computer systems and the information stored on them\n\nScheduling and resource management\n\nResource management is the most major of the OS’s responsibilities\nResource allocation policies must consider:\n\nDifferential Responsiveness\nFairness\nEfficiency\n\n\nFault Tolerance:\n\nRefers to the ability of a system or component to continue normal operation despite the presence of hardware or software faults\n\nTypically involves some degree of redundancy\nIntended to increase the reliability of a system\n\nTypically comes with a cost, either in financial terms or performance\n\nThe extent of adoption of fault tolerance measures must be determined by how critical a resource is\n\nBasic Measures:\n\nReliability:\n\nR(t)\nThe probability of a system’s correct operation up to a time t, given that the system was operating correctly at time t = 0\n\nMean time to failure\n\nThe length of time that a component from a system is expected to last before failure (also called the lifetime of a product)\nMTTF\n\nMean time to repair\n\nThe average time it takes to repair or replace a faulty element\nMTTR\n\nAvailability\n\nDefined as the fraction of time that a system is availble to service a user’s requests\n\n\n\nFaults:\n\nDefined by the IEEE Standards Dictionary as an erroneous hardware or software state as a result of the following:\n\nComponent failure\nOperator error\nPhysical interference from the environment\nDesign error\nProgram error\nData structure errors\n\nThe standards also provide that a fault manifests itself as:\n\nA defect in hardware device or components\nAn incorrect, step, process, or data definition in a computer program\n\n\nFaults can be:\n\nPermanent:\n\nFaults that, after it occurs, are always present\nFaults that persist until the faulty component is replaced or repaired\n\nTemporary\n\nNot present at all times, for all operating conditions\n\nTransient - Only occurs once\nIntermittent - Occurs at multiple, unpredictable times\n\n\n\nMethods of redundancy:\n\nSpacial (Physical) redundancy: Involves the use of mulitple components that either perform the same function simultaneously or are configured such that one is available as a backup in case of primary component failure\nTemporal redundancy: Involves repeating a function or operation when an error is detected. These work well for tempoary faults, but not permanent\nInformation redundancy: Provides fault tolerance by replicating or coding data in such a way that bit errors can be detected and corrected\n\nCould be data backups, or RAID based systems\n\n\nOS Mechanisms for Fault Tolerance:\n\nSeveral techniques can be incorporated into OS software to support fault tolerance:\n\nProcess isolation: Prevents processes from interfering with one another\nConcurrency controls: Ensure orderly access to shared resources\nVirtual machines: Isolate software environments to contain faults\nCheckpoints and rollbacks: Save system state so it can be restored after a fault",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "01 · OS Overview"
+    ]
+  },
+  {
+    "objectID": "01-OS-Overview.html#multicore-os-considerations",
+    "href": "01-OS-Overview.html#multicore-os-considerations",
+    "title": "01 · OS Overview",
+    "section": "Multicore OS Considerations",
+    "text": "Multicore OS Considerations\n\nThe design challenge for a many-core multicore system is to efficiently harness the multicore processing power and intelligently manage the substantial on-chip resources\nPotential for parallelism exists at three levels:\n\nInstruction-level parallelism: Within a single instruction stream\nThread-level parallelism: Across multiple threads within a process\nProcess-level parallelism: Across independent processes",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "01 · OS Overview"
+    ]
+  },
+  {
+    "objectID": "02-Processes.html",
+    "href": "02-Processes.html",
+    "title": "02 · Processes",
+    "section": "",
+    "text": "A program in execution\n\nA program in passive\nA process is active",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "02 · Processes"
+    ]
+  },
+  {
+    "objectID": "02-Processes.html#processes",
+    "href": "02-Processes.html#processes",
+    "title": "02 · Processes",
+    "section": "",
+    "text": "A program in execution\n\nA program in passive\nA process is active",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "02 · Processes"
+    ]
+  },
+  {
+    "objectID": "02-Processes.html#the-process-model",
+    "href": "02-Processes.html#the-process-model",
+    "title": "02 · Processes",
+    "section": "The Process Model",
+    "text": "The Process Model\n\nAll runnable software on a computer, sometimes including the OS, is organized into a number of processes\nConceptually, each process has its own CPU, but in reality, a physical CPU is swapping between processes (qucikly)\nProcess Elements:\n\nProgram Code\n\nText section: The executable code\n\nData associated with that program\n\nStack section: LIFO data structure, a part of memory that is dynamically allocated during program runtime. Contains instructions, used for invoking functions, contains function parameters, return addresses, and local variables\nHeap section: Dynamically allocated memory region used for data that needs to persist beyond the scope of a single function. Memory is allocated and freed explicitly by the program (e.g., via malloc/free or new/delete)\nData section: Global information for the process\n\nWhile the process is in progress, it can be charactarized by the following:\n\nIdentifiers (PID)\nState\nPriority\nProgram Counter Value\nMemory\nContext\nI/O status information\nAccounting information\n\n\nProcess Control Structures:\n\nThe OS requires the following to control and manage processes\n\nWhere the process is in memory\nAttributes of the process necessary to manage a process, also known as the process control block (PCB)\n\nThe Process Control Block\n\nContains all process elements\nThe PCB allows a process to be interuppted and resume running at a later time as if the interruption never occurred\nKey tool that allows support for multiple processes, the most important data structure in the OS\n\nParts of the PCB:\n\nProcess Identification:\n\nGenerally Numeric identifiers\nPID: Process Identification Number\nPPID: Parent Processes Identification Number\nUser Identifier\n\nProcess State\n\nA process can be in any of the five following state:\n\nNew/Initialized: A process is being created\nRunning: Instructions are being executed\nWait/Blocked/Stopped: The process is waiting for some event\nReady: The process is waiting to be assigned to the processor\nTerminated: The process has finished execution\n\n\nExtra information:\n\nUser Visible Registers: A register that may be referenced by means of machine language that the processor executes while in user mode. Typical systems have 8 to 32 registers, though some have over 100\nControl and Status Registers\n\nProgram Counter: Contains the address of the next instruction\nCondition Codes: Results of the most recent arithmetic or logical operation (status flags: Sign, carry, zero, overflow, etc)\nStatus Information: Includes interrupt enabled/disabled flags, execution mode\n\nStack Pointer: Each process has one or more LIFO stacks associated with it. A stack is used to store paramenters, calling addresses for procedure, and system calls. The Stack Pointer points to the top of this stack.\n\nProcess Control Information\n\nScheduling Information (sometimes paired with the process state)\n\nProcess state, if paired\nPriority: One or more fields that define the importance or execution order in which processes should be taken. Sometimes several values are required such as default, current, highest-allowable\nScheduling Values: Depends on the scheudling algorithm of the OS, examples include amount of time a process has been waiting, or the amount of time since the process’s last execution\nEvents: Identity of the event the process is awaiting before it can continue\n\n\nData Structure Information\n\nInformation involving how the current process fits into the context of all other running programs\n\nInterprocess Communication:\n\nVarious flags, signals, or messages that may be associated with communication between two independent processes. Some or all of that information is maintained by the PCB.\n\nPrivileges\n\nProcesses are granted privileges in terms of memory that may be accessed and the types of instuctions that may be executed. In addition, privileges may apply to the use of certain system utilites and services.\n\nResource management and utilization information\n\nWhy is the PCB considered the most important data structure of the OS?\n\nUsed to define the state of the OS\nContains all the information about the process an OS may need\n\nAll data is kept in one location, easier to access.\n\n\nWhat is the problem with PCBs?\n\nA bug in a single routine could damage all PCBs, which would destroy the system’s ability to manage affected processes. It is a single point of failure.\n\nProcess Image:\n\nEach process has associated with it a number of attributes that are used by the OS for process control\nThe collection of program, data, stack, and attributes is referred to as the process image, or context of a process\nContents of the process image:\n\nUser Data: The modifiable part of User Space. That includes program data some user stack area, and programs that can be modified\nUser Program: The program to be executed\nStack: Each process has one or more LIFO stacks associated with it. A Stack is used to store parameters and calling address for procedures and system calls\nAttributes: PCB\n\n\n\nProcess Execution/Trace\n\nProcess Trace: The behavior of an individual process by listing the sequence of instructions that execute for that process\nThe behavior of the processor can be charactarized by showing how the trace of the various processes are interleaving\nDispatcher: A small program that switches the processor from one process to another\nSuspended Processes:\n\nSwapping:\n\nInvolves moving part, or all, of a process from main memory to disk\nWhen none of the process is in the Ready state, the OS swaps one of the blocked processes out on to disk in a suspended queue\n\nThis is a queue of existing processes that have been temporarily kicked out of main memory or suspended\nThe OS then brings in another process from the suspended queue or it honors a new-process request\nSwapping is an I/O operation, which has potential for making speed problems even worse. Since Disk I/O is much faster than other types of I/O (think user input), swapping usually increases performance\n\n\nCharactaristics of a Suspended Process:\n\nThe process is not immediately available for execution\nProcess was placed in a suspended state by an agent of some sort: the process itself, a parent proess, or the OS\nThe process may or may not be waiting on some event\nThe process may not be removed from this state until the agent that placed it there explicitly orders its removal\n\nReasons for suspension:\n\nSwapping: The OS needs to release memory to bring in a process that is Ready\nOS reasons: The OS may suspend a background or utility process, or other processes that are suspected to cause problems\nInteractive User Requests: A user may wish to suspend the execution of a process for the purposes of debugging or in connection with use of resources\nTiming\nParent process request\n\n\n\nImplementation of the Process Model:\n\nTo implement the process model, the OS maintains several tables\nThe process table, with one entry per process (pcb) has several elements\nProcess tables:\n\nThese are the key to process management\nThere must be some reference to memory, I/O, and files, directly or indirectly\nThe tables themsevles are accessable to the OS, and are therefore subject to memory management\n\nMemory tables\n\nUsed to keep track of both main (real) and secondary (virtual) memory\nProcesses are maintained on secondary memory using some sort of virtual memory swapping mechanism\nIncludes:\n\nAllocation of main and secondary memory to a process\nInformation related to memory management (mostly in regards to virtual)\nProtection attributes of blocks of main or virtual memory\n\n\nI/O tables\n\nUsed by the OS to manage the I/O devices and channels of the computer system\nAt any given time, I/O devices may be available to a particular process\nIf I/O is in operation, the OS needs to know:\n\nThe status of the operation\nThe location in main memory being used as the source or destination of the I/O transfer\n\n\nFile tables\n\nContains:\n\nExistence of files\nLocation on storage devices\nCurrent status\nOther minor attributes\n\nInformation may be maintained and used by a file management system, in this case, the OS has little or no knowledge of files\n\n\nProcess Creation:\n\nProcesses are created through four main events:\n\nSystem Initalization: Turning the system on\nExecution of a process-creation system call by a running process\nA user request to create a new process\nInitalized by a batch job\n\nBatch job: system scheduled events (generally)\n\n\nSteps taken to create a process\n\nAfter the OS decides to create a new process:\n\n\nAssign a unique process identifier to the new process\nAllocate space for the new process\nInitialize the PCB\nSets appropriate linkages to other processes\nCreates or expands related data structures\n\n\nProcess Termination:\n\n\n\nVoluntary\nInvoluntary\n\n\n\n\nNormal Exit\nFatal Error\n\n\nError Exit\nKilled by another process\n\n\n\n\nReasons for termination:\n\nNormal Completion: The process executes an OS service call to indicate that has completed running\nTime Limit Exceeded: The process has run longer than the specified total time limit\nTime Overrun: The process has waited longer than a specified amount of time for a certain event to occur\nMemory Unavailable: The process requires more memory than the system can provide\nBounds Violation: The process tries to access a memory location that it is not allowed to access\nProtection Errors: The process attempts to use a resource such as a file that it is not allowed to use, or tries to use it in an improper fashion\nArithmetic Errors: The process tries to perform a prohibited computation such as division by zero\nData Misuse\nParent Termination\nParent Request\nI/O Failure\nInvalid Instructions: The process attempts to use an instruction reserved for the OS\n\n\nInterrupts: Pause or ending execution of a running program (stopping current execution for some prioritized event)\nMechanisms for interrupting program execution:\n\nInterrupt: Caused by some function external to the current instruction. Used to react to untimed or asychronus events\nTrap: Associated with the execution of the current instruction. Used for handling errors or exceptions\nSupervisor Call: Explicitly requested function with no relation to the current instruction. Usually used to call OS functions.\n\nKernel:\n\nThe “brain of the OS”\nHandles:\nProcess Management\n\nCreation and Termination\nScheduling and Dispatching\nProcess Switching\nManages PCBs\nProcess synchronization and support for interprocess communication\n\nMemory Management\n\nSwapping\nAllocation of address space to process\nPage/segment management\n\nI/O Management\n\nBuffer management\nAllocation of I/O channels and buffers to processes\n\nSupport Functions:\n\nInterrupt handling\nAccounting Information\nMonitoring\n\nMode Switching\n\nIf an interrupt is pending the processor:\n\nSets the program counter (PC) to the memory address where the interrupt handling program starts\nSwitch the user mode to kernel mode so that the interrupt processing code may include privileged instructions\n\nIf there are no interrupts pending: Proceeds to the fetch stage and takes the next instruction of the current process\n\nContext Switch steps:\n\nSave the context of the current process\nUpdate the PCB of the currently Running process\nMove the PCB of this process to the appropriate queue (Ready or Blocked)\nSelect the next process from the Ready queue\nUpdate the PCB of the selected process\nUpdate the memory management data structures\nRestore the context of the processor to that which existed at the time the selected process was last switched out\n\nProcess Creation in Unix:\n\nProcess creation is by means of the fork() kernel system call\nWhen a process issues a fork() request, the OS does the following:\n\nAllocate a slot in the process table for the new process\nAssign a unique PID to the child (new) process\nMake a copy of the process image of the parent, with the exception of shared memory\nIncrement counters for any files owned by the parent, to reflect that an additional process now also owns those files\nAssign the child process to the Ready state\nReturn the ID number of the child to the parent process, and a 0 value to the child process\n\n\nFollowing Creation:\n\nAfter creating the process, the kernel will do one of three things as part of the dispatcher routine\n\nStay in the parent process. Control returns to user mode at the point the fork call of the parent.\nTransfer to the child process. The child process begins executing at the same point in the code as the parent, namely at the return from the fork call\nTransfer control to another process. Both parent and child are left in the Ready state.",
+    "crumbs": [
+      "Home",
+      "Lectures",
+      "02 · Processes"
+    ]
+  }
+]
