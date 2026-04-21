@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>01 · OS Overview – CSC 345 — Operating Systems</title>
+<title>01 · OS Overview – CSC 345 — Operating Systems (Enhanced)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -79,7 +79,7 @@ ul.task-list li input[type="checkbox"] {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">CSC 345 — Operating Systems</span>
+    <span class="navbar-title">CSC 345 — Operating Systems (Enhanced)</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -179,7 +179,7 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">CSC 345 — Operating Systems Notes</span></a>
+ <span class="menu-text">CSC 345 — Operating Systems (Enhanced)</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -269,13 +269,14 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#a-computer-system" id="toc-a-computer-system" class="nav-link active" data-scroll-target="#a-computer-system">A Computer System</a></li>
+  <li><a href="#what-just-happened" id="toc-what-just-happened" class="nav-link active" data-scroll-target="#what-just-happened">What Just Happened?</a></li>
+  <li><a href="#what-an-operating-system-actually-is" id="toc-what-an-operating-system-actually-is" class="nav-link" data-scroll-target="#what-an-operating-system-actually-is">What an Operating System Actually Is</a></li>
   <li><a href="#os-services" id="toc-os-services" class="nav-link" data-scroll-target="#os-services">OS Services</a></li>
-  <li><a href="#reasons-an-os-may-evolve" id="toc-reasons-an-os-may-evolve" class="nav-link" data-scroll-target="#reasons-an-os-may-evolve">Reasons an OS May Evolve</a></li>
-  <li><a href="#history-of-operating-systems" id="toc-history-of-operating-systems" class="nav-link" data-scroll-target="#history-of-operating-systems">History of Operating Systems</a></li>
-  <li><a href="#processes" id="toc-processes" class="nav-link" data-scroll-target="#processes">Processes</a></li>
-  <li><a href="#memory" id="toc-memory" class="nav-link" data-scroll-target="#memory">Memory</a></li>
-  <li><a href="#multicore-os-considerations" id="toc-multicore-os-considerations" class="nav-link" data-scroll-target="#multicore-os-considerations">Multicore OS Considerations</a></li>
+  <li><a href="#a-brief-history-of-how-we-got-here" id="toc-a-brief-history-of-how-we-got-here" class="nav-link" data-scroll-target="#a-brief-history-of-how-we-got-here">A Brief History of How We Got Here</a></li>
+  <li><a href="#processes-and-memory-a-preview" id="toc-processes-and-memory-a-preview" class="nav-link" data-scroll-target="#processes-and-memory-a-preview">Processes and Memory: A Preview</a></li>
+  <li><a href="#the-memory-hierarchy" id="toc-the-memory-hierarchy" class="nav-link" data-scroll-target="#the-memory-hierarchy">The Memory Hierarchy</a></li>
+  <li><a href="#security-fault-tolerance-and-scheduling" id="toc-security-fault-tolerance-and-scheduling" class="nav-link" data-scroll-target="#security-fault-tolerance-and-scheduling">Security, Fault Tolerance, and Scheduling</a></li>
+  <li><a href="#multicore-considerations" id="toc-multicore-considerations" class="nav-link" data-scroll-target="#multicore-considerations">Multicore Considerations</a></li>
   </ul>
 </nav>
     </div>
@@ -301,379 +302,193 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="a-computer-system" class="level2">
-<h2 class="anchored" data-anchor-id="a-computer-system">A Computer System</h2>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Learning Objectives
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>By the end of this lecture, you should be able to:</p>
 <ul>
-<li>The computer system can be divided into four main parts:
-<ul>
-<li>Hardware: Provide basic computing resources, and does basic calculation at request</li>
-<li>Operating System: Controls and coordinates use of hardware among various applications and users</li>
-<li>Application Programs: Defines ways in which the system resources are used to solve computing problems of the user
-<ul>
-<li>Examples: word processors, compilers, browsers, database systems and so on</li>
-</ul></li>
-<li>Users: Humans, machines, or other computers, that can control another computer</li>
-</ul></li>
-<li>What is a system?
-<ul>
-<li>A complex unit formed of many, often diverse, parts subject to a common plan, or serving a common purpose</li>
-</ul></li>
-<li>What is an Operating System?
-<ul>
-<li>A complex program that acts an intermediary, or interface, between users and hardware</li>
-<li>An OS turns awful hardware interfaces into clean, and clear abstractions for programs and users</li>
-</ul></li>
-<li>Goals:
-<ul>
-<li>Executing user programs and making solving user problems easier</li>
-<li>Making a computer convenient to use</li>
-<li>Use hardware efficiently</li>
-</ul></li>
-<li>Roles an OS plays:
-<ul>
-<li>Referee: Manages shared resources (and makes sure they’re used appropriately)
-<ul>
-<li>Shared Resources: Memory, CPU, disk, networks</li>
-</ul></li>
-<li>Illusionist: Every running program (process) has infinite memory and exclusive access to the CPU</li>
-<li>Glue: Offers a set of common services/applications independent of hardware on a system</li>
-</ul></li>
+<li>Explain what an OS does using the three-role framework (Referee, Illusionist, Glue)</li>
+<li>Describe how multiprogramming improved CPU utilization over earlier batch systems</li>
+<li>Place the memory hierarchy levels in order and explain the access/capacity tradeoff at each level</li>
+<li>Define the process and virtual memory abstractions at a conceptual level</li>
 </ul>
+</div>
+</div>
+<section id="what-just-happened" class="level2">
+<h2 class="anchored" data-anchor-id="what-just-happened">What Just Happened?</h2>
+<p>Double-click an app. The window appears. Simple.</p>
+<p>Except it isn’t. In the fraction of a second between your click and that window, your operating system allocated memory, loaded executable code from disk, created a process, set up a virtual address space, wired up I/O channels, and handed off execution — all while continuing to run your music player, your browser, your clock, and everything else. None of that required any thought on your part.</p>
+<p>This course is about understanding those thousand invisible things. Once you do, a lot of computing behavior that seemed arbitrary — why does your computer slow down with too many tabs open? why does your program crash with a segfault? why does adding more RAM help? — starts making sense.</p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opening Discussion
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Before moving forward: what do you think the OS is actually responsible for? What would break if it didn’t exist? Take a few guesses from the class before continuing.</p>
+</div>
+</div>
+</section>
+<section id="what-an-operating-system-actually-is" class="level2">
+<h2 class="anchored" data-anchor-id="what-an-operating-system-actually-is">What an Operating System Actually Is</h2>
+<p>An operating system sits between hardware and the applications running on top of it. The hardware provides raw computational power. Applications want to use that power. The OS is the intermediary that makes the negotiation safe, efficient, and transparent.</p>
+<p>It plays three distinct roles simultaneously:</p>
+<p><strong>Referee.</strong> Multiple programs run at the same time, and they all want the same resources: CPU time, memory, disk access, network bandwidth. Left to themselves, programs would constantly step on each other. The OS arbitrates access and enforces isolation — your text editor cannot read Chrome’s memory, and Chrome cannot starve your music player of CPU time.</p>
+<p><strong>Illusionist.</strong> Every running program believes it has exclusive access to the CPU and to a large, contiguous block of memory. Neither is true. The OS creates this illusion through scheduling and virtual memory, covered in depth in later lectures. Programmers can write code as if they own the machine, while the OS quietly ensures dozens of programs share it.</p>
+<p><strong>Glue.</strong> Hardware is diverse and messy. Your program shouldn’t need to know whether it’s writing to an NVMe SSD or a spinning hard drive, or whether its display is an OLED or an LCD. The OS provides a consistent set of abstractions — files, sockets, processes — that work regardless of what hardware is underneath.</p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Class Activity: Name That Role
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>For each of the following OS behaviors, identify which role it serves — Referee, Illusionist, or Glue. Discuss briefly:</p>
+<ol type="1">
+<li>Preventing Process A from reading Process B’s memory</li>
+<li>Making <code>printf()</code> work on both Linux and macOS without code changes</li>
+<li>Making a program think it has 8 GB of RAM on a machine with only 4 GB installed</li>
+<li>Stopping a runaway process from using 100% of the CPU indefinitely</li>
+</ol>
+<p><em>(These can overlap — some behaviors serve more than one role.)</em></p>
+</div>
+</div>
 </section>
 <section id="os-services" class="level2">
 <h2 class="anchored" data-anchor-id="os-services">OS Services</h2>
-<ul>
-<li>Program development</li>
-<li>Program execution</li>
-<li>Access to input/output (I/O)</li>
-<li>Controlled access to files</li>
-<li>System access</li>
-<li>Error detection and response</li>
-<li>Accounting</li>
-</ul>
+<p>The OS provides services that applications depend on: an environment for program development and execution, I/O access, controlled access to the filesystem, system-wide access control, error detection, and resource accounting. These aren’t glamorous, but remove any one and software development gets dramatically harder. A single <code>write()</code> call, for instance, involves the OS arbitrating disk access, managing a buffer cache, handling errors, updating filesystem metadata, and ensuring other processes don’t clobber the same file simultaneously — all hidden behind a one-line API.</p>
 </section>
-<section id="reasons-an-os-may-evolve" class="level2">
-<h2 class="anchored" data-anchor-id="reasons-an-os-may-evolve">Reasons an OS May Evolve</h2>
-<ul>
-<li>New types of hardware</li>
-<li>Hardware upgrades</li>
-<li>New features</li>
-<li>Fixes</li>
-</ul>
+<section id="a-brief-history-of-how-we-got-here" class="level2">
+<h2 class="anchored" data-anchor-id="a-brief-history-of-how-we-got-here">A Brief History of How We Got Here</h2>
+<p>Understanding the history makes the OS’s design decisions less arbitrary.</p>
+<p><strong>Serial Processing (1945–1955).</strong> No OS. Programmers reserved machine time on a sign-up sheet, walked in, set up their program physically, ran it, and collected output. Setup inefficiency and scheduling waste were enormous.</p>
+<p><strong>Simple Batch Systems (1955–1965).</strong> A <em>monitor</em> automated the transition between jobs. Programs were batched on tape and run sequentially without operator intervention. Better utilization, but the CPU still sat idle waiting for I/O.</p>
+<p><strong>Multiprogramming (1965–1980).</strong> The key insight: when one job waits for I/O, run a different job. Keep several programs in memory at once. Consider the numbers: if reading a file takes 15µs, executing 100 instructions takes 1µs, and writing takes 15µs, a single job keeps the CPU busy only about 3% of the time. With multiple jobs overlapping their I/O, CPU utilization climbs dramatically.</p>
+<p><strong>Time-Sharing (1970s–present).</strong> Multiprogramming maximized batch throughput, but interactive users needed fast <em>response time</em>. Time-sharing gave each user a short CPU slice in rapid rotation, creating the illusion of a dedicated machine. This is how your OS still works today.</p>
+<div class="callout callout-style-default callout-important no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Key Calculation: Multiprogramming Utilization
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If a process spends fraction <em>p</em> of its time waiting for I/O, and there are <em>n</em> processes in memory, the probability all are waiting simultaneously is p<sup>n</sup>. CPU utilization ≈ 1 − p<sup>n</sup>.</p>
+<p><strong>Example on the board:</strong> 80% I/O wait (p = 0.8):</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Processes (n)</th>
+<th>CPU Utilization</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>20%</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td>49%</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>67%</td>
+</tr>
+<tr class="even">
+<td>10</td>
+<td>89%</td>
+</tr>
+</tbody>
+</table>
+<p>This is why adding more RAM (allowing more processes) directly improves CPU utilization — up to a point.</p>
+</div>
+</div>
 </section>
-<section id="history-of-operating-systems" class="level2">
-<h2 class="anchored" data-anchor-id="history-of-operating-systems">History of Operating Systems</h2>
-<ul>
-<li>Operating Systems have gone through four major phases:
-<ul>
-<li>Serial Processing</li>
-<li>Simple Batch Systems</li>
-<li>Multiprogrammed batch systems</li>
-<li>Time sharing systems</li>
-</ul></li>
-<li>Serial Processing (1945-1955)
-<ul>
-<li>Earliest Computers:
-<ul>
-<li><p>No OS</p>
-<ul>
-<li>Programmers interacted directly with computer hardware</li>
-</ul></li>
-<li><p>Users had to interact with computers in “series”</p></li>
-<li><p>Problems:</p>
-<ul>
-<li>Scheduling</li>
-<li>Most installations used a hard-copy sign-up sheet to reserve computer time</li>
-<li>Times could run long or short, resulted in wasted computer time</li>
-<li>Set-up time: A considerable amount of time was just the time required to set up a “program” to run</li>
-</ul></li>
-</ul></li>
-</ul></li>
-<li>Simple Batch Systems (1955-1965):
-<ul>
-<li>Early computers were expensive, so it was important to maximize processor utilization</li>
-<li>The central idea behind the simple batch processing system scheme is the use of a piece of software called a monitor</li>
-<li>Monitor:
-<ul>
-<li>The user no longer directly interacts with the processor</li>
-<li>Job is submitted to the computer operator who batches them together and places them on an input device</li>
-<li>Program brnaches back to the monitor when finished</li>
-</ul></li>
-<li>Overhead:
-<ul>
-<li>Processor time alternates between execution of user programs and execution of the monitor</li>
-<li>Sacrifices:
-<ul>
-<li>A portion of main memory is now given to the monitor</li>
-<li>Some processor time is used by the monitor</li>
-</ul></li>
-</ul></li>
-</ul></li>
-<li>Multiprogrammed batch systems (1965-1980):
-<ul>
-<li><p>Issues with prior systems:</p>
-<ul>
-<li><p>I/O devices are slow compared to a processor</p></li>
-<li><p>Processor is often left idle, even with automatic job sequencing</p></li>
-<li><p>Example:</p>
-<ul>
-<li><p>Read one record from a file: 15 us</p></li>
-<li><p>Execute 100 instructions: 1 us</p></li>
-<li><p>Write out records to a file: 15 us</p></li>
-<li><p>Percent CPU utilization: 1/31 = .032 or 3.2%</p></li>
-</ul></li>
-</ul></li>
-<li><p>Uniprogramming: The processor spends a certain amount of time until it reaches and I/O instruction; it must wait until that I/O instruction concludes before continuing</p></li>
-<li><p>Multiprogramming:</p>
-<ul>
-<li>There must be enough memory to hold the OS (our monitor) and one user program</li>
-<li>When one job is waiting for I/O, the processor can switch to the other job, which is likely not waiting for I/O</li>
-<li>Allows for multitasking</li>
-<li>Memory can be expanded to hold some number of programs that there is time to switch between</li>
-<li>Goal: Maximize processor utilization</li>
-</ul></li>
-<li><p>Time Sharing Systems (up to current):</p>
-<ul>
-<li>Can be used to handle many interactive jobs</li>
-<li>Processor time can be shared across users</li>
-<li>Multiple users can simultaneously access the system through terminals, with the OS interleaving the execution of each user program in short bursts</li>
-<li>Goal: Minimize user response time</li>
-</ul></li>
-</ul></li>
-</ul>
+<section id="processes-and-memory-a-preview" class="level2">
+<h2 class="anchored" data-anchor-id="processes-and-memory-a-preview">Processes and Memory: A Preview</h2>
+<p>Two abstractions appear throughout this course. A <strong>process</strong> is a running program — not just the code, but the program’s data, stack, heap, and all the OS bookkeeping: what it’s waiting for, what resources it holds, where it is in execution. Every program you launch becomes a process.</p>
+<p><strong>Virtual memory</strong> gives each process the illusion of its own large, private address space. The OS maps the addresses the program sees to wherever data actually lives in physical RAM or on disk. This is how programs whose combined memory needs exceed physical RAM can all run simultaneously.</p>
 </section>
-<section id="processes" class="level2">
-<h2 class="anchored" data-anchor-id="processes">Processes</h2>
-<ul>
-<li>Fundamental to the structure of operating systems
-<ul>
-<li>It can be defined as:
-<ul>
-<li>A program in execution</li>
-<li>An instance of a running program</li>
-<li>The entitiy that can be assigned to, and executed on a processor</li>
-<li>A unit of activity charactarized by a single thread of execution, a current state, and an associate set of system resources</li>
-</ul></li>
-<li>Components of a process (“process state”):
-<ul>
-<li>An executable program</li>
-<li>The associated data needed by the program (variables, workspace, buffers)</li>
-<li>The execution context
-<ul>
-<li>The internal data by which the OS is able to supervicse and control the process</li>
-<li>Includes the contents of various process registers</li>
-<li>Includes information such as the priority of a process, and whether or not the process is waiting for execution, or waiting on I/O</li>
-</ul></li>
-</ul></li>
-<li>Process Management:
-<ul>
-<li>The entire process state at any instant is contained in its “context”</li>
-<li>If there are any new features designed, they can be incorporated into the OS by expanding its context</li>
-</ul></li>
-</ul></li>
-</ul>
+<section id="the-memory-hierarchy" class="level2">
+<h2 class="anchored" data-anchor-id="the-memory-hierarchy">The Memory Hierarchy</h2>
+<p>There is a fundamental and unavoidable tradeoff between speed and capacity that shapes every OS decision about memory:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Level</th>
+<th>Example</th>
+<th>Speed</th>
+<th>Capacity</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Registers</td>
+<td>CPU registers</td>
+<td>~1 cycle</td>
+<td>Bytes</td>
+</tr>
+<tr class="even">
+<td>L1/L2/L3 Cache</td>
+<td>On-chip SRAM</td>
+<td>4–40 cycles</td>
+<td>KB–MB</td>
+</tr>
+<tr class="odd">
+<td>Main Memory</td>
+<td>DRAM</td>
+<td>~100 cycles</td>
+<td>GB</td>
+</tr>
+<tr class="even">
+<td>Secondary Storage</td>
+<td>SSD / HDD</td>
+<td>Millions of cycles</td>
+<td>TB</td>
+</tr>
+</tbody>
+</table>
+<p>The OS cannot change this hierarchy — it’s physics and economics. What it can do is manage movement between levels intelligently. The <strong>principle of locality</strong> makes this tractable: programs tend to access the same memory locations repeatedly in short time windows. Cache exploits this by keeping recently used data close to the CPU. Cache is entirely hardware-managed — the OS doesn’t control it — but understanding it is essential for writing efficient software and understanding system behavior.</p>
 </section>
-<section id="memory" class="level2">
-<h2 class="anchored" data-anchor-id="memory">Memory</h2>
-<ul>
-<li>The Memory Hierarchy
-<ul>
-<li><p>There are three main constraints to memory:</p>
-<ul>
-<li>Quantity</li>
-<li>Speed</li>
-<li>Cost</li>
-</ul></li>
-<li><p>If you have capacity, applications will likely be developed to use it</p></li>
-<li><p>Memory must be able to keep up with the processor</p></li>
-<li><p>Cost of memory must be reasonable in relationsip to other components</p></li>
-<li><p>Tradeoffs:</p>
-<ul>
-<li>Faster Access Time: Higher cost per bit, generally smaller capacity</li>
-<li>Greater Capacity: Lower cost per bit, generally slower</li>
-</ul></li>
-<li><p>Hierarchy Structure:</p>
-<ul>
-<li><p>Inboard memory: Registers, Cache, Main Memory</p></li>
-<li><p>Outboard memory: SSDs, Hard Drives/Magnetic Discs, CD/DVD</p></li>
-<li><p>Off-line Storage: Magnetic Tapes</p></li>
-<li><p>Going down the hierarchy:</p>
-<ul>
-<li>Decrease cost per bit</li>
-<li>Increase capacity</li>
-<li>Increase access time</li>
-<li>Decrease frequency of access to the memory by the processor</li>
-</ul></li>
-</ul></li>
-<li><p>Principal of Locality:</p>
-<ul>
-<li>Memory references by the processor tend to cluster</li>
-<li>Data is organized so that the percentage of access to each successively lower level is substantially less than that of the level above</li>
-<li>Can be applied across more than two levels of memory</li>
-</ul></li>
-</ul></li>
-<li>Cache memory
-<ul>
-<li><p>Invisible to the OS, all hardware</p></li>
-<li><p>All hardware interactions</p></li>
-<li><p>Processor must access memory for every instruction cycle (at least once)</p>
-<ul>
-<li>Execution is limited by memory cycle type as a result of this</li>
-</ul></li>
-<li><p>Cache memory exploits the principal of locality by introducing small, fast memory, which is quicker to access and read than RAM</p></li>
-<li><p>Design</p>
-<ul>
-<li>Cache Size: Small caches have significant positive impact on performance since they keep important instructions closer to the CPU</li>
-<li>Block Size: Size of a unit of data exchanged between main memory and the cache</li>
-<li>Mapping Functions: Determine where in cache a block of information will occupy</li>
-<li>Replacement Algorithms: Chooses which block to replace when a new block is loaded into the cache
-<ul>
-<li>Least Recently Used (LRU) Algorithm: An effective strategy to replace a block that has been in the cache the longest with no references to it
-<ul>
-<li>All algorithms have to have hardware mechanisms to identify the LRU block, this is why more advanced algorithms are harder, or impractical to implement</li>
-</ul></li>
-</ul></li>
-<li>Write policies</li>
-<li>Number of levels: The more levels of cache there are, the slower access to main memory is, but low levels of small cache sizes still increase performance</li>
-</ul></li>
-</ul></li>
-<li>Responsibilities of the OS
-<ul>
-<li>Memory Management:
-<ul>
-<li>Process Isolation</li>
-<li>Automatic allocation and management</li>
-<li>Support for modular programming</li>
-<li>Protection and access control</li>
-<li>Long term storage</li>
-</ul></li>
-<li>Virtual Memory:
-<ul>
-<li>A facility that allows programs to address memory from a logical point of view without regard to physical main memory</li>
-<li>Protects systems from runaway programs by tricking a process into believing it has exclusive access to physical memory</li>
-<li>Concieved to meet the requirement of having multiple user jobs reside in main memory concurrently</li>
-</ul></li>
-<li>Information protection and security
-<ul>
-<li>Main issues (CIA Triad):
-<ul>
-<li>Confidentiality: Only authenticated users can access information</li>
-<li>Integrity: Only authorized users should be able to modify information</li>
-<li>Accessability/Availablity: Authenticated users should be able to access information reliably</li>
-</ul></li>
-<li>The nature of any threat to an orgainzation varies based on the organization’s circumstances (The threats at one place are different than at another)</li>
-<li>In most threats, the problem involves controlling access to computer systems and the information stored on them</li>
-</ul></li>
-<li>Scheduling and resource management
-<ul>
-<li>Resource management is the most major of the OS’s responsibilities</li>
-<li>Resource allocation policies must consider:
-<ul>
-<li>Differential Responsiveness</li>
-<li>Fairness</li>
-<li>Efficiency</li>
-</ul></li>
-</ul></li>
-<li>Fault Tolerance:
-<ul>
-<li>Refers to the ability of a system or component to continue normal operation despite the presence of hardware or software faults
-<ul>
-<li>Typically involves some degree of redundancy</li>
-<li>Intended to increase the reliability of a system
-<ul>
-<li>Typically comes with a cost, either in financial terms or performance</li>
-</ul></li>
-<li>The extent of adoption of fault tolerance measures must be determined by how critical a resource is</li>
-</ul></li>
-<li>Basic Measures:
-<ul>
-<li>Reliability:
-<ul>
-<li>R(t)</li>
-<li>The probability of a system’s correct operation up to a time t, given that the system was operating correctly at time t = 0</li>
-</ul></li>
-<li>Mean time to failure
-<ul>
-<li>The length of time that a component from a system is expected to last before failure (also called the lifetime of a product)</li>
-<li>MTTF</li>
-</ul></li>
-<li>Mean time to repair
-<ul>
-<li>The average time it takes to repair or replace a faulty element</li>
-<li>MTTR</li>
-</ul></li>
-<li>Availability
-<ul>
-<li>Defined as the fraction of time that a system is availble to service a user’s requests</li>
-</ul></li>
-</ul></li>
-</ul></li>
-<li>Faults:
-<ul>
-<li>Defined by the IEEE Standards Dictionary as an erroneous hardware or software state as a result of the following:
-<ul>
-<li>Component failure</li>
-<li>Operator error</li>
-<li>Physical interference from the environment</li>
-<li>Design error</li>
-<li>Program error</li>
-<li>Data structure errors</li>
-</ul></li>
-<li>The standards also provide that a fault manifests itself as:
-<ul>
-<li>A defect in hardware device or components</li>
-<li>An incorrect, step, process, or data definition in a computer program</li>
-</ul></li>
-</ul></li>
-<li>Faults can be:
-<ul>
-<li>Permanent:
-<ul>
-<li>Faults that, after it occurs, are always present</li>
-<li>Faults that persist until the faulty component is replaced or repaired</li>
-</ul></li>
-<li>Temporary
-<ul>
-<li>Not present at all times, for all operating conditions
-<ul>
-<li>Transient - Only occurs once</li>
-<li>Intermittent - Occurs at multiple, unpredictable times</li>
-</ul></li>
-</ul></li>
-</ul></li>
-<li>Methods of redundancy:
-<ul>
-<li>Spacial (Physical) redundancy: Involves the use of mulitple components that either perform the same function simultaneously or are configured such that one is available as a backup in case of primary component failure</li>
-<li>Temporal redundancy: Involves repeating a function or operation when an error is detected. These work well for tempoary faults, but not permanent</li>
-<li>Information redundancy: Provides fault tolerance by replicating or coding data in such a way that bit errors can be detected and corrected
-<ul>
-<li>Could be data backups, or RAID based systems</li>
-</ul></li>
-</ul></li>
-<li>OS Mechanisms for Fault Tolerance:
-<ul>
-<li>Several techniques can be incorporated into OS software to support fault tolerance:
-<ul>
-<li>Process isolation: Prevents processes from interfering with one another</li>
-<li>Concurrency controls: Ensure orderly access to shared resources</li>
-<li>Virtual machines: Isolate software environments to contain faults</li>
-<li>Checkpoints and rollbacks: Save system state so it can be restored after a fault</li>
-</ul></li>
-</ul></li>
-</ul></li>
-</ul>
+<section id="security-fault-tolerance-and-scheduling" class="level2">
+<h2 class="anchored" data-anchor-id="security-fault-tolerance-and-scheduling">Security, Fault Tolerance, and Scheduling</h2>
+<p>The OS handles security through the CIA triad: <strong>Confidentiality</strong> (only authorized users see data), <strong>Integrity</strong> (only authorized users modify data), and <strong>Availability</strong> (authorized users can access data reliably). It enforces all three through access control, process isolation, and virtual memory protection.</p>
+<p><strong>Fault tolerance</strong> keeps the system running when something breaks. Reliability R(t) is the probability of correct operation up to time t. Key metrics: Mean Time to Failure (MTTF) — how often things break — and Mean Time to Repair (MTTR) — how long to fix them. Availability = MTTF / (MTTF + MTTR). Redundancy through backup components, data replication, and checkpointing is how high-availability systems achieve good numbers on these metrics.</p>
+<p><strong>Scheduling and resource management</strong> decide how CPU time, memory, and I/O are allocated. Fairness, efficiency, and responsiveness are all in tension — the right tradeoff depends entirely on the workload. Lectures 4 and 5 are dedicated to this.</p>
 </section>
-<section id="multicore-os-considerations" class="level2">
-<h2 class="anchored" data-anchor-id="multicore-os-considerations">Multicore OS Considerations</h2>
-<ul>
-<li>The design challenge for a many-core multicore system is to efficiently harness the multicore processing power and intelligently manage the substantial on-chip resources</li>
-<li>Potential for parallelism exists at three levels:
-<ul>
-<li>Instruction-level parallelism: Within a single instruction stream</li>
-<li>Thread-level parallelism: Across multiple threads within a process</li>
-<li>Process-level parallelism: Across independent processes</li>
-</ul></li>
-</ul>
+<section id="multicore-considerations" class="level2">
+<h2 class="anchored" data-anchor-id="multicore-considerations">Multicore Considerations</h2>
+<p>Modern hardware has shifted dramatically toward many-core designs. Parallelism now exists at three levels: within a single instruction stream (handled by the CPU itself), across threads within a process, and across independent processes. The OS must assign work to many cores efficiently, synchronize shared data, and balance load — none of which is straightforward. This is one of the central engineering challenges in modern OS design.</p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Discussion Prompt
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A student claims: “Since CPUs are so fast now, the overhead of scheduling and context switching is negligible.” How would you push back on that, using what you just learned about the memory hierarchy?</p>
+</div>
+</div>
 
 
 </section>
@@ -769,7 +584,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp('/' + window.location.host + '/');
+      var filterRegex = new RegExp("https:\/\/nmorgan505\.github\.io\/CSC345Notes\/");
     var isInternal = (href) => {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }

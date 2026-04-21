@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>05 · Uniprocessor Scheduling – CSC 345 — Operating Systems</title>
+<title>05 · Uniprocessor Scheduling – CSC 345 — Operating Systems (Enhanced)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -79,7 +79,7 @@ ul.task-list li input[type="checkbox"] {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">CSC 345 — Operating Systems</span>
+    <span class="navbar-title">CSC 345 — Operating Systems (Enhanced)</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -179,7 +179,7 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">CSC 345 — Operating Systems Notes</span></a>
+ <span class="menu-text">CSC 345 — Operating Systems (Enhanced)</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -269,24 +269,19 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#uniprocessor-scheduling" id="toc-uniprocessor-scheduling" class="nav-link active" data-scroll-target="#uniprocessor-scheduling">Uniprocessor Scheduling</a></li>
-  <li><a href="#types-of-scheduling" id="toc-types-of-scheduling" class="nav-link" data-scroll-target="#types-of-scheduling">Types of Scheduling</a></li>
-  <li><a href="#the-main-goal-of-scheduling" id="toc-the-main-goal-of-scheduling" class="nav-link" data-scroll-target="#the-main-goal-of-scheduling">The Main goal of Scheduling</a></li>
-  <li><a href="#scheduling-criteria-user-oriented" id="toc-scheduling-criteria-user-oriented" class="nav-link" data-scroll-target="#scheduling-criteria-user-oriented">Scheduling Criteria: User Oriented</a></li>
-  <li><a href="#scheduling-criteria-system-oriented" id="toc-scheduling-criteria-system-oriented" class="nav-link" data-scroll-target="#scheduling-criteria-system-oriented">Scheduling Criteria: System Oriented</a></li>
-  <li><a href="#long-term-scheduler" id="toc-long-term-scheduler" class="nav-link" data-scroll-target="#long-term-scheduler">Long Term Scheduler</a></li>
-  <li><a href="#medium-term-scheduler" id="toc-medium-term-scheduler" class="nav-link" data-scroll-target="#medium-term-scheduler">Medium Term Scheduler</a></li>
-  <li><a href="#short-term-scheduler" id="toc-short-term-scheduler" class="nav-link" data-scroll-target="#short-term-scheduler">Short Term Scheduler</a></li>
-  <li><a href="#short-term-scheduler-criteria" id="toc-short-term-scheduler-criteria" class="nav-link" data-scroll-target="#short-term-scheduler-criteria">Short Term Scheduler Criteria</a></li>
-  <li><a href="#process-behavior" id="toc-process-behavior" class="nav-link" data-scroll-target="#process-behavior">Process Behavior</a></li>
-  <li><a href="#cpu-scheduler" id="toc-cpu-scheduler" class="nav-link" data-scroll-target="#cpu-scheduler">CPU Scheduler</a></li>
-  <li><a href="#selection-function" id="toc-selection-function" class="nav-link" data-scroll-target="#selection-function">Selection Function</a></li>
-  <li><a href="#preemptive-scheduling-and-nonpreemptive-scheduling" id="toc-preemptive-scheduling-and-nonpreemptive-scheduling" class="nav-link" data-scroll-target="#preemptive-scheduling-and-nonpreemptive-scheduling">Preemptive Scheduling and Nonpreemptive Scheduling</a></li>
-  <li><a href="#preemptive-scheduling-and-race-conditions" id="toc-preemptive-scheduling-and-race-conditions" class="nav-link" data-scroll-target="#preemptive-scheduling-and-race-conditions">Preemptive Scheduling and Race conditions</a></li>
+  <li><a href="#the-problem-scheduling-solves" id="toc-the-problem-scheduling-solves" class="nav-link active" data-scroll-target="#the-problem-scheduling-solves">The Problem Scheduling Solves</a></li>
+  <li><a href="#three-layers-of-scheduling" id="toc-three-layers-of-scheduling" class="nav-link" data-scroll-target="#three-layers-of-scheduling">Three Layers of Scheduling</a></li>
+  <li><a href="#what-makes-a-good-scheduler" id="toc-what-makes-a-good-scheduler" class="nav-link" data-scroll-target="#what-makes-a-good-scheduler">What Makes a Good Scheduler?</a></li>
+  <li><a href="#preemptive-vs.-nonpreemptive-scheduling" id="toc-preemptive-vs.-nonpreemptive-scheduling" class="nav-link" data-scroll-target="#preemptive-vs.-nonpreemptive-scheduling">Preemptive vs.&nbsp;Nonpreemptive Scheduling</a></li>
+  <li><a href="#scheduling-algorithms" id="toc-scheduling-algorithms" class="nav-link" data-scroll-target="#scheduling-algorithms">Scheduling Algorithms</a>
+  <ul class="collapse">
+  <li><a href="#first-come-first-served-fcfs" id="toc-first-come-first-served-fcfs" class="nav-link" data-scroll-target="#first-come-first-served-fcfs">First-Come, First-Served (FCFS)</a></li>
+  <li><a href="#shortest-job-first-sjf" id="toc-shortest-job-first-sjf" class="nav-link" data-scroll-target="#shortest-job-first-sjf">Shortest Job First (SJF)</a></li>
+  <li><a href="#shortest-remaining-time-first-srtf" id="toc-shortest-remaining-time-first-srtf" class="nav-link" data-scroll-target="#shortest-remaining-time-first-srtf">Shortest Remaining Time First (SRTF)</a></li>
+  <li><a href="#round-robin-rr" id="toc-round-robin-rr" class="nav-link" data-scroll-target="#round-robin-rr">Round Robin (RR)</a></li>
+  <li><a href="#priority-scheduling" id="toc-priority-scheduling" class="nav-link" data-scroll-target="#priority-scheduling">Priority Scheduling</a></li>
+  </ul></li>
   <li><a href="#dispatcher-latency" id="toc-dispatcher-latency" class="nav-link" data-scroll-target="#dispatcher-latency">Dispatcher Latency</a></li>
-  <li><a href="#scheduling-algorithm-goals-to-be-filled-in-later" id="toc-scheduling-algorithm-goals-to-be-filled-in-later" class="nav-link" data-scroll-target="#scheduling-algorithm-goals-to-be-filled-in-later">Scheduling Algorithm Goals: To be filled in later</a></li>
-  <li><a href="#scheduling-metrics" id="toc-scheduling-metrics" class="nav-link" data-scroll-target="#scheduling-metrics">Scheduling Metrics</a></li>
-  <li><a href="#scheduling-algorithms" id="toc-scheduling-algorithms" class="nav-link" data-scroll-target="#scheduling-algorithms">Scheduling Algorithms</a></li>
   </ul>
 </nav>
     </div>
@@ -312,256 +307,207 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="uniprocessor-scheduling" class="level2">
-<h2 class="anchored" data-anchor-id="uniprocessor-scheduling">Uniprocessor Scheduling</h2>
-</section>
-<section id="types-of-scheduling" class="level2">
-<h2 class="anchored" data-anchor-id="types-of-scheduling">Types of Scheduling</h2>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Learning Objectives
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>By the end of this lecture, you should be able to:</p>
 <ul>
-<li>Long-term Scheduling: The decision to add to the pool of processes to be run</li>
-<li>Medium-term Scheduling: The decision to add to the number of processes that are partially or fully in memory</li>
-<li>Short-term Scheduling: The decision as to which available processes will be executed by the processor</li>
-<li>I/O Scheduling: The decision as to which process’s pending I/O request shall be handled by an available I/O device</li>
+<li>Explain what the three layers of scheduling (long-term, medium-term, short-term) each control</li>
+<li>Calculate average wait time and turnaround time for FCFS, SJF, SRTF, and Round Robin</li>
+<li>Explain the convoy effect, Belady’s Anomaly, and starvation, and which algorithms suffer from each</li>
+<li>Describe why preemption is necessary for interactive systems and what race conditions it can introduce</li>
 </ul>
+</div>
+</div>
+<section id="the-problem-scheduling-solves" class="level2">
+<h2 class="anchored" data-anchor-id="the-problem-scheduling-solves">The Problem Scheduling Solves</h2>
+<p>Imagine a single CPU and a dozen processes all wanting to run. Some are playing music — needs the CPU regularly, in short bursts, with tight timing. Some are compiling code — needs the CPU for long stretches. Some are waiting on network responses — mostly idle, short bursts of activity. If the CPU simply ran them in order of arrival, a long compilation would block music playback entirely. The user experience would be terrible.</p>
+<p>Scheduling is the OS’s answer to: <em>which process gets the CPU next, and for how long?</em> The algorithm it chooses determines how responsive the system feels, how efficiently the CPU is used, and whether any process ever gets permanently starved. There’s no perfect algorithm — every design involves tradeoffs — which is why modern OSes use different schedulers for different situations.</p>
 </section>
-<section id="the-main-goal-of-scheduling" class="level2">
-<h2 class="anchored" data-anchor-id="the-main-goal-of-scheduling">The Main goal of Scheduling</h2>
-<ul>
-<li>Aim to assign processes to be executed by the processor in a way that meets system objectives such as response time, throughput, and processor efficiency</li>
-</ul>
+<section id="three-layers-of-scheduling" class="level2">
+<h2 class="anchored" data-anchor-id="three-layers-of-scheduling">Three Layers of Scheduling</h2>
+<p><strong>Long-term scheduling</strong> decides which programs get admitted into the system as processes. It controls the degree of multiprogramming — how many processes exist at once. More processes means smaller slices of CPU and memory per process, but potentially higher throughput. In most desktop OSes this is implicit (every launched app just runs), but in batch and production systems it’s explicit and important.</p>
+<p><strong>Medium-term scheduling</strong> handles swapping — moving processes between memory and disk based on memory pressure. When memory is scarce, it suspends processes to free space; when pressure eases, it revives them. This directly controls how many processes actively compete for the CPU.</p>
+<p><strong>Short-term scheduling</strong> — the <em>dispatcher</em> — is what people usually mean by “the scheduler.” It runs extremely frequently, potentially thousands of times per second, and makes the fine-grained decision of which ready process runs next. It fires on clock interrupts, I/O completions, new arrivals to the ready queue, and whenever the current process blocks.</p>
 </section>
-<section id="scheduling-criteria-user-oriented" class="level2">
-<h2 class="anchored" data-anchor-id="scheduling-criteria-user-oriented">Scheduling Criteria: User Oriented</h2>
-<ul>
-<li>Performance related
-<ul>
-<li>Turnaround Time: The interval of time between process creation and its completion. Includes actual execution time, plus time spent waiting for resources, including the processor. This is generally used for batch jobs.</li>
-<li>Response Time: For an interactive process, this is the time from the submission of a request until the response begins to be received. Often a process can begin to produce some output to the user while continuing to process the request. Thus, this is a better measure than turnaround time from a User’s point of view. This is generally for time sensitive / real-time systems such as websites</li>
-<li>Deadlines: When process completion deadlines can be specified, the scheduling discipline should subordinate other goals to that of maximizing the percentage of deadlines met</li>
-</ul></li>
-<li>Other
-<ul>
-<li>Predictability: A given job should run in about the same amount of time and at about the same cost, regardless of the load on the system</li>
-</ul></li>
-</ul>
+<section id="what-makes-a-good-scheduler" class="level2">
+<h2 class="anchored" data-anchor-id="what-makes-a-good-scheduler">What Makes a Good Scheduler?</h2>
+<p>Goals differ based on who you’re optimizing for.</p>
+<p><strong>From the user’s perspective</strong>: <em>turnaround time</em> (submission to completion, relevant for batch) and <em>response time</em> (action to visible reaction, critical for interactive). Predictability matters too — a scheduler that’s usually 2 seconds but occasionally 30 creates a poor experience even if the average is acceptable.</p>
+<p><strong>From the system’s perspective</strong>: <em>throughput</em> (jobs completed per unit time) and <em>processor utilization</em> (keep the CPU busy, especially on expensive shared hardware). Fairness and priority enforcement also matter: high-priority processes should run first, and no process should be starved indefinitely.</p>
+<p>These goals conflict. Maximizing response time for interactive processes may require preempting a long-running batch job that was making excellent throughput progress. There is no universally best scheduling algorithm — only algorithms better suited to different workloads.</p>
 </section>
-<section id="scheduling-criteria-system-oriented" class="level2">
-<h2 class="anchored" data-anchor-id="scheduling-criteria-system-oriented">Scheduling Criteria: System Oriented</h2>
-<ul>
-<li>Performance related:
-<ul>
-<li>Throughput: The scheudling policy should attempt to maximize the number of processes completed per unit of time. This is a measure of how much work is being performed. This clearly depends on the average amount of time a process takes, but is also influenced by the scheudling policy used.</li>
-<li>Processor Utilization: This is the percentage of time that the processor is busy. For expensive shared systems, this is a significant criterion. In single user systems, and some other systems (such as real time), this criteria is less important than others</li>
-</ul></li>
-<li>Other:
-<ul>
-<li>Fairness: In absence of guidance from the user, or other system supplied guidance, processes should be treated the same, and no process should suffer starvation (lack of resources).</li>
-<li>Priority Enforcement: When processes are assigned priorities, the scheudling policy should favor high priority processes.</li>
-<li>Resource Balancing: The scheduling policy should keep the resources of the system busy. Processes that will underutilize stressed resources should be favored. This criteria mostly refers to long and medium term scheudling</li>
-</ul></li>
-</ul>
-</section>
-<section id="long-term-scheduler" class="level2">
-<h2 class="anchored" data-anchor-id="long-term-scheduler">Long Term Scheduler</h2>
-<ul>
-<li>Determines what programs are admitted to the system for processing</li>
-<li>Controls the degree of multiprogramming
-<ul>
-<li>The more processes that are created, the smaller the percentage of time that each process can be executed</li>
-<li>May be limited to provide satisfactory services to the current set of processes</li>
-</ul></li>
-<li>Creates processes from a queue when it can, but must decide:
-<ul>
-<li>When the OS can take on one or more additional processes</li>
-<li>Which jobs to accept and turn into processes
-<ul>
-<li>Can be first come, first served</li>
-<li>Can be dictated by priority, expected execution time, I/O requirements</li>
-</ul></li>
-</ul></li>
-</ul>
-</section>
-<section id="medium-term-scheduler" class="level2">
-<h2 class="anchored" data-anchor-id="medium-term-scheduler">Medium Term Scheduler</h2>
-<ul>
-<li>Part of Admit and Swapping functions</li>
-<li>Swapping decisions are based on need for resources and to manage the degree of multiprogramming
-<ul>
-<li>Considers the resources needed of the swapped out (suspended) process</li>
-</ul></li>
-</ul>
-</section>
-<section id="short-term-scheduler" class="level2">
-<h2 class="anchored" data-anchor-id="short-term-scheduler">Short Term Scheduler</h2>
-<ul>
-<li>Known as the dispatcher</li>
-<li>Executes the most frequently</li>
-<li>Makes the fine-grained decision of which process to execute next</li>
-<li>Invoked when an even occurs that may lead to the blocking of the current process, or that may provide an opportunity to preempt a currently running process in favor of another
-<ul>
-<li>Examples:
-<ul>
-<li>clock interrupts</li>
-<li>I/O interrupts</li>
-<li>OS system calls</li>
-<li>Signals (i.e.&nbsp;Semaphores (discussed later))</li>
-</ul></li>
-</ul></li>
-</ul>
-</section>
-<section id="short-term-scheduler-criteria" class="level2">
-<h2 class="anchored" data-anchor-id="short-term-scheduler-criteria">Short Term Scheduler Criteria</h2>
-<ul>
-<li>Performance:
-<ul>
-<li>Quantitative</li>
-<li>Easily measured</li>
-<li>Throughput/Response time</li>
-</ul></li>
-</ul>
-</section>
-<section id="process-behavior" class="level2">
-<h2 class="anchored" data-anchor-id="process-behavior">Process Behavior</h2>
-<ul>
-<li>Processes alternate bursts of computing with I/O requests
-<ul>
-<li>Some processes spend most of their time computing: CPU bound</li>
-<li>Some processes spend most of their time waiting for I/O: I/O bound</li>
-</ul></li>
-<li>There are generally more small-medium cpu bursts than long</li>
-</ul>
-</section>
-<section id="cpu-scheduler" class="level2">
-<h2 class="anchored" data-anchor-id="cpu-scheduler">CPU Scheduler</h2>
-<ul>
-<li>The CPU scheduler selects from among processes in the ready queue and allocates a CPU core (uniprocessor) to one of them
-<ul>
-<li>Queue can be ordered by burst time, priority, execution time, etc.</li>
-</ul></li>
-<li>CPU Scheduler can make 4 choices based on process states:
-<ol type="1">
-<li>Switch from running to waiting</li>
-<li>Switch from running to ready</li>
-<li>Switch from waiting to ready</li>
-<li>Terminate the process</li>
-</ol></li>
-</ul>
-</section>
-<section id="selection-function" class="level2">
-<h2 class="anchored" data-anchor-id="selection-function">Selection Function</h2>
-<ul>
-<li>Determines which process, among ready processes, is selected for next execution</li>
-<li>May be based on priority, resource management, or execution charactaristcs of the process
-<ul>
-<li>If based on charactaristcs, the important quanitites are:
-<ul>
-<li>w: Time spent waiting in the system</li>
-<li>e: Time spent in execution</li>
-<li>s: Total serivce time required by the process, including e: generally this quantity must be estimated or supplied by the user</li>
-</ul></li>
-</ul></li>
-</ul>
-</section>
-<section id="preemptive-scheduling-and-nonpreemptive-scheduling" class="level2">
-<h2 class="anchored" data-anchor-id="preemptive-scheduling-and-nonpreemptive-scheduling">Preemptive Scheduling and Nonpreemptive Scheduling</h2>
-<ul>
-<li>Nonpreemptive scheduling: Once the CPU has been allocated to a process, the process keeps the CPU until it either releases by switching to waiting, or is terminated</li>
-<li>Anything else is preemptive</li>
-<li>Virtually all modern OS (like windows, mac, etc) use preemptive scheduling</li>
-</ul>
-</section>
-<section id="preemptive-scheduling-and-race-conditions" class="level2">
-<h2 class="anchored" data-anchor-id="preemptive-scheduling-and-race-conditions">Preemptive Scheduling and Race conditions</h2>
-<ul>
-<li>Preemptive scheduling can result in race conditions when data is shared between several processes</li>
-<li>Consider a case where two processes share the same data. While one process is updating the data, it is preempted so that the second process can run. The second process then tries to read the data, but it is in an inconsistent state. ← Race condition</li>
-</ul>
-</section>
-<section id="dispatcher-latency" class="level2">
-<h2 class="anchored" data-anchor-id="dispatcher-latency">Dispatcher Latency</h2>
-<ul>
-<li>Dispatcher latency: The time it takes for the dispatcher to stop one process from running and start running another process</li>
-</ul>
-</section>
-<section id="scheduling-algorithm-goals-to-be-filled-in-later" class="level2">
-<h2 class="anchored" data-anchor-id="scheduling-algorithm-goals-to-be-filled-in-later">Scheduling Algorithm Goals: To be filled in later</h2>
-</section>
-<section id="scheduling-metrics" class="level2">
-<h2 class="anchored" data-anchor-id="scheduling-metrics">Scheduling Metrics</h2>
-<ul>
-<li>CPU Utilization</li>
-<li>Throughput</li>
-<li>Turnaround time</li>
-<li>Waiting time: amount of time a process waits before executing</li>
-<li>Response time</li>
-</ul>
+<section id="preemptive-vs.-nonpreemptive-scheduling" class="level2">
+<h2 class="anchored" data-anchor-id="preemptive-vs.-nonpreemptive-scheduling">Preemptive vs.&nbsp;Nonpreemptive Scheduling</h2>
+<p><strong>Nonpreemptive</strong> schedulers let the running process keep the CPU until it voluntarily gives it up — by blocking on I/O, yielding, or terminating. Once selected, it runs until it stops.</p>
+<p><strong>Preemptive</strong> schedulers can forcibly remove the CPU from a running process — via a timer interrupt — and give it to another. Essential for interactive systems requiring predictable response times. All modern OSes (Linux, Windows, macOS) are preemptive.</p>
+<p>The tradeoff: preemption requires a context switch with its associated overhead. Without preemption, a CPU-bound process can monopolize the CPU and starve everything else.</p>
+<p>Preemption also introduces <strong>race conditions</strong>: Process A is halfway through updating shared data when it’s preempted. Process B runs and reads the half-modified structure. The data is inconsistent. This is exactly why shared data in concurrent programs requires synchronization — Lecture 6.</p>
 </section>
 <section id="scheduling-algorithms" class="level2">
 <h2 class="anchored" data-anchor-id="scheduling-algorithms">Scheduling Algorithms</h2>
+<section id="first-come-first-served-fcfs" class="level3">
+<h3 class="anchored" data-anchor-id="first-come-first-served-fcfs">First-Come, First-Served (FCFS)</h3>
+<p>Processes run in the order they arrive. Nonpreemptive. Simple to implement.</p>
+<p>Suffers from the <strong>convoy effect</strong>: short processes stuck behind a long one inherit all of its wait time.</p>
+<div class="callout callout-style-default callout-important no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Board Exercise: FCFS
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Three processes arrive simultaneously: P1 (burst 24ms), P2 (burst 3ms), P3 (burst 3ms).</p>
+<p>Draw the Gantt chart, then calculate:</p>
 <ul>
-<li>First-Come, First-Served (FCFS):
-<ul>
-<li><p>The simplest CPU-Scheduling Algorithm</p></li>
-<li><p>Processes are assigned to the CPU in the order they arrive in the ready queue</p></li>
-<li><p>Nonpreemptive algorithm: Once a process is in the running state, it continues until it is blocked or terminated</p></li>
-<li><p>Average W: W = (T1 + T2 + T3 + … Tn) / n</p></li>
-<li><p>Convoy effect: Short processes behind long processes have a higher average wait time</p></li>
-</ul></li>
-<li>Shortest Job First (SJF):
-<ul>
-<li>Associate each process with length of its next CPU burst
-<ul>
-<li>Use these lengths to schedule the process with the shortest time</li>
-</ul></li>
-<li>SJF is optimal for nonpreemptive methods: gives minimum average waiting time for a given set of processes</li>
-<li>How do we determine the length of the next CPU burst?
-<ul>
-<li>Ask the user</li>
-<li>estimate</li>
-<li>This is why this method is hard to implement</li>
-</ul></li>
-<li>Preemptive version of the algorithm is Shortest Remaining Time First (SRTF)</li>
-</ul></li>
-<li>Shortest Remaining Time First (SRTF):
-<ul>
-<li>Like SJF, but if a shorter job arrives, the current job is preempted</li>
-</ul></li>
-<li>Round Robin (RR):
-<ul>
-<li>Preemptive</li>
-<li>Each process gets a small unit of CPU time (time quantum q), usually 10-100 ms. After this time has elapsed the process is preempted and added to the end of the ready queue.</li>
-<li>If there are n processes in the ready queue and the time quantum is q, then each process gets 1/n of the CPU time in chunks of at most q time units at once. No process waits more than (n-1)q time units.</li>
-<li>Timer interrupts every q to dispatch next process</li>
-<li>Large q: Becomes much like FCFS</li>
-<li>Small q: dispatcher latency increases and decreases efficiency</li>
-</ul></li>
-<li>Priority Scheduling:
-<ul>
-<li>A priority number (integer) is associated with each process</li>
-<li>The CPU is allocated to the process(es) with the highest priority (the smaller int is higher priority)
-<ul>
-<li>Preemptive or Nonpreemptive</li>
-</ul></li>
-<li>SRTF is used if multiple processes of the same priority arrive and it is preemptive</li>
-<li>SJF is used for multiple processes of the same priorirty and it is non preemptive</li>
-<li>Problem: Starvation - Low priority processes may never execute
-<ul>
-<li>Solution: Aging - As time progresses, increase the priority of a process</li>
-</ul></li>
-<li>Multilevel queues:
-<ul>
-<li>With priority scheduling, we have a seperate queue for each priority</li>
-<li>Schedule each process from its related priority queue</li>
-</ul></li>
-<li>Prioritization based on process type:
-<ul>
-<li>Highest priority: Real-time processes</li>
-<li>System processes</li>
-<li>Interactive processes</li>
-<li>Lowest priority: Batch processes</li>
-</ul></li>
-</ul></li>
+<li>Average wait time: (0 + 24 + 27) / 3 = <strong>17ms</strong></li>
 </ul>
+<p>Now reverse the order — P2, P3, P1 — and recalculate:</p>
+<ul>
+<li>Average wait time: (0 + 3 + 6) / 3 = <strong>3ms</strong></li>
+</ul>
+<p>Same work, same CPU time — but the order changes average wait from 17ms to 3ms. This is the motivation for SJF.</p>
+</div>
+</div>
+</section>
+<section id="shortest-job-first-sjf" class="level3">
+<h3 class="anchored" data-anchor-id="shortest-job-first-sjf">Shortest Job First (SJF)</h3>
+<p>Run the process with the shortest expected CPU burst next. Nonpreemptive.</p>
+<p>SJF is provably optimal for minimizing average waiting time in nonpreemptive settings. The catch: you need to know burst lengths in advance, which typically requires estimation from historical averages.</p>
+</section>
+<section id="shortest-remaining-time-first-srtf" class="level3">
+<h3 class="anchored" data-anchor-id="shortest-remaining-time-first-srtf">Shortest Remaining Time First (SRTF)</h3>
+<p>The preemptive version of SJF: when a new process arrives, if its burst is shorter than the remaining time of the current process, preempt. Optimal for minimizing average wait time in the preemptive setting. Risk: starvation of long processes if short ones keep arriving.</p>
+<div class="callout callout-style-default callout-important no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Board Exercise: SJF vs.&nbsp;SRTF
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Four processes:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Process</th>
+<th>Arrival</th>
+<th>Burst</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>P1</td>
+<td>0</td>
+<td>8</td>
+</tr>
+<tr class="even">
+<td>P2</td>
+<td>1</td>
+<td>4</td>
+</tr>
+<tr class="odd">
+<td>P3</td>
+<td>2</td>
+<td>9</td>
+</tr>
+<tr class="even">
+<td>P4</td>
+<td>3</td>
+<td>5</td>
+</tr>
+</tbody>
+</table>
+<p>Draw the Gantt chart for <strong>nonpreemptive SJF</strong>, then for <strong>SRTF</strong> (preemptive SJF). Compare average wait times. SRTF should give a lower average — why doesn’t it always win in practice?</p>
+</div>
+</div>
+</section>
+<section id="round-robin-rr" class="level3">
+<h3 class="anchored" data-anchor-id="round-robin-rr">Round Robin (RR)</h3>
+<p>Preemptive. Each process gets a fixed <strong>time quantum</strong> <em>q</em> (typically 10–100ms). After <em>q</em> elapses, the process is preempted and moved to the back of the ready queue.</p>
+<p>With <em>n</em> processes and quantum <em>q</em>, every process gets CPU time within <em>(n−1)q</em> — a hard bound on wait time that FCFS and SJF don’t offer.</p>
+<p>The choice of <em>q</em> dominates performance:</p>
+<ul>
+<li><strong>Large q</strong> → approaches FCFS (processes rarely preempted)</li>
+<li><strong>Small q</strong> → maximum responsiveness, but if <em>q</em> &lt; context switch time, you spend more time switching than executing</li>
+</ul>
+<div class="callout callout-style-default callout-important no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Board Exercise: Round Robin
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Three processes: P1 (burst 24ms), P2 (burst 3ms), P3 (3ms). Quantum = 4ms.</p>
+<p>Draw the Gantt chart. Calculate average wait time and compare to FCFS from the first exercise. Which is better for the short processes? Which for the long process? <em>(Takeaway: RR distributes wait time more fairly but may hurt overall throughput.)</em></p>
+</div>
+</div>
+</section>
+<section id="priority-scheduling" class="level3">
+<h3 class="anchored" data-anchor-id="priority-scheduling">Priority Scheduling</h3>
+<p>Associate a numeric priority with each process; always run the highest priority. Can be preemptive or nonpreemptive. When priorities tie, SJF or SRTF applies.</p>
+<p><strong>Starvation risk</strong>: low-priority processes may never run if high-priority ones keep arriving. <strong>Aging</strong> fixes this: gradually increase a process’s priority the longer it waits. Eventually, even the lowest-priority job gets scheduled.</p>
+<p>Real-world priority tiers:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Priority</th>
+<th>Process Type</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Highest</td>
+<td>Real-time (hard deadlines)</td>
+</tr>
+<tr class="even">
+<td>High</td>
+<td>System/kernel</td>
+</tr>
+<tr class="odd">
+<td>Medium</td>
+<td>Interactive user</td>
+</tr>
+<tr class="even">
+<td>Low</td>
+<td>Batch background</td>
+</tr>
+</tbody>
+</table>
+<p>Each tier can have its own queue with its own algorithm — Round Robin for interactive, FCFS for batch.</p>
+</section>
+</section>
+<section id="dispatcher-latency" class="level2">
+<h2 class="anchored" data-anchor-id="dispatcher-latency">Dispatcher Latency</h2>
+<p>The <strong>dispatcher</strong> performs the actual context switch once the scheduler has chosen the next process. <strong>Dispatcher latency</strong> is the time between the selection and the process actually starting execution — it includes saving the outgoing state, loading the incoming state, and the cache cold-start penalty. Minimizing dispatcher latency is a kernel implementation concern, separate from the scheduling algorithm itself.</p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Discussion Prompt
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>SJF gives the best average waiting time, so why don’t all OSes use it? Think through: what does the OS actually know at scheduling time? What would happen to long jobs on a busy server that runs SJF? What does “optimal” mean here, and for whom?</p>
+</div>
+</div>
 
 
 </section>
@@ -657,7 +603,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp('/' + window.location.host + '/');
+      var filterRegex = new RegExp("https:\/\/nmorgan505\.github\.io\/CSC345Notes\/");
     var isInternal = (href) => {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>02 · Processes – CSC 345 — Operating Systems</title>
+<title>02 · Processes – CSC 345 — Operating Systems (Enhanced)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -79,7 +113,7 @@ ul.task-list li input[type="checkbox"] {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">CSC 345 — Operating Systems</span>
+    <span class="navbar-title">CSC 345 — Operating Systems (Enhanced)</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -179,7 +213,7 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">CSC 345 — Operating Systems Notes</span></a>
+ <span class="menu-text">CSC 345 — Operating Systems (Enhanced)</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -269,8 +303,13 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#processes" id="toc-processes" class="nav-link active" data-scroll-target="#processes">Processes</a></li>
-  <li><a href="#the-process-model" id="toc-the-process-model" class="nav-link" data-scroll-target="#the-process-model">The Process Model</a></li>
+  <li><a href="#open-your-task-manager" id="toc-open-your-task-manager" class="nav-link active" data-scroll-target="#open-your-task-manager">Open Your Task Manager</a></li>
+  <li><a href="#what-a-process-is" id="toc-what-a-process-is" class="nav-link" data-scroll-target="#what-a-process-is">What a Process Is</a></li>
+  <li><a href="#the-process-control-block" id="toc-the-process-control-block" class="nav-link" data-scroll-target="#the-process-control-block">The Process Control Block</a></li>
+  <li><a href="#process-states-and-transitions" id="toc-process-states-and-transitions" class="nav-link" data-scroll-target="#process-states-and-transitions">Process States and Transitions</a></li>
+  <li><a href="#the-context-switch" id="toc-the-context-switch" class="nav-link" data-scroll-target="#the-context-switch">The Context Switch</a></li>
+  <li><a href="#process-creation-fork" id="toc-process-creation-fork" class="nav-link" data-scroll-target="#process-creation-fork">Process Creation: <code>fork()</code></a></li>
+  <li><a href="#interrupts-traps-and-the-kernel" id="toc-interrupts-traps-and-the-kernel" class="nav-link" data-scroll-target="#interrupts-traps-and-the-kernel">Interrupts, Traps, and the Kernel</a></li>
   </ul>
 </nav>
     </div>
@@ -296,354 +335,192 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="processes" class="level2">
-<h2 class="anchored" data-anchor-id="processes">Processes</h2>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Learning Objectives
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>By the end of this lecture, you should be able to:</p>
 <ul>
-<li>A program in execution
-<ul>
-<li>A program in passive</li>
-<li>A process is active</li>
-</ul></li>
+<li>Describe the four memory regions that make up a process</li>
+<li>Explain what information the PCB contains and why each field is necessary</li>
+<li>Trace a process through its five lifecycle states and explain what triggers each transition</li>
+<li>Walk through the steps of a context switch and explain why it has a performance cost</li>
+<li>Explain what <code>fork()</code> does and the fork-exec pattern</li>
 </ul>
+</div>
+</div>
+<section id="open-your-task-manager" class="level2">
+<h2 class="anchored" data-anchor-id="open-your-task-manager">Open Your Task Manager</h2>
+<p>Press Ctrl+Shift+Esc on Windows, or run <code>ps aux</code> in a Linux terminal. What you see is a list of <em>processes</em> — every program the OS is currently tracking. There are probably 100–200 of them, even on a quiet system. For each one, the OS knows its ID, CPU usage, memory consumption, state, and dozens of other details.</p>
+<p>The data structure that holds all of that information for a single process is called the <strong>Process Control Block (PCB)</strong>, and it is the most important data structure in the OS. This lecture is about what’s in it, why, and how the OS uses it to manage dozens of running programs simultaneously.</p>
 </section>
-<section id="the-process-model" class="level2">
-<h2 class="anchored" data-anchor-id="the-process-model">The Process Model</h2>
+<section id="what-a-process-is" class="level2">
+<h2 class="anchored" data-anchor-id="what-a-process-is">What a Process Is</h2>
+<p>A process is a <em>program in execution</em>. The distinction matters: a program is passive — an executable file sitting on disk. A process is active — that program loaded into memory, running or waiting to run, with its own dedicated state and resources.</p>
+<p>Every process occupies four distinct regions in memory:</p>
 <ul>
-<li><p>All runnable software on a computer, sometimes including the OS, is organized into a number of processes</p></li>
-<li><p>Conceptually, each process has its own CPU, but in reality, a physical CPU is swapping between processes (qucikly)</p></li>
-<li><p>Process Elements:</p>
-<ul>
-<li>Program Code
-<ul>
-<li>Text section: The executable code</li>
-</ul></li>
-<li>Data associated with that program
-<ul>
-<li>Stack section: LIFO data structure, a part of memory that is dynamically allocated during program runtime. Contains instructions, used for invoking functions, contains function parameters, return addresses, and local variables</li>
-<li>Heap section: Dynamically allocated memory region used for data that needs to persist beyond the scope of a single function. Memory is allocated and freed explicitly by the program (e.g., via malloc/free or new/delete)</li>
-<li>Data section: Global information for the process</li>
-</ul></li>
-<li>While the process is in progress, it can be charactarized by the following:
-<ul>
-<li>Identifiers (PID)</li>
-<li>State</li>
-<li>Priority</li>
-<li>Program Counter Value</li>
-<li>Memory</li>
-<li>Context</li>
-<li>I/O status information</li>
-<li>Accounting information</li>
-</ul></li>
-</ul></li>
-<li><p>Process Control Structures:</p>
-<ul>
-<li>The OS requires the following to control and manage processes
-<ul>
-<li>Where the process is in memory</li>
-<li>Attributes of the process necessary to manage a process, also known as the process control block (PCB)</li>
-</ul></li>
-<li>The Process Control Block
-<ul>
-<li>Contains all process elements</li>
-<li>The PCB allows a process to be interuppted and resume running at a later time as if the interruption never occurred</li>
-<li>Key tool that allows support for multiple processes, the most important data structure in the OS</li>
-</ul></li>
-<li>Parts of the PCB:
-<ul>
-<li>Process Identification:
-<ul>
-<li>Generally Numeric identifiers</li>
-<li>PID: Process Identification Number</li>
-<li>PPID: Parent Processes Identification Number</li>
-<li>User Identifier</li>
-</ul></li>
-<li>Process State
-<ul>
-<li>A process can be in any of the five following state:
-<ul>
-<li>New/Initialized: A process is being created</li>
-<li>Running: Instructions are being executed</li>
-<li>Wait/Blocked/Stopped: The process is waiting for some event</li>
-<li>Ready: The process is waiting to be assigned to the processor</li>
-<li>Terminated: The process has finished execution</li>
-</ul></li>
-</ul></li>
-<li>Extra information:
-<ul>
-<li>User Visible Registers: A register that may be referenced by means of machine language that the processor executes while in user mode. Typical systems have 8 to 32 registers, though some have over 100</li>
-<li>Control and Status Registers
-<ul>
-<li>Program Counter: Contains the address of the next instruction</li>
-<li>Condition Codes: Results of the most recent arithmetic or logical operation (status flags: Sign, carry, zero, overflow, etc)</li>
-<li>Status Information: Includes interrupt enabled/disabled flags, execution mode</li>
-</ul></li>
-<li>Stack Pointer: Each process has one or more LIFO stacks associated with it. A stack is used to store paramenters, calling addresses for procedure, and system calls. The Stack Pointer points to the top of this stack.</li>
-</ul></li>
-<li>Process Control Information
-<ul>
-<li>Scheduling Information (sometimes paired with the process state)
-<ul>
-<li>Process state, if paired</li>
-<li>Priority: One or more fields that define the importance or execution order in which processes should be taken. Sometimes several values are required such as default, current, highest-allowable</li>
-<li>Scheduling Values: Depends on the scheudling algorithm of the OS, examples include amount of time a process has been waiting, or the amount of time since the process’s last execution</li>
-<li>Events: Identity of the event the process is awaiting before it can continue</li>
-</ul></li>
-</ul></li>
-<li>Data Structure Information
-<ul>
-<li>Information involving how the current process fits into the context of all other running programs</li>
-</ul></li>
-<li>Interprocess Communication:
-<ul>
-<li>Various flags, signals, or messages that may be associated with communication between two independent processes. Some or all of that information is maintained by the PCB.</li>
-</ul></li>
-<li>Privileges
-<ul>
-<li>Processes are granted privileges in terms of memory that may be accessed and the types of instuctions that may be executed. In addition, privileges may apply to the use of certain system utilites and services.</li>
-</ul></li>
-<li>Resource management and utilization information</li>
-</ul></li>
-<li>Why is the PCB considered the most important data structure of the OS?
-<ul>
-<li>Used to define the state of the OS</li>
-<li>Contains all the information about the process an OS may need
-<ul>
-<li>All data is kept in one location, easier to access.</li>
-</ul></li>
-</ul></li>
-<li>What is the problem with PCBs?
-<ul>
-<li>A bug in a single routine could damage all PCBs, which would destroy the system’s ability to manage affected processes. It is a single point of failure.</li>
-</ul></li>
-<li>Process Image:
-<ul>
-<li><p>Each process has associated with it a number of attributes that are used by the OS for process control</p></li>
-<li><p>The collection of program, data, stack, and attributes is referred to as the process image, or context of a process</p></li>
-<li><p>Contents of the process image:</p>
-<ul>
-<li>User Data: The modifiable part of User Space. That includes program data some user stack area, and programs that can be modified</li>
-<li>User Program: The program to be executed</li>
-<li>Stack: Each process has one or more LIFO stacks associated with it. A Stack is used to store parameters and calling address for procedures and system calls</li>
-<li>Attributes: PCB</li>
-</ul></li>
-</ul></li>
-</ul></li>
-<li><p>Process Execution/Trace</p>
-<ul>
-<li><p>Process Trace: The behavior of an individual process by listing the sequence of instructions that execute for that process</p></li>
-<li><p>The behavior of the processor can be charactarized by showing how the trace of the various processes are interleaving</p></li>
-<li><p>Dispatcher: A small program that switches the processor from one process to another</p></li>
-<li><p>Suspended Processes:</p>
-<ul>
-<li>Swapping:
-<ul>
-<li>Involves moving part, or all, of a process from main memory to disk</li>
-<li>When none of the process is in the Ready state, the OS swaps one of the blocked processes out on to disk in a suspended queue
-<ul>
-<li>This is a queue of existing processes that have been temporarily kicked out of main memory or suspended</li>
-<li>The OS then brings in another process from the suspended queue or it honors a new-process request</li>
-<li>Swapping is an I/O operation, which has potential for making speed problems even worse. Since Disk I/O is much faster than other types of I/O (think user input), swapping usually increases performance</li>
-</ul></li>
-</ul></li>
-<li>Charactaristics of a Suspended Process:
-<ul>
-<li>The process is not immediately available for execution</li>
-<li>Process was placed in a suspended state by an agent of some sort: the process itself, a parent proess, or the OS</li>
-<li>The process may or may not be waiting on some event</li>
-<li>The process may not be removed from this state until the agent that placed it there explicitly orders its removal</li>
-</ul></li>
-<li>Reasons for suspension:
-<ul>
-<li>Swapping: The OS needs to release memory to bring in a process that is Ready</li>
-<li>OS reasons: The OS may suspend a background or utility process, or other processes that are suspected to cause problems</li>
-<li>Interactive User Requests: A user may wish to suspend the execution of a process for the purposes of debugging or in connection with use of resources</li>
-<li>Timing</li>
-<li>Parent process request</li>
-</ul></li>
-</ul></li>
-</ul></li>
-<li><p>Implementation of the Process Model:</p>
-<ul>
-<li><p>To implement the process model, the OS maintains several tables</p></li>
-<li><p>The process table, with one entry per process (pcb) has several elements</p></li>
-<li><p>Process tables:</p>
-<ul>
-<li>These are the key to process management</li>
-<li>There must be some reference to memory, I/O, and files, directly or indirectly</li>
-<li>The tables themsevles are accessable to the OS, and are therefore subject to memory management</li>
-</ul></li>
-<li><p>Memory tables</p>
-<ul>
-<li>Used to keep track of both main (real) and secondary (virtual) memory</li>
-<li>Processes are maintained on secondary memory using some sort of virtual memory swapping mechanism</li>
-<li>Includes:
-<ul>
-<li>Allocation of main and secondary memory to a process</li>
-<li>Information related to memory management (mostly in regards to virtual)</li>
-<li>Protection attributes of blocks of main or virtual memory</li>
-</ul></li>
-</ul></li>
-<li><p>I/O tables</p>
-<ul>
-<li>Used by the OS to manage the I/O devices and channels of the computer system</li>
-<li>At any given time, I/O devices may be available to a particular process</li>
-<li>If I/O is in operation, the OS needs to know:
-<ul>
-<li>The status of the operation</li>
-<li>The location in main memory being used as the source or destination of the I/O transfer</li>
-</ul></li>
-</ul></li>
-<li><p>File tables</p>
-<ul>
-<li>Contains:
-<ul>
-<li>Existence of files</li>
-<li>Location on storage devices</li>
-<li>Current status</li>
-<li>Other minor attributes</li>
-</ul></li>
-<li>Information may be maintained and used by a file management system, in this case, the OS has little or no knowledge of files</li>
-</ul></li>
-</ul></li>
-<li><p>Process Creation:</p>
-<ul>
-<li>Processes are created through four main events:
-<ul>
-<li>System Initalization: Turning the system on</li>
-<li>Execution of a process-creation system call by a running process</li>
-<li>A user request to create a new process</li>
-<li>Initalized by a batch job
-<ul>
-<li>Batch job: system scheduled events (generally)</li>
-</ul></li>
-</ul></li>
-<li>Steps taken to create a process
-<ul>
-<li>After the OS decides to create a new process:</li>
+<li><strong>Text section</strong> — the executable instructions themselves</li>
+<li><strong>Data section</strong> — global variables and static data</li>
+<li><strong>Heap</strong> — dynamically allocated memory (<code>malloc</code>, <code>new</code>), grows and shrinks at runtime</li>
+<li><strong>Stack</strong> — local variables, function parameters, return addresses; a LIFO structure that grows with each function call and shrinks as they return</li>
 </ul>
+<p>At any moment, the OS also tracks the process’s PID, current state, priority, program counter value, and the contents of all CPU registers. This execution context is what makes it possible to pause a process mid-execution, run something else, and resume later without the process knowing it was ever interrupted.</p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Quick Check
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Draw a diagram of a process’s memory layout — text, data, heap, stack — and label which direction the heap and stack grow. Which two can collide if a program uses too much memory? This is a common interview question and a real system failure mode.</p>
+</div>
+</div>
+</section>
+<section id="the-process-control-block" class="level2">
+<h2 class="anchored" data-anchor-id="the-process-control-block">The Process Control Block</h2>
+<p>The PCB is the OS’s per-process record. It’s a single data structure containing everything the OS needs to manage that process:</p>
+<p><strong>Process Identification</strong> — the numeric PID, the parent’s PID (PPID), and the user ID of the process owner.</p>
+<p><strong>Process State</strong> — one of five values: New, Ready, Running, Blocked/Waiting, or Terminated (described in the next section).</p>
+<p><strong>CPU Context</strong> — the values of all registers at the moment the process was last paused. When the process resumes, these get loaded back into the CPU. Without this, there would be no way to resume a process — the CPU state would be permanently lost.</p>
+<p><strong>Memory Information</strong> — where this process’s pages or segments live in physical memory, and the base/limit registers defining its valid address space.</p>
+<p><strong>Scheduling Information</strong> — the process’s priority, time spent waiting, time of last execution, and whatever other data the scheduling algorithm requires.</p>
+<p><strong>I/O Status</strong> — which files are open, which devices are in use, and any pending I/O requests.</p>
+<div class="callout callout-style-default callout-warning no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+The PCB’s Achilles Heel
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Every running process is described by a PCB, and all PCBs are managed by the same kernel code. A bug in OS process management could corrupt every PCB simultaneously — crashing every process at once. This is why PCB-touching kernel code is among the most carefully written and tested code in existence. It is a genuine single point of failure for the entire system.</p>
+</div>
+</div>
+</section>
+<section id="process-states-and-transitions" class="level2">
+<h2 class="anchored" data-anchor-id="process-states-and-transitions">Process States and Transitions</h2>
+<p>A process is always in exactly one of five states:</p>
+<ul>
+<li><strong>New</strong> — being created; the OS is allocating memory and initializing the PCB</li>
+<li><strong>Ready</strong> — in memory and ready to run, waiting for the scheduler</li>
+<li><strong>Running</strong> — instructions executing on a CPU core right now</li>
+<li><strong>Blocked (Waiting)</strong> — waiting for an external event (I/O, a signal, a lock); cannot proceed even if a CPU is available</li>
+<li><strong>Terminated</strong> — execution finished; OS is cleaning up</li>
+</ul>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Board Exercise: Trace These Transitions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Work through the following scenario as a class and draw the state transitions:</p>
 <ol type="1">
-<li>Assign a unique process identifier to the new process</li>
-<li>Allocate space for the new process</li>
-<li>Initialize the PCB</li>
-<li>Sets appropriate linkages to other processes</li>
-<li>Creates or expands related data structures</li>
-</ol></li>
-</ul></li>
-<li><p>Process Termination:</p>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Voluntary</th>
-<th>Involuntary</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Normal Exit</td>
-<td>Fatal Error</td>
-</tr>
-<tr class="even">
-<td>Error Exit</td>
-<td>Killed by another process</td>
-</tr>
-</tbody>
-</table>
-<ul>
-<li>Reasons for termination:
-<ul>
-<li>Normal Completion: The process executes an OS service call to indicate that has completed running</li>
-<li>Time Limit Exceeded: The process has run longer than the specified total time limit</li>
-<li>Time Overrun: The process has waited longer than a specified amount of time for a certain event to occur</li>
-<li>Memory Unavailable: The process requires more memory than the system can provide</li>
-<li>Bounds Violation: The process tries to access a memory location that it is not allowed to access</li>
-<li>Protection Errors: The process attempts to use a resource such as a file that it is not allowed to use, or tries to use it in an improper fashion</li>
-<li>Arithmetic Errors: The process tries to perform a prohibited computation such as division by zero</li>
-<li>Data Misuse</li>
-<li>Parent Termination</li>
-<li>Parent Request</li>
-<li>I/O Failure</li>
-<li>Invalid Instructions: The process attempts to use an instruction reserved for the OS</li>
-</ul></li>
-</ul></li>
-<li><p>Interrupts: Pause or ending execution of a running program (stopping current execution for some prioritized event)</p></li>
-<li><p>Mechanisms for interrupting program execution:</p>
-<ul>
-<li>Interrupt: Caused by some function external to the current instruction. Used to react to untimed or asychronus events</li>
-<li>Trap: Associated with the execution of the current instruction. Used for handling errors or exceptions</li>
-<li>Supervisor Call: Explicitly requested function with no relation to the current instruction. Usually used to call OS functions.</li>
-</ul></li>
-<li><p>Kernel:</p>
-<ul>
-<li>The “brain of the OS”</li>
-<li>Handles:</li>
-<li>Process Management
-<ul>
-<li>Creation and Termination</li>
-<li>Scheduling and Dispatching</li>
-<li>Process Switching</li>
-<li>Manages PCBs</li>
-<li>Process synchronization and support for interprocess communication</li>
-</ul></li>
-<li>Memory Management
-<ul>
-<li>Swapping</li>
-<li>Allocation of address space to process</li>
-<li>Page/segment management</li>
-</ul></li>
-<li>I/O Management
-<ul>
-<li>Buffer management</li>
-<li>Allocation of I/O channels and buffers to processes</li>
-</ul></li>
-<li>Support Functions:
-<ul>
-<li>Interrupt handling</li>
-<li>Accounting Information</li>
-<li>Monitoring</li>
-</ul></li>
-<li>Mode Switching
-<ul>
-<li>If an interrupt is pending the processor:
-<ul>
-<li>Sets the program counter (PC) to the memory address where the interrupt handling program starts</li>
-<li>Switch the user mode to kernel mode so that the interrupt processing code may include privileged instructions</li>
-</ul></li>
-<li>If there are no interrupts pending: Proceeds to the fetch stage and takes the next instruction of the current process</li>
-</ul></li>
-<li>Context Switch steps:
-<ul>
-<li>Save the context of the current process</li>
-<li>Update the PCB of the currently Running process</li>
-<li>Move the PCB of this process to the appropriate queue (Ready or Blocked)</li>
-<li>Select the next process from the Ready queue</li>
-<li>Update the PCB of the selected process</li>
-<li>Update the memory management data structures</li>
-<li>Restore the context of the processor to that which existed at the time the selected process was last switched out</li>
-</ul></li>
-<li>Process Creation in Unix:
-<ul>
-<li>Process creation is by means of the fork() kernel system call</li>
-<li>When a process issues a fork() request, the OS does the following:
-<ul>
-<li>Allocate a slot in the process table for the new process</li>
-<li>Assign a unique PID to the child (new) process</li>
-<li>Make a copy of the process image of the parent, with the exception of shared memory</li>
-<li>Increment counters for any files owned by the parent, to reflect that an additional process now also owns those files</li>
-<li>Assign the child process to the Ready state</li>
-<li>Return the ID number of the child to the parent process, and a 0 value to the child process</li>
-</ul></li>
-</ul></li>
-<li>Following Creation:
-<ul>
-<li>After creating the process, the kernel will do one of three things as part of the dispatcher routine
-<ul>
-<li>Stay in the parent process. Control returns to user mode at the point the fork call of the parent.</li>
-<li>Transfer to the child process. The child process begins executing at the same point in the code as the parent, namely at the return from the fork call</li>
-<li>Transfer control to another process. Both parent and child are left in the Ready state.</li>
-</ul></li>
-</ul></li>
-</ul></li>
-</ul>
+<li>The OS creates a new process for an app the user just launched</li>
+<li>The scheduler selects it for execution</li>
+<li>The process calls <code>read()</code> to load a file from disk</li>
+<li>The disk I/O completes</li>
+<li>The scheduler selects the process again</li>
+<li>The process calls <code>exit()</code></li>
+</ol>
+<p>Which transition is most expensive? Which one is under the process’s control vs.&nbsp;the OS’s control?</p>
+</div>
+</div>
+<p><strong>Suspended processes</strong> add an extra layer. When memory is scarce, the OS can <em>swap</em> a blocked process out to disk entirely, freeing its RAM for others. The swapped process enters a Suspended state — not in memory, cannot run until swapped back in. Modern SSDs make this far less painful than it was in the spinning-disk era.</p>
+</section>
+<section id="the-context-switch" class="level2">
+<h2 class="anchored" data-anchor-id="the-context-switch">The Context Switch</h2>
+<p>The context switch is how the CPU moves between processes. When the OS decides to switch from Process A to Process B:</p>
+<ol type="1">
+<li>Save A’s entire CPU state (all registers, program counter, flags) into A’s PCB</li>
+<li>Update A’s state from Running to Ready or Blocked</li>
+<li>Select Process B from the ready queue; update B’s state to Running</li>
+<li>Load B’s CPU state from its PCB into the actual CPU registers</li>
+<li>Jump to where B’s program counter points</li>
+</ol>
+<p>From B’s perspective, it was never interrupted. The switch is invisible to both processes.</p>
+<p>Context switches aren’t free. The save/restore takes time, and because B has different memory access patterns than A, much of the CPU cache is now stale — the first memory accesses will be slow cache misses. This is one reason modern OSes try to minimize unnecessary switches, and why thread switching (next lecture) is cheaper than full process switching.</p>
+</section>
+<section id="process-creation-fork" class="level2">
+<h2 class="anchored" data-anchor-id="process-creation-fork">Process Creation: <code>fork()</code></h2>
+<p>On Unix/Linux, every process is created via <strong><code>fork()</code></strong>. When a process calls <code>fork()</code>, the OS:</p>
+<ol type="1">
+<li>Allocates a new PCB and assigns a unique PID to the child</li>
+<li>Gives the child a copy of the parent’s address space</li>
+<li>Increments reference counts on all open files (both parent and child now own handles)</li>
+<li>Places the child in Ready</li>
+<li>Returns the child’s PID to the parent, and <code>0</code> to the child</li>
+</ol>
+<p>Parent and child then run independently. The child typically calls <code>exec()</code> immediately, replacing its inherited copy of the parent’s program with a new executable. This <strong>fork-exec pattern</strong> underlies every program launch on Unix — your shell forks itself, then the child execs the program you typed.</p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Class Activity: Read This Code
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="sourceCode" id="cb1"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pid_t pid <span class="op">=</span> fork<span class="op">();</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(</span>pid <span class="op">==</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">"I am the child, PID = </span><span class="sc">%d\n</span><span class="st">"</span><span class="op">,</span> getpid<span class="op">());</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">"I am the parent, my child's PID = </span><span class="sc">%d\n</span><span class="st">"</span><span class="op">,</span> pid<span class="op">);</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">"This line runs in both processes</span><span class="sc">\n</span><span class="st">"</span><span class="op">);</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>How many times does the last <code>printf</code> execute? What does the output look like? Can you predict the exact ordering? Why or why not?</p>
+</div>
+</div>
+<p>Processes terminate voluntarily (<code>exit()</code>) or involuntarily (fatal error, kill signal). On termination, resources are freed and the PCB is removed — but only after the parent calls <code>wait()</code> to collect the exit status. Until then, the terminated process is a <strong>zombie</strong>: no resources, PCB preserved, waiting for the parent to acknowledge it.</p>
+</section>
+<section id="interrupts-traps-and-the-kernel" class="level2">
+<h2 class="anchored" data-anchor-id="interrupts-traps-and-the-kernel">Interrupts, Traps, and the Kernel</h2>
+<p>Three mechanisms let the CPU stop what it’s doing and handle something else:</p>
+<p><strong>Interrupts</strong> — asynchronous signals from hardware: a disk read completing, a timer firing, a network packet arriving. The CPU saves state and jumps to a kernel handler.</p>
+<p><strong>Traps</strong> — synchronous events from the current instruction: division by zero, segfault (invalid memory access), illegal instruction. The OS handles it, usually terminating the offending process.</p>
+<p><strong>System calls</strong> — explicit requests from a process to the kernel: open a file, allocate memory, fork a child. The process switches from user mode to kernel mode, the kernel does the work, and returns.</p>
+<p>The <strong>kernel</strong> manages all of this — process creation and scheduling, memory management, I/O, and interrupt handling — running in privileged kernel mode with access to instructions user processes can never execute.</p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Live Demo
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Run <code>strace ls</code> in a terminal (Linux/WSL). <code>strace</code> intercepts and prints every system call a process makes. You’ll see <code>openat()</code>, <code>read()</code>, <code>write()</code>, <code>close()</code>, and more — every interaction between <code>ls</code> and the kernel, completely exposed. Try it on other simple commands: <code>strace echo hello</code>, <code>strace pwd</code>. What’s the most surprising call you see?</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Discussion Prompt
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>fork()</code> creates a child with a copy of the parent’s address space. For a process using 2 GB of RAM, creating that copy sounds catastrophically slow. But <code>fork()</code> is actually fast. How? What optimization do modern OSes use to avoid eagerly copying all that memory? <em>(This is worth working through carefully — the answer has implications for understanding both performance and the copy-on-write technique used throughout the kernel.)</em></p>
+</div>
+</div>
 
 
 </section>
@@ -739,7 +616,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp('/' + window.location.host + '/');
+      var filterRegex = new RegExp("https:\/\/nmorgan505\.github\.io\/CSC345Notes\/");
     var isInternal = (href) => {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }

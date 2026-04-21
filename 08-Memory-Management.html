@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>08 · Memory Management – CSC 345 — Operating Systems</title>
+<title>08 · Memory Management – CSC 345 — Operating Systems (Enhanced)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -79,7 +79,7 @@ ul.task-list li input[type="checkbox"] {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">CSC 345 — Operating Systems</span>
+    <span class="navbar-title">CSC 345 — Operating Systems (Enhanced)</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -179,7 +179,7 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">CSC 345 — Operating Systems Notes</span></a>
+ <span class="menu-text">CSC 345 — Operating Systems (Enhanced)</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -269,21 +269,13 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#memory-management-background" id="toc-memory-management-background" class="nav-link active" data-scroll-target="#memory-management-background">Memory Management Background</a></li>
+  <li><a href="#your-program-is-living-in-a-lie" id="toc-your-program-is-living-in-a-lie" class="nav-link active" data-scroll-target="#your-program-is-living-in-a-lie">Your Program Is Living in a Lie</a></li>
   <li><a href="#requirements-of-memory-management" id="toc-requirements-of-memory-management" class="nav-link" data-scroll-target="#requirements-of-memory-management">Requirements of Memory Management</a></li>
-  <li><a href="#relocation" id="toc-relocation" class="nav-link" data-scroll-target="#relocation">Relocation</a></li>
-  <li><a href="#protection" id="toc-protection" class="nav-link" data-scroll-target="#protection">Protection</a></li>
-  <li><a href="#hardware-address-protection" id="toc-hardware-address-protection" class="nav-link" data-scroll-target="#hardware-address-protection">Hardware Address Protection</a></li>
-  <li><a href="#sharing" id="toc-sharing" class="nav-link" data-scroll-target="#sharing">Sharing</a></li>
-  <li><a href="#logical-organization" id="toc-logical-organization" class="nav-link" data-scroll-target="#logical-organization">Logical Organization</a></li>
-  <li><a href="#physical-organization" id="toc-physical-organization" class="nav-link" data-scroll-target="#physical-organization">Physical Organization</a></li>
-  <li><a href="#types-of-partitioning" id="toc-types-of-partitioning" class="nav-link" data-scroll-target="#types-of-partitioning">Types of Partitioning</a></li>
-  <li><a href="#fragmentation" id="toc-fragmentation" class="nav-link" data-scroll-target="#fragmentation">Fragmentation</a></li>
-  <li><a href="#buddy-system" id="toc-buddy-system" class="nav-link" data-scroll-target="#buddy-system">Buddy System</a></li>
-  <li><a href="#virtual-memory" id="toc-virtual-memory" class="nav-link" data-scroll-target="#virtual-memory">Virtual Memory</a></li>
+  <li><a href="#fixed-and-dynamic-partitioning-why-they-failed" id="toc-fixed-and-dynamic-partitioning-why-they-failed" class="nav-link" data-scroll-target="#fixed-and-dynamic-partitioning-why-they-failed">Fixed and Dynamic Partitioning: Why They Failed</a></li>
+  <li><a href="#paging-the-solution-that-stuck" id="toc-paging-the-solution-that-stuck" class="nav-link" data-scroll-target="#paging-the-solution-that-stuck">Paging: The Solution That Stuck</a></li>
+  <li><a href="#virtual-memory-running-programs-larger-than-ram" id="toc-virtual-memory-running-programs-larger-than-ram" class="nav-link" data-scroll-target="#virtual-memory-running-programs-larger-than-ram">Virtual Memory: Running Programs Larger Than RAM</a></li>
   <li><a href="#page-replacement-algorithms" id="toc-page-replacement-algorithms" class="nav-link" data-scroll-target="#page-replacement-algorithms">Page Replacement Algorithms</a></li>
-  <li><a href="#thrashing" id="toc-thrashing" class="nav-link" data-scroll-target="#thrashing">Thrashing</a></li>
-  <li><a href="#secondary-storage" id="toc-secondary-storage" class="nav-link" data-scroll-target="#secondary-storage">Secondary Storage</a></li>
+  <li><a href="#secondary-storage-and-disk-scheduling" id="toc-secondary-storage-and-disk-scheduling" class="nav-link" data-scroll-target="#secondary-storage-and-disk-scheduling">Secondary Storage and Disk Scheduling</a></li>
   </ul>
 </nav>
     </div>
@@ -309,511 +301,169 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="memory-management-background" class="level2">
-<h2 class="anchored" data-anchor-id="memory-management-background">Memory Management Background</h2>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Learning Objectives
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>By the end of this lecture, you should be able to:</p>
 <ul>
-<li>Program has to be brought from disk to memory and placed in a process to run</li>
-<li>This allocation should be as efficient as possible to accommodate both the OS and other processes.</li>
-<li>Must allocate memory to ensure reasonable supply of ready processes</li>
+<li>Explain virtual memory and why every process gets its own address space</li>
+<li>Describe how paging eliminates external fragmentation and how address translation works</li>
+<li>Trace through a page fault and explain its performance impact using the EAT formula</li>
+<li>Compare FIFO, OPT, and LRU page replacement algorithms and explain Belady’s Anomaly</li>
+<li>Explain the causes of thrashing and the OS response</li>
+<li>Calculate disk access times and compare FCFS, SCAN, C-SCAN, and SSTF scheduling</li>
 </ul>
+</div>
+</div>
+<section id="your-program-is-living-in-a-lie" class="level2">
+<h2 class="anchored" data-anchor-id="your-program-is-living-in-a-lie">Your Program Is Living in a Lie</h2>
+<p>When your C program accesses memory address <code>0x7fff5a2b3c40</code>, it is not touching physical RAM at that address. In fact, two different processes running simultaneously might both use that exact address — and that’s fine, because neither is touching the same physical memory.</p>
+<p>Your program operates inside a <strong>virtual address space</strong>: a fiction the OS maintains, mapping the addresses your program sees to wherever data actually lives in physical RAM (or on disk if swapped out). Every process gets its own complete virtual address space, starting at address 0. The mapping is managed transparently by OS and hardware — your program never has to think about it.</p>
+<p>This illusion explains a lot: why programs can be larger than physical RAM, why one crashing process doesn’t corrupt another, why adding RAM makes the system faster, and why <code>malloc</code> can fail.</p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opening Discussion
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Before we explain virtual memory: on a 64-bit system, every process “sees” up to 2^64 bytes of address space. A 64-bit machine might have 16GB of physical RAM. How can dozens of processes each claim they have 2^64 bytes available? What has to be true about how they use that space for this to work?</p>
+</div>
+</div>
 </section>
 <section id="requirements-of-memory-management" class="level2">
 <h2 class="anchored" data-anchor-id="requirements-of-memory-management">Requirements of Memory Management</h2>
-<ul>
-<li>Relocation</li>
-<li>Protection</li>
-<li>Sharing</li>
-<li>Logical Organization</li>
-<li>Physical Organization</li>
-</ul>
+<p>Memory management must balance five competing demands simultaneously:</p>
+<p><strong>Relocation</strong>: a process doesn’t know in advance where it will be loaded. Different runs might land at entirely different physical addresses. All memory references must be translated correctly regardless.</p>
+<p><strong>Protection</strong>: a process must never access another process’s memory. The hardware checks every access — a significant ongoing cost for a critical safety property.</p>
+<p><strong>Sharing</strong>: processes should sometimes share memory — multiple instances of the same program can share code, and cooperative processes can share data. This requires controlled sharing without compromising protection elsewhere.</p>
+<p><strong>Logical organization</strong>: programs have structure (code, stack, heap, data). The memory model should reflect this rather than forcing everything into a flat uniform space.</p>
+<p><strong>Physical organization</strong>: programmers shouldn’t manage what’s in RAM vs.&nbsp;on disk. The OS handles this transparently.</p>
 </section>
-<section id="relocation" class="level2">
-<h2 class="anchored" data-anchor-id="relocation">Relocation</h2>
-<ul>
-<li>Programmers typically do not know in advance which other programs will be resident in main memory at the time of execution of their program</li>
-<li>Active processes need to be able to be swapped in and out of main memory in order to maximize processor utilization</li>
-<li>Specifying that a process must be placed in the same memory region when it is swapped back in would be limiting</li>
-</ul>
+<section id="fixed-and-dynamic-partitioning-why-they-failed" class="level2">
+<h2 class="anchored" data-anchor-id="fixed-and-dynamic-partitioning-why-they-failed">Fixed and Dynamic Partitioning: Why They Failed</h2>
+<p>Early OSes divided physical memory into partitions — lessons from both approaches explain why virtual memory was necessary.</p>
+<p><strong>Fixed partitioning</strong> split RAM into static regions at boot. One process per partition. Problems: small processes in large partitions wasted space (<strong>internal fragmentation</strong>); large processes that didn’t fit couldn’t run; partition count limited multiprogramming.</p>
+<p><strong>Dynamic partitioning</strong> allocated exactly the memory each process needed. Eliminated internal fragmentation but created <strong>external fragmentation</strong>: as processes came and went at different sizes, memory filled with small unusable gaps. <strong>Compaction</strong> — moving processes to consolidate free space — was the fix, but it was expensive and disruptive.</p>
+<p>Three placement algorithms emerged for dynamic partitioning: <strong>first-fit</strong> (use the first gap large enough), <strong>best-fit</strong> (use the smallest gap that fits, minimizing waste), <strong>next-fit</strong> (like first-fit but start from the last allocated point, spreading allocations throughout memory).</p>
 </section>
-<section id="protection" class="level2">
-<h2 class="anchored" data-anchor-id="protection">Protection</h2>
-<ul>
-<li>Need to ensure that a process can access only those addresses in its address space</li>
-<li>We can provide this protection by using a pair of base and limit registers to define the logical address space of a process</li>
-</ul>
+<section id="paging-the-solution-that-stuck" class="level2">
+<h2 class="anchored" data-anchor-id="paging-the-solution-that-stuck">Paging: The Solution That Stuck</h2>
+<p><strong>Paging</strong> breaks both physical memory and the process’s virtual address space into fixed-size chunks of equal size — typically 4KB on modern systems. Physical chunks are <strong>frames</strong>; virtual chunks are <strong>pages</strong>.</p>
+<p>The key insight: pages need not map to contiguous frames. Page 0 of your program might be in physical frame 47, page 1 in frame 2, page 3 in frame 891. The <strong>page table</strong> — maintained by the OS for each process — records this mapping. Address translation is done transparently by hardware (the Memory Management Unit, or MMU).</p>
+<p><strong>Address translation</strong>: a virtual address is split into a <strong>page number</strong> (high bits, index into the page table) and a <strong>page offset</strong> (low bits, byte position within the page). The page table maps page number → frame number. Physical address = frame_number × page_size + offset.</p>
+<div class="callout callout-style-default callout-important no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Board Exercise: Address Translation
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Page size: 1KB (= 1024 bytes). Virtual address bits: 16 (so 6 bits page offset, 10 bits page number).</p>
+<p>Given page table: page 0 → frame 3, page 1 → frame 7, page 2 → frame 1, page 3 → frame 5.</p>
+<p>Translate these virtual addresses to physical: 1. Virtual address 1000 → page 0, offset 1000 → physical: 3×1024 + 1000 = <strong>4072</strong> 2. Virtual address 1500 → page 1, offset 476 → physical: 7×1024 + 476 = <strong>7644</strong> 3. Virtual address 3000 → page 2, offset 952 → physical: 1×1024 + 952 = <strong>1976</strong></p>
+<p><em>(Paging eliminates external fragmentation entirely — why? Because any free frame can hold any page, regardless of size.)</em></p>
+</div>
+</div>
 </section>
-<section id="hardware-address-protection" class="level2">
-<h2 class="anchored" data-anchor-id="hardware-address-protection">Hardware Address Protection</h2>
-<ul>
-<li>CPU must check (at runtime) every memory access generated in user mode to be sure it is between base and limit for that user</li>
-<li>The instructions to load the relocation and limit registers are privileged</li>
-</ul>
-</section>
-<section id="sharing" class="level2">
-<h2 class="anchored" data-anchor-id="sharing">Sharing</h2>
-<ul>
-<li>Advantageous to allow each process access to the same copy of the program rather than have their own separate copy</li>
-<li>Memory management must allow controlled access to shared areas of memory without compromising protection</li>
-<li>Mechanisms used to support relocation support sharing capabilities</li>
-</ul>
-</section>
-<section id="logical-organization" class="level2">
-<h2 class="anchored" data-anchor-id="logical-organization">Logical Organization</h2>
-<ul>
-<li>The main memory is organized as a linear, or one dimensional address space, consisting of a sequence of bytes, but:
-<ul>
-<li>Programs are written in modules</li>
-<li>Modules can be written and compiled independently</li>
-<li>Different degrees of protection given to modules (read only, execute only)</li>
-<li>Sharing on a module level corresponds to the way of viewing the problem</li>
-</ul></li>
-</ul>
-</section>
-<section id="physical-organization" class="level2">
-<h2 class="anchored" data-anchor-id="physical-organization">Physical Organization</h2>
-<ul>
-<li>Computer memory is organized into at least two levels:
-<ul>
-<li>Main memory (RAM)</li>
-<li>Secondary storage (disk)</li>
-</ul></li>
-<li>The flow of information between main memory and secondary memory is a major system concern</li>
-<li>The responsibility for this flow should not be assigned to the individual programmer because:
-<ul>
-<li>Memory available for a program plus its data may be insufficient</li>
-<li>Overlaying allows various modules to be assigned the same region of memory but is time consuming to the program</li>
-<li>Programmer does not know how much space will be available</li>
-</ul></li>
-</ul>
-</section>
-<section id="types-of-partitioning" class="level2">
-<h2 class="anchored" data-anchor-id="types-of-partitioning">Types of Partitioning</h2>
-<ul>
-<li>Fixed: Main memory is divided into a number of static partitions at system generation time. A process may be loaded into a partition of equal or greater size
-<ul>
-<li>Disadvantages:
-<ul>
-<li>A program may not fit into a partition</li>
-<li>Program needs to be designed with the use of overlays</li>
-<li>Main memory utilization is inefficient</li>
-<li>Internal fragmentation:
-<ul>
-<li>Wasted space due to the block of data loaded being smaller than the partition</li>
-</ul></li>
-<li>The number of partitions specified at system generation time limits the number of active processes in the system</li>
-<li>Small jobs will not utilize partition space efficiently</li>
-</ul></li>
-</ul></li>
-<li>Dynamic: Partitions are created dynamically, so that each process is loaded into a partition of exactly the size of that process.
-<ul>
-<li>Was used by IBM’s mainframe OS OS/MVT</li>
-<li>Issues:
-<ul>
-<li>External Fragmentation:
-<ul>
-<li>Memory becomes more and more fragmented</li>
-<li>Memory utilization declines</li>
-</ul></li>
-<li>Compaction:
-<ul>
-<li>Technique for overcoming external fragmentation</li>
-<li>OS shifts processes so that they are contiguous</li>
-<li>Free memory is together in one block</li>
-<li>Time consuming and wastes CPU time</li>
-</ul></li>
-</ul></li>
-<li>Uses 3 placement algorithms:
-<ul>
-<li>Best-fit</li>
-<li>First-fit</li>
-<li>Next-fit</li>
-</ul></li>
-</ul></li>
-<li>Simple Paging: Main memory is divided into a number of equal size frames. Each process is divided into a number of equal size pages of the same length as frames. A process is loaded by loading all of its pages into available, if not necessarily contiguous, frames.
-<ul>
-<li>Pages are chunks of a process</li>
-<li>Frames are available chunks of memory</li>
-<li>The method uses a “Page Table”
-<ul>
-<li>Maintained by the OS for each process</li>
-<li>Contains the frame location for each page in the process</li>
-<li>Processor must know how to access for the current process</li>
-<li>Used by the processor to translate logical addresses into physical addresses</li>
-<li>Kept in main memory</li>
-</ul></li>
-<li>Address Translation Scheme is used to convert logical address into physical address
-<ul>
-<li>Address generated by the CPU is divided into:
-<ul>
-<li>Page number (p): used as an index into a page table which contains base address of each page in physical memory</li>
-<li>Page Offset (d): Combined with the base address to define the physical memory address that is sent to the memory unit.</li>
-</ul></li>
-</ul></li>
-</ul></li>
-<li>Simple Segmentation: Each process is divided into a number of segments. A process is loaded by loading all of its segments into dynamic partitions that need not be contiguous
-<ul>
-<li>Segments may vary in length</li>
-<li>There is a maximum length</li>
-<li>Addressing consists of two parts:
-<ul>
-<li>Segment number</li>
-<li>An Offset</li>
-</ul></li>
-<li>Similar to dynamic partitioning</li>
-<li>Eliminates internal fragmentation</li>
-</ul></li>
-<li>Exercises: 1:
-<ul>
-<li>Consider a simple paging system with a page size of 2,048 bytes.</li>
-</ul>
+<section id="virtual-memory-running-programs-larger-than-ram" class="level2">
+<h2 class="anchored" data-anchor-id="virtual-memory-running-programs-larger-than-ram">Virtual Memory: Running Programs Larger Than RAM</h2>
+<p>Paging enables something powerful: a page doesn’t need to be in physical RAM. It can live on disk, loaded only when the process actually accesses it. This is <strong>demand paging</strong> — the foundation of virtual memory.</p>
+<p>Each page table entry has a <strong>valid/invalid bit</strong>: valid means the page is in RAM; invalid means it’s on disk or not yet allocated. When a process accesses an invalid page, the hardware generates a <strong>page fault</strong>. The OS handles it:</p>
 <ol type="1">
-<li>What is the worst amount (in bytes) of internal fragmentation that can occur?</li>
-<li>What is the average amount (in bytes) of internal fragmentation that can occur?</li>
-</ol></li>
-</ul>
-<p>2: - Consider a simple paging system with a page size of 2048 bytes. A process P of size 31577 bytes needs to be loaded. 1. How many frames (or pages) are needed for process P? 2. What amount (in bytes) of internal fragmentation will occur?</p>
-<p>3: - Assuming a 1 KB page size, what are the page numbers and offsets for the following address references? (provided as decimal values such as (page.offset)) 1. 1000 2. 3085</p>
-<ul>
-<li>Virtual memory paging: As with simple paging, except that it is not necessary to load all of the pages of a process. Nonresident pages that are needed are brought in later automatically.</li>
-<li>Virtual memory segmentation: As with simple segmentation, except that it is not necessary to load all of the segments of a process. Nonresident segments that are needed are brought in later automatically.</li>
-</ul>
-</section>
-<section id="fragmentation" class="level2">
-<h2 class="anchored" data-anchor-id="fragmentation">Fragmentation</h2>
-<ul>
-<li>External Fragmentation:
-<ul>
-<li>Total memory space exists to satisfy a request, but is not contiguous</li>
-</ul></li>
-<li>Internal Fragmentation:
-<ul>
-<li>Allocated memory may be slightly larger than requested memory; this size difference is memory internal to a partition, but not being used</li>
-</ul></li>
-<li>First fit analysis reveals that given N blocks of allocated memory, 0.5 N blocks will be lost to fragmentation.</li>
-</ul>
-</section>
-<section id="buddy-system" class="level2">
-<h2 class="anchored" data-anchor-id="buddy-system">Buddy System</h2>
-<ul>
-<li>Comprised of fixed and dynamic partitioning schemes</li>
-<li>Space available for allocation is treated as a single block</li>
-<li>Memory blocks are available in size 2^k words, L &lt;= k &lt;= U where:
-<ul>
-<li>2^L = smallest block that is allocated</li>
-<li>2^U = largest block that is allocated; usually, 2^U is the size of the entire memory available for allocation</li>
-</ul></li>
-<li>Requested block sizes are rounded up to the nearest power of 2</li>
-</ul>
-</section>
-<section id="virtual-memory" class="level2">
-<h2 class="anchored" data-anchor-id="virtual-memory">Virtual Memory</h2>
-<ul>
-<li>Virtual memory is the separation of user logic memory from physical memory.</li>
-<li>Importance:
-<ul>
-<li>Only part of the program needs to be in memory for execution</li>
-<li>Logical address space can therefore be much larger than physical memory</li>
-<li>Allows more efficient process creation</li>
-<li>Less I/O needed to load or swap processes</li>
-<li>More programs can be running concurrently</li>
-</ul></li>
-<li>Virtual Memory Address Spaces:
-<ul>
-<li>Usually starts at address 0, contiguous addresses until the end of available space</li>
-<li>Meanwhile physical memory is divided into frames</li>
-<li>The physical page frames assigned to a process may not be contiguous</li>
-<li>Memory management unit (MMU) maps logical to physical</li>
-</ul></li>
-<li>Virtual memory can be implemented via:
-<ul>
-<li>Demand paging:
-<ul>
-<li>Load pages only as they are needed</li>
-<li>If we want to run a process, we can either:
-<ul>
-<li>Load the entire process into memory at once</li>
-<li>Only bring in pages as needed
-<ul>
-<li>This is more efficient, but complex</li>
-</ul></li>
-</ul></li>
-<li>Demand paging is similar to paging system with swapping</li>
-</ul></li>
-<li>Demand segmentation</li>
-</ul></li>
-<li>Valid-Invalid Bit:
-<ul>
-<li>Each page table entry has a valid-invalid bit (v = in memory, i = not in memory)</li>
-<li>Initially set to i on all entries</li>
-<li>If the MMU encounters i during address translation, a page fault is triggered</li>
-</ul></li>
-<li>Page Fault Handling:
-<ol type="1">
-<li>Trap to the OS</li>
-<li>Save user registers and process state</li>
-<li>Determine the interrupt was a page fault</li>
-<li>Check the page reference is legal; determine disk location</li>
-<li>Issue a disk read to a free frame</li>
-<li>Allocate CPU to another process while waiting</li>
-<li>Receive disk I/O interrupt when complete</li>
-<li>Restore registers and page table; resume interrupted instruction</li>
-</ol></li>
-<li>Effective Access Time (EAT):
-<ul>
-<li>EAT = (1 - p) * memory access + p * (page fault overhead + swap page out + swap page in)</li>
-<li>Where p = page fault rate (0 &lt;= p &lt;= 1)</li>
-</ul></li>
-<li>Copy-on-Write (COW):
-<ul>
-<li>Allows parent and child processes to initially share the same pages in memory</li>
-<li>If either process modifies a shared page, only then is the page copied</li>
-<li>Allows more efficient process creation since only modified pages are copied</li>
-</ul></li>
-</ul>
+<li>Trap to the OS, save registers and process state</li>
+<li>Confirm it was a page fault; find the page’s location on disk</li>
+<li>Find a free frame (evicting a page if necessary)</li>
+<li>Initiate a disk read into that frame</li>
+<li>Schedule another process while waiting for disk I/O</li>
+<li>When the disk read completes, update the page table; resume the faulting process</li>
+</ol>
+<p>The process never knows any of this happened. The memory access just took longer.</p>
+<p><strong>Effective Access Time (EAT)</strong>: if <em>p</em> is the page fault rate, then:</p>
+<p>EAT = (1 − p) × memory_access_time + p × page_fault_overhead</p>
+<p>If memory access takes 100ns and a page fault takes 10ms, even a 0.1% fault rate increases average access time dramatically. Minimizing page fault rate is essential.</p>
+<p><strong>Copy-on-Write (COW)</strong>: when <code>fork()</code> is called, the child and parent initially share the parent’s physical pages (marked read-only). Only when either process writes to a page does the OS create a private copy for the writer. Most fork/exec pairs never write to inherited pages — COW makes those forks nearly free.</p>
 </section>
 <section id="page-replacement-algorithms" class="level2">
 <h2 class="anchored" data-anchor-id="page-replacement-algorithms">Page Replacement Algorithms</h2>
-<ul>
-<li><p>When no free frame is available, the OS must replace a page</p></li>
-<li><p>Goal: minimize the number of page faults</p></li>
-<li><p>FIFO (First-In, First-Out):</p>
-<ul>
-<li>Replace the oldest page in memory</li>
-<li>Simple to implement</li>
-<li>Suffers from Belady’s Anomaly: adding more frames can sometimes cause more page faults, not fewer</li>
-</ul></li>
-<li><p>Optimal Algorithm (OPT):</p>
-<ul>
-<li>Replace the page that will not be used for the longest period of time in the future</li>
-<li>Guarantees the minimum number of page faults</li>
-<li>Cannot be implemented in practice (requires future knowledge)</li>
-<li>Used as a benchmark to evaluate other algorithms</li>
-</ul></li>
-<li><p>Least Recently Used (LRU):</p>
-<ul>
-<li>Replace the page that has not been used for the longest time in the past</li>
-<li>Uses past knowledge as an approximation of future behavior</li>
-<li>Generally a good algorithm; does not suffer from Belady’s Anomaly</li>
-<li>More complex to implement than FIFO</li>
-</ul></li>
-<li><p>Counting Algorithms (less common):</p>
-<ul>
-<li>Least Frequently Used (LFU): replace page with smallest reference count</li>
-<li>Most Frequently Used (MFU): replace page with largest reference count (reasoning: smallest count was likely just brought in)</li>
-</ul></li>
-</ul>
+<p>When a page fault occurs and no free frames exist, the OS must evict a page. The choice affects performance significantly.</p>
+<p><strong>FIFO</strong>: evict the oldest page. Simple. Suffers from <strong>Belady’s Anomaly</strong> — adding more frames can <em>increase</em> page faults for some reference patterns. This counterintuitive result disqualifies FIFO from serious use.</p>
+<p><strong>Optimal (OPT)</strong>: evict the page not needed for the longest time in the future. Minimizes page faults provably. Impossible to implement (requires future knowledge). Used as a benchmark.</p>
+<p><strong>Least Recently Used (LRU)</strong>: evict the page not accessed for the longest time. Uses the past as a proxy for the future — reasonable given locality of reference. Performs close to OPT in practice. Does not suffer Belady’s Anomaly. Implementation challenge: tracking recency without checking timestamps on every access.</p>
+<div class="callout callout-style-default callout-important no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Board Exercise: Page Replacement
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Reference string: 7, 0, 1, 2, 0, 3, 0, 4, 2, 3, 0, 3, 2, 1, 2, 0, 1, 7, 0, 1</p>
+<p>With 3 frames, calculate the number of page faults under: 1. FIFO 2. LRU 3. OPT</p>
+<p>Compare the three. Notice that OPT serves as the theoretical minimum. How close does LRU get?</p>
+<p><em>(Also try FIFO with 4 frames and note if Belady’s Anomaly appears — does adding a frame ever </em>increase* page faults for this string?)*</p>
+</div>
+</div>
+<p><strong>Thrashing</strong> occurs when the OS spends more time swapping pages in and out than executing useful code. It happens when a process’s <strong>working set</strong> — the pages actively used in a time window — doesn’t fit in available frames. The process faults repeatedly; evicted pages are immediately needed again; CPU utilization collapses. The fix: reduce multiprogramming. Fewer active processes means each gets more frames, allowing working sets to fit in memory.</p>
 </section>
-<section id="thrashing" class="level2">
-<h2 class="anchored" data-anchor-id="thrashing">Thrashing</h2>
+<section id="secondary-storage-and-disk-scheduling" class="level2">
+<h2 class="anchored" data-anchor-id="secondary-storage-and-disk-scheduling">Secondary Storage and Disk Scheduling</h2>
+<p>Virtual memory requires efficient disk access, so understanding disk performance is essential.</p>
+<p>A Hard Disk Drive (HDD) stores data on spinning magnetic platters. Access time has three components:</p>
 <ul>
-<li>If a process does not have enough frames, the page-fault rate becomes very high</li>
-<li>The process spends more time paging than executing</li>
-<li>Leads to very low CPU utilization</li>
-<li>OS may respond by increasing multiprogramming, making the problem worse</li>
-<li>Occurs when: total size of localities &gt; total memory size</li>
+<li><strong>Seek time</strong> — moving the arm to the right track (3–12ms typical)</li>
+<li><strong>Rotational latency</strong> — waiting for the sector to spin under the head (average = half a full rotation)</li>
+<li><strong>Transfer time</strong> — reading/writing the data once positioned (fast)</li>
 </ul>
-</section>
-<section id="secondary-storage" class="level2">
-<h2 class="anchored" data-anchor-id="secondary-storage">Secondary Storage</h2>
-<ul>
-<li>Hard Disk Drives:
-<ul>
-<li><p>Platters range from .86” to 14” (historically)</p></li>
-<li><p>3.5”, 2.5” and 1.8” are the most common sizes</p></li>
-<li><p>Range from 30GB to 12TB, and growing</p></li>
-<li><p>Transfer rates reach theoretical rates of 6 Gb/sec, but are more realistically around 1 Gb/s</p></li>
-<li><p>Seek time ranges from 3ms to 12ms, where 9ms is common on desktop drives</p></li>
-<li><p>Latency is the time it takes for the disk to spin</p></li>
-<li><p>Average latency = 1/2 the time it takes for a full rotation</p></li>
-<li><p>HDDs spin platters of magnetic material at high speeds under a read-write head</p></li>
-<li><p>Transfer rate is the rate at which data flows between the disk and a computer</p></li>
-<li><p>Positioning/Access time is the time taken to move the disk arm to the desired cylinder (seek) and time for the desired sector to rotate under the disk head (rotational latency)</p></li>
-<li><p>Head crash results when the read-write head touches the platter</p>
-<ul>
-<li>This is really bad</li>
-</ul></li>
-<li><p>Disk Performance Parameters:</p>
-<ul>
-<li>The actual details of disk I/O operation depend on:
-<ul>
-<li>Computer System (hardware)</li>
-<li>Operating System</li>
-<li>Nature of the I/O channel and disk controller</li>
-</ul></li>
-<li>On a moveable-head system, the time it takes to position the head at the track is known as seek time</li>
-<li>The time it takes for the beginning of the sector to reach the head is known as rotational delay, or latency</li>
-<li>The sum of the seek time and the rotational delay is known as the access time</li>
-</ul></li>
-<li><p>Seek time:</p>
-<ul>
-<li>The time required to move the disk arm to the required track</li>
-<li>Three key components of seek time:
-<ul>
-<li>Startup time: The time it takes to accelerate the arm to its maximum speed</li>
-<li>Settling time: The time after positioning the head over the target track until track identification is confirmed</li>
-</ul></li>
-<li>Typical seek time is under 10ms</li>
-</ul></li>
-<li><p>Rotational Delay:</p>
-<ul>
-<li>The time required for the addressed area of the disk to rotate into a position where it is accessible by the read-write head</li>
-<li>Disk rotates at speeds ranging from 3600 to 15000 RPM</li>
-</ul></li>
-<li><p>Transfer time:</p>
-<ul>
-<li>The transfer time to or from the disk depends on the disk rotation speed</li>
-</ul></li>
-<li><p>Performance:</p>
-<ul>
-<li>Average access time is the sum of the average seek time and latency
-<ul>
-<li>For fast disks, 3ms + 2ms = 5ms</li>
-<li>For slow disks, 9ms + ~5.56ms = 14.56ms</li>
-</ul></li>
-</ul></li>
-<li><p>Example:</p>
-<ul>
-<li>To transfer a 4KB block of data on a 7200 RPM disk with a 5ms average seek time, 1 Gb/sec transfer rate with a .1ms controller overhead:
-<ul>
-<li>5ms + 4.17ms + transfer time =</li>
-<li>Transfer time = 4 KB / 1 Gb/sec * 8Gb/GB * 1 GB / 1024^2KB = 32/(1024^2) = 0.00003051758 s or .031 ms</li>
-<li>Average I/O time for 4KB block = 9.27ms + .031ms = 9.301ms</li>
-</ul></li>
-</ul></li>
-<li><p>Other Nonvolatile Memory:</p>
-<ul>
-<li>If disk-drive like, then called solid-state disks (SSD)</li>
-<li>Other forms include USB drives (thumb drives, flash drives), DRAM disk replacements, surface mounted motherboards, and main storage in devices like smartphones and tablets</li>
-<li>Can be more reliable than HDDs</li>
-<li>More expensive per GB</li>
-<li>Generally less capacity, but much faster</li>
-<li>No moving parts, so no seek time or rotational latency</li>
-</ul></li>
-<li><p>HDD Scheduling:</p>
-<ul>
-<li>The OS is responsible for using hardware efficiently — for disk drives, this means having a fast access time and disk bandwidth
-<ul>
-<li>Minimize seek time
-<ul>
-<li>seek time ~= seek distance</li>
-</ul></li>
-</ul></li>
-<li>Disk Bandwidth is the total number of bytes transferred, divided by the total time between the first request for service and the completion of the last transfer</li>
-<li>We can improve both the access time and the bandwidth by managing the order in which storage I/O requests are serviced</li>
-<li>There are many sources of disk I/O requests:
-<ul>
-<li>User processes</li>
-<li>System processes</li>
-<li>OS</li>
-</ul></li>
-<li>I/O request includes mode, disk address, memory address, and number of sectors to transfer</li>
-<li>OS maintains a queue of requests</li>
-<li>Idle disk can immediately work on I/O request, but busy disk means work must queue
-<ul>
-<li>This means we must use optimization algorithms to determine the order in which to service requests</li>
-</ul></li>
-<li>In the past, the OS was responsible for queue management and disk drive head scheduling, but now it is usually built into the storage devices or controllers.</li>
-</ul></li>
-</ul></li>
-<li>Hard Drive Algorithms:
-<ul>
-<li><p>Queue of requests: 98, 183, 37, 122, 14, 124, 65, 67</p></li>
-<li><p>Assume the disk head is at 53</p></li>
-<li><p>The disk is divided into 200 cylinders, numbered 0-199</p></li>
-<li><p>FCFS (FIFO):</p>
-<ul>
-<li>First Come First Serve</li>
-<li>The requests are serviced in the order they arrive</li>
-<li>Measure the total distance traveled by the disk head as a check of efficiency</li>
-</ul></li>
-<li><p>SCAN:</p>
-<ul>
-<li>The disk arm starts at one end of the disk and moves toward the other end, servicing requests until it reaches the other end, then reverses direction and services requests on the way back</li>
-<li>Also called the elevator algorithm</li>
-</ul></li>
-<li><p>C-SCAN:</p>
-<ul>
-<li>Provides a more uniform wait time than SCAN</li>
-<li>The head moves from one end of the disk to the other, servicing requests as it goes.
-<ul>
-<li>When it reaches the end, it immediately returns to the beginning of the disk, without servicing any requests on the return trip</li>
-</ul></li>
-<li>Treats the cylinders as a circular list that wraps around from the last cylinder to the first one.</li>
-</ul></li>
-<li><p>N-Step-SCAN:</p>
-<ul>
-<li>Segments the disk request queue into subqueues of length N</li>
-<li>Subqueues are processed one at a time, using SCAN</li>
-<li>While a queue is being processed, new requests must be added to some other queue</li>
-<li>If fewer than N requests are available at the end of the scan, all of them are processed with the next scan</li>
-</ul></li>
-<li><p>FSCAN:</p>
-<ul>
-<li>Uses two subqueues</li>
-<li>When a scan begins, all of the requests are in one of the queues, with the other empty</li>
-<li>During SCAN, all new requests are put into the other queue</li>
-<li>Service of new requests is deferred until all of the old requests have been processed</li>
-</ul></li>
-<li><p>Shortest Service Time First (SSTF):</p>
-<ul>
-<li>Select the disk I/O request that requires the least movement of the disk arm from its current position</li>
-<li>Always choose the minimum seek time</li>
-<li>Common and has natural appeal, but can cause starvation</li>
-<li>SCAN and C-SCAN perform better for systems under heavy disk load and have less starvation</li>
-</ul></li>
-<li><p>Choosing an Algorithm:</p>
-<ul>
-<li>SSTF is common and has a natural appeal with good performance</li>
-<li>SCAN and C-SCAN perform better for systems that place a heavy load on the disk
-<ul>
-<li>Generally less starvation</li>
-</ul></li>
-<li>To avoid starvation, Linux implements deadline scheduler
-<ul>
-<li>Maintains separate read and write queues, gives read priority</li>
-<li>Because processes more likely to block on read than write</li>
-</ul></li>
-</ul></li>
-<li><p>Track: A circular path on disk where data is recorded, structured like rings on a tree, where tracks are labeled starting from 0 on the outside and increasing as you move toward the center of the disk</p></li>
-<li><p>Cylinder: A stack of tracks</p></li>
-<li><p>Sector: A portion of a track, usually 512 bytes, but modern disks can have larger sectors, such as 4KB. These are grouped into blocks</p></li>
-</ul></li>
-<li>Average Latency Computation:
-<ul>
-<li>Average latency = 1/2 * (1/RPM) * 60 seconds/minute
-<ul>
-<li>For a 7200 RPM disk: average latency = 1/2 * (1/7200) * 60 = 4.17ms</li>
-</ul></li>
-</ul></li>
-<li>Equations to consider:
-<ul>
-<li>Rotational Latency = (60,000ms / x RPM)</li>
-<li>Average Rotational Latency = 1/2 * Rotational Latency</li>
-<li>Transfer Time (ms) = (Block Size (GB)) / (Transfer Rate (GB/s)) * (8Gb/s / 1 GB/s) * (1000ms / 1s) = Rotational Latency / # of sectors</li>
-<li>Total Transfer Time = Avg Seek + Controller Overhead + Transfer Time</li>
-<li>Average Access Time = Average Seek Time + Average Rotational Latency + Average Transfer Time</li>
-<li>Average I/O time = Average Access Time + (amount to transfer / transfer rate) + controller overhead</li>
-<li>Transfer rate (bytes/ms) = total track size (bytes) / one disk rev (ms)</li>
-<li>Total Capacity of cylinder = # of platters * # of platter sides used * total capacity of a track</li>
-<li>Total capacity of a track = capacity of cylinder * number of cylinders</li>
-<li>Total capacity of a track = (sector size) * (sectors/track)</li>
-<li>Time to transfer x amount of data = (x bytes) / (transfer rate in bytes/ms)</li>
-<li>Avg time to locate and transfer a single sector (ms) = (avg seek time) + (avg rotational latency) + (1/RPM/60000)</li>
-<li>Avg time to transfer x random sectors (ms) = (x # of sectors) * (avg time to locate and transfer a single sector)</li>
-<li>Avg time to transfer x consecutive sectors (ms) = Average seek time + avg rotational latency + (x * sector size) / (transfer rate in bytes/ms) + controller overhead</li>
-</ul></li>
-<li>Exercises:
-<ol type="1">
-<li><p>Consider a disk queue holding requests to the following cylinders in the listed order: 110, 22, 3, 11, 75, 180, 100, 85, 60, 23 What is the order that the requests are serviced, assuming the disk head is at cylinder 90 and moving upward through the cylinders, using:</p></li>
-<li><p>The FCFS scheduling algorithm</p></li>
-<li><p>The SCAN scheduling algorithm</p></li>
-<li><p>The C-SCAN scheduling algorithm</p></li>
-<li><p>The SSTF scheduling algorithm</p></li>
-<li><p>Consider a disk with 10,000 RPM, an average seek time of 8ms, and 500 sectors per track:</p></li>
-<li><p>What is the average time to read a random sector from the disk?</p></li>
-<li><p>What is the average time to read 100 consecutive sectors from the disk?</p></li>
-</ol></li>
-</ul>
+<p>For a 7200 RPM disk: average rotational latency = ½ × (60s / 7200) = <strong>4.17ms</strong>. Seek time dominates performance; minimizing unnecessary arm movement is the goal of disk scheduling.</p>
+<p><strong>FCFS</strong>: service requests in arrival order. Simple, but head movement can be large and erratic.</p>
+<p><strong>SCAN</strong> (elevator algorithm): sweep from one end to the other, servicing requests along the way, then reverse. Like an elevator — doesn’t skip back for requests behind it.</p>
+<p><strong>C-SCAN</strong>: like SCAN, but on the return trip the head jumps immediately back to the start without servicing. More uniform wait times — requests near one end don’t get double service.</p>
+<p><strong>SSTF (Shortest Service Time First)</strong>: always service the nearest request to the current head position. Minimizes seek per request; can starve distant requests.</p>
+<div class="callout callout-style-default callout-important no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Board Exercise: Disk Scheduling
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Request queue: 98, 183, 37, 122, 14, 124, 65, 67. Head starts at cylinder 53, moving upward.</p>
+<p>For each algorithm, trace the head movement and compute total distance traveled: 1. FCFS 2. SCAN 3. C-SCAN 4. SSTF</p>
+<p>Which minimizes total movement? Which gives the most uniform wait times? Which would you use on a heavy-write database server?</p>
+<p><em>(Note: SSDs skip all of this analysis — no moving parts means seek time and rotational latency are essentially zero. Algorithms designed for HDDs are irrelevant to SSDs.)</em></p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Discussion Prompt
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Chrome with 10 tabs open uses several gigabytes of RAM on a machine that has 16GB installed. Why? What’s actually in that memory? If you forced Chrome to run in only 1GB, what would happen at the OS level, and what would you observe from the user’s perspective?</p>
+</div>
+</div>
 
 
 </section>
@@ -909,7 +559,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp('/' + window.location.host + '/');
+      var filterRegex = new RegExp("https:\/\/nmorgan505\.github\.io\/CSC345Notes\/");
     var isInternal = (href) => {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
