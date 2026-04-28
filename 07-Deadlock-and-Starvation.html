@@ -67,6 +67,9 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 <style>html{ scroll-behavior: smooth; }</style>
+<script src="site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
 
 </head>
@@ -271,7 +274,13 @@ ul.task-list li input[type="checkbox"] {
   <ul>
   <li><a href="#four-cars-at-a-four-way-stop" id="toc-four-cars-at-a-four-way-stop" class="nav-link active" data-scroll-target="#four-cars-at-a-four-way-stop">Four Cars at a Four-Way Stop</a></li>
   <li><a href="#the-four-necessary-conditions" id="toc-the-four-necessary-conditions" class="nav-link" data-scroll-target="#the-four-necessary-conditions">The Four Necessary Conditions</a></li>
-  <li><a href="#resource-allocation-graphs" id="toc-resource-allocation-graphs" class="nav-link" data-scroll-target="#resource-allocation-graphs">Resource Allocation Graphs</a></li>
+  <li><a href="#resource-allocation-graphs" id="toc-resource-allocation-graphs" class="nav-link" data-scroll-target="#resource-allocation-graphs">Resource Allocation Graphs</a>
+  <ul class="collapse">
+  <li><a href="#example-1-no-cycle-no-deadlock" id="toc-example-1-no-cycle-no-deadlock" class="nav-link" data-scroll-target="#example-1-no-cycle-no-deadlock">Example 1: No Cycle — No Deadlock</a></li>
+  <li><a href="#example-2-cycle-with-single-instance-resources-deadlock" id="toc-example-2-cycle-with-single-instance-resources-deadlock" class="nav-link" data-scroll-target="#example-2-cycle-with-single-instance-resources-deadlock">Example 2: Cycle with Single-Instance Resources — Deadlock</a></li>
+  <li><a href="#example-3-cycle-with-multi-instance-resources-not-necessarily-deadlock" id="toc-example-3-cycle-with-multi-instance-resources-not-necessarily-deadlock" class="nav-link" data-scroll-target="#example-3-cycle-with-multi-instance-resources-not-necessarily-deadlock">Example 3: Cycle with Multi-Instance Resources — Not Necessarily Deadlock</a></li>
+  <li><a href="#example-4-three-processes-deadlock-detection-exercise" id="toc-example-4-three-processes-deadlock-detection-exercise" class="nav-link" data-scroll-target="#example-4-three-processes-deadlock-detection-exercise">Example 4: Three Processes — Deadlock Detection Exercise</a></li>
+  </ul></li>
   <li><a href="#strategies-for-handling-deadlock" id="toc-strategies-for-handling-deadlock" class="nav-link" data-scroll-target="#strategies-for-handling-deadlock">Strategies for Handling Deadlock</a>
   <ul class="collapse">
   <li><a href="#prevention-make-one-condition-impossible" id="toc-prevention-make-one-condition-impossible" class="nav-link" data-scroll-target="#prevention-make-one-condition-impossible">Prevention: Make One Condition Impossible</a></li>
@@ -377,6 +386,136 @@ Board Exercise: Identify the Conditions
 <li><strong>Cycle, one instance per resource type</strong> → deadlock</li>
 <li><strong>Cycle, multiple instances per resource type</strong> → possible deadlock, needs further analysis</li>
 </ul>
+<p>The diagrams below use dashed arrows (→ ·· ·→) for <em>request</em> edges and solid arrows (→) for <em>assignment</em> edges.</p>
+<section id="example-1-no-cycle-no-deadlock" class="level3">
+<h3 class="anchored" data-anchor-id="example-1-no-cycle-no-deadlock">Example 1: No Cycle — No Deadlock</h3>
+<p>P1 holds R1 and is waiting for R2. P2 holds R2 and is not waiting for anything. There is no cycle: following the arrows never brings you back to where you started.</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#dbeafe', 'primaryBorderColor': '#3b82f6'}}}%%
+flowchart LR
+    P1((P1)):::process
+    P2((P2)):::process
+    R1[R1]:::resource
+    R2[R2]:::resource
+
+    R1 --&gt; P1
+    R2 --&gt; P2
+    P1 -.-&gt;|requests| R2
+
+    classDef process fill:#dbeafe,stroke:#3b82f6,color:#1e3a5f
+    classDef resource fill:#fef3c7,stroke:#f59e0b,color:#78350f
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p>P2 can finish and release R2 at any time — P1 is merely waiting, not deadlocked. The system will make progress.</p>
+</section>
+<section id="example-2-cycle-with-single-instance-resources-deadlock" class="level3">
+<h3 class="anchored" data-anchor-id="example-2-cycle-with-single-instance-resources-deadlock">Example 2: Cycle with Single-Instance Resources — Deadlock</h3>
+<p>P1 holds R1 and requests R2. P2 holds R2 and requests R1. Each is waiting for the other to release something neither will ever release.</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">%%{init: {'theme': 'base'}}%%
+flowchart LR
+    P1((P1)):::process
+    P2((P2)):::process
+    R1[R1]:::resource
+    R2[R2]:::resource
+
+    R1 --&gt;|assigned| P1
+    R2 --&gt;|assigned| P2
+    P1 -.-&gt;|requests| R2
+    P2 -.-&gt;|requests| R1
+
+    classDef process fill:#fee2e2,stroke:#ef4444,color:#7f1d1d
+    classDef resource fill:#fef3c7,stroke:#f59e0b,color:#78350f
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p>Trace the cycle: P1 → R2 → P2 → R1 → P1. Every node in the cycle is permanently blocked. This is the deadlock from the semaphore example earlier in the lecture with <code>s1</code>/<code>s2</code>.</p>
+</section>
+<section id="example-3-cycle-with-multi-instance-resources-not-necessarily-deadlock" class="level3">
+<h3 class="anchored" data-anchor-id="example-3-cycle-with-multi-instance-resources-not-necessarily-deadlock">Example 3: Cycle with Multi-Instance Resources — Not Necessarily Deadlock</h3>
+<p>R1 has <strong>two instances</strong>. P1 holds one instance of R1 and requests R2. P2 holds R2 and requests R1. P3 holds the other instance of R1 and needs nothing else.</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">%%{init: {'theme': 'base'}}%%
+flowchart LR
+    P1((P1)):::process
+    P2((P2)):::process
+    P3((P3)):::process
+    R1["R1\n● ●"]:::resource
+    R2[R2]:::resource
+
+    R1 --&gt;|inst 1| P1
+    R1 --&gt;|inst 2| P3
+    R2 --&gt;|assigned| P2
+    P1 -.-&gt;|requests| R2
+    P2 -.-&gt;|requests| R1
+
+    classDef process fill:#dcfce7,stroke:#22c55e,color:#14532d
+    classDef resource fill:#fef3c7,stroke:#f59e0b,color:#78350f
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p>There is a cycle (P1 → R2 → P2 → R1 → P1), but it is <strong>not</strong> a deadlock. P3 holds R1 instance 2 and isn’t waiting for anything — P3 can finish and release its instance. That frees R1 for P2, which can then finish and release R2, which unblocks P1. The safe sequence is P3 → P2 → P1.</p>
+<p>The key lesson: a cycle is a <em>necessary</em> condition for deadlock with single-instance resources, but not <em>sufficient</em> when resources have multiple instances.</p>
+</section>
+<section id="example-4-three-processes-deadlock-detection-exercise" class="level3">
+<h3 class="anchored" data-anchor-id="example-4-three-processes-deadlock-detection-exercise">Example 4: Three Processes — Deadlock Detection Exercise</h3>
+<p>This is the graph you should be able to draw and analyze from scratch:</p>
+<ul>
+<li>P1 holds R2, requests R1</li>
+<li>P2 holds nothing, requests R1 and R2 (it has requested both but neither is granted yet — R1 has one instance, R2 has one instance, both are held)</li>
+<li>P3 holds R1, requests R2</li>
+</ul>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">%%{init: {'theme': 'base'}}%%
+flowchart LR
+    P1((P1)):::process
+    P2((P2)):::process
+    P3((P3)):::process
+    R1[R1]:::resource
+    R2[R2]:::resource
+
+    R2 --&gt;|assigned| P1
+    R1 --&gt;|assigned| P3
+    P1 -.-&gt;|requests| R1
+    P2 -.-&gt;|requests| R1
+    P2 -.-&gt;|requests| R2
+    P3 -.-&gt;|requests| R2
+
+    classDef process fill:#fee2e2,stroke:#ef4444,color:#7f1d1d
+    classDef resource fill:#fef3c7,stroke:#f59e0b,color:#78350f
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p>Two cycles exist here: P1 → R1 → P3 → R2 → P1, and P2 → R1 → P3 → R2 → P2. Since both resources have only one instance, both cycles confirm deadlock. P1, P2, and P3 are all permanently blocked.</p>
 <div class="callout callout-style-default callout-tip no-icon callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -387,9 +526,10 @@ Board Exercise: Draw the Graph
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Draw the resource allocation graph for the semaphore example above. Does it contain a cycle? Now add a third semaphore s3 and a third process P3 that holds s3 and waits for s1. Add P1 also wanting s3. Is the system now definitely deadlocked, or only possibly?</p>
+<p>Draw the resource allocation graph for the semaphore example above (P1 holds s1/requests s2, P2 holds s2/requests s1). Does it contain a cycle? Now add a third semaphore s3 and a third process P3 that holds s3 and waits for s1. Add P1 also wanting s3. Is the system now definitely deadlocked, or only possibly?</p>
 </div>
 </div>
+</section>
 </section>
 <section id="strategies-for-handling-deadlock" class="level2">
 <h2 class="anchored" data-anchor-id="strategies-for-handling-deadlock">Strategies for Handling Deadlock</h2>
