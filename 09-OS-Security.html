@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>09 · OS Security – CSC 345 — Operating Systems</title>
+<title>09 · OS Security – CSC 345 — Operating Systems (Enhanced)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -79,7 +79,7 @@ ul.task-list li input[type="checkbox"] {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">CSC 345 — Operating Systems</span>
+    <span class="navbar-title">CSC 345 — Operating Systems (Enhanced)</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -179,7 +179,7 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">CSC 345 — Operating Systems Notes</span></a>
+ <span class="menu-text">CSC 345 — Operating Systems (Enhanced)</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -269,23 +269,15 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#operating-system-security" id="toc-operating-system-security" class="nav-link active" data-scroll-target="#operating-system-security">Operating System Security</a></li>
-  <li><a href="#the-security-problem" id="toc-the-security-problem" class="nav-link" data-scroll-target="#the-security-problem">The Security Problem</a></li>
+  <li><a href="#think-like-an-attacker" id="toc-think-like-an-attacker" class="nav-link active" data-scroll-target="#think-like-an-attacker">Think Like an Attacker</a></li>
   <li><a href="#security-violation-categories" id="toc-security-violation-categories" class="nav-link" data-scroll-target="#security-violation-categories">Security Violation Categories</a></li>
-  <li><a href="#system-access-threats" id="toc-system-access-threats" class="nav-link" data-scroll-target="#system-access-threats">System Access Threats</a></li>
-  <li><a href="#intruder-types" id="toc-intruder-types" class="nav-link" data-scroll-target="#intruder-types">Intruder Types</a></li>
-  <li><a href="#security-violation-methods" id="toc-security-violation-methods" class="nav-link" data-scroll-target="#security-violation-methods">Security Violation Methods</a></li>
-  <li><a href="#malicious-software" id="toc-malicious-software" class="nav-link" data-scroll-target="#malicious-software">Malicious Software</a></li>
-  <li><a href="#principle-of-least-privilege" id="toc-principle-of-least-privilege" class="nav-link" data-scroll-target="#principle-of-least-privilege">Principle of Least Privilege</a></li>
-  <li><a href="#four-layer-model-of-security" id="toc-four-layer-model-of-security" class="nav-link" data-scroll-target="#four-layer-model-of-security">Four Layer Model of Security</a></li>
-  <li><a href="#countermeasures" id="toc-countermeasures" class="nav-link" data-scroll-target="#countermeasures">Countermeasures</a></li>
-  <li><a href="#ids-components" id="toc-ids-components" class="nav-link" data-scroll-target="#ids-components">IDS components</a></li>
-  <li><a href="#user-authentication" id="toc-user-authentication" class="nav-link" data-scroll-target="#user-authentication">User Authentication</a></li>
-  <li><a href="#means-of-authentication" id="toc-means-of-authentication" class="nav-link" data-scroll-target="#means-of-authentication">Means of Authentication</a></li>
-  <li><a href="#access-control" id="toc-access-control" class="nav-link" data-scroll-target="#access-control">Access control</a></li>
+  <li><a href="#whos-attacking" id="toc-whos-attacking" class="nav-link" data-scroll-target="#whos-attacking">Who’s Attacking?</a></li>
+  <li><a href="#malware-structure-and-types" id="toc-malware-structure-and-types" class="nav-link" data-scroll-target="#malware-structure-and-types">Malware: Structure and Types</a></li>
+  <li><a href="#the-principle-of-least-privilege" id="toc-the-principle-of-least-privilege" class="nav-link" data-scroll-target="#the-principle-of-least-privilege">The Principle of Least Privilege</a></li>
+  <li><a href="#four-layers-of-defense" id="toc-four-layers-of-defense" class="nav-link" data-scroll-target="#four-layers-of-defense">Four Layers of Defense</a></li>
+  <li><a href="#authentication-and-access-control" id="toc-authentication-and-access-control" class="nav-link" data-scroll-target="#authentication-and-access-control">Authentication and Access Control</a></li>
+  <li><a href="#intrusion-detection" id="toc-intrusion-detection" class="nav-link" data-scroll-target="#intrusion-detection">Intrusion Detection</a></li>
   <li><a href="#cryptography-as-a-security-tool" id="toc-cryptography-as-a-security-tool" class="nav-link" data-scroll-target="#cryptography-as-a-security-tool">Cryptography as a Security Tool</a></li>
-  <li><a href="#buffer-overflow" id="toc-buffer-overflow" class="nav-link" data-scroll-target="#buffer-overflow">Buffer Overflow</a></li>
-  <li><a href="#defense-against-buffer-overflow" id="toc-defense-against-buffer-overflow" class="nav-link" data-scroll-target="#defense-against-buffer-overflow">Defense against Buffer Overflow</a></li>
   </ul>
 </nav>
     </div>
@@ -311,297 +303,217 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="operating-system-security" class="level2">
-<h2 class="anchored" data-anchor-id="operating-system-security">Operating System Security</h2>
-</section>
-<section id="the-security-problem" class="level2">
-<h2 class="anchored" data-anchor-id="the-security-problem">The Security Problem</h2>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Learning Objectives
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>By the end of this lecture, you should be able to:</p>
 <ul>
-<li>System is secure if resources are used and accessed as intended under all circumstances.
-<ul>
-<li>This is basically impossible to achieve.</li>
-</ul></li>
-<li>Some terms:
-<ul>
-<li>Intruder/Attacker: Someone attempting to breach security</li>
-<li>Threat: A potential security violation (suspected but not always verified)</li>
-<li>Attack: An attempt to breach security
-<ul>
-<li>Can be accidental or malicious</li>
-</ul></li>
-<li>Vulnerability: A weakness in the system that can be exploited</li>
-<li>Easier to protect against accidental attacks than malicious ones</li>
-</ul></li>
+<li>Classify security violations using the CIA triad and the five violation categories</li>
+<li>Distinguish masqueraders, misfeasors, and clandestine users and explain which mechanisms defend against each</li>
+<li>Describe how each layer of the four-layer security model works and what it protects against</li>
+<li>Explain the principle of least privilege and apply it to a system design scenario</li>
+<li>Compare symmetric and asymmetric cryptography and explain why both are used in practice</li>
 </ul>
+</div>
+</div>
+<section id="think-like-an-attacker" class="level2">
+<h2 class="anchored" data-anchor-id="think-like-an-attacker">Think Like an Attacker</h2>
+<p>Security courses usually focus on defenses. This one starts differently: <strong>before you can design a defense, you need to understand what you’re defending against.</strong></p>
+<p>What does an attacker want? One of a few things:</p>
+<ul>
+<li><strong>Access to data</strong> they’re not supposed to see (read your files, intercept your traffic, steal credentials)</li>
+<li><strong>Ability to modify data</strong> they shouldn’t touch (change a grade, alter a transaction, inject malicious code)</li>
+<li><strong>Control of a system</strong> they don’t own (run code, host malware, mine cryptocurrency on your hardware)</li>
+<li><strong>Ability to prevent legitimate use</strong> (crash the service, hold files ransom)</li>
+</ul>
+<p>Every security mechanism in the OS exists to make one of these goals harder. The uncomfortable truth is that no system is perfectly secure. The goal is to make attacks more expensive than they’re worth, detect breaches when they happen, and limit damage when they succeed anyway.</p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opening Discussion
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Before diving in: what security violations have you personally experienced or heard about recently? For each one, try to classify it: was it a confidentiality breach, an integrity breach, a denial of service? Who was the attacker — an outsider, an insider, automated malware? <em>(This grounds the abstract framework in things students have actually seen.)</em></p>
+</div>
+</div>
 </section>
 <section id="security-violation-categories" class="level2">
 <h2 class="anchored" data-anchor-id="security-violation-categories">Security Violation Categories</h2>
+<p>Security violations map to what the attacker achieves:</p>
 <ul>
-<li>Breach of confidentiality: Unauthorized access to sensitive data</li>
-<li>Breach of integrity: Unauthorized modification of data</li>
-<li>Breach of availability: Unauthorized destruction of data</li>
-<li>Theft of service: Unauthorized use of system resources</li>
-<li>Denial of service (DOS): Prevention of legitimate use</li>
+<li><strong>Breach of confidentiality</strong> — unauthorized access to sensitive data</li>
+<li><strong>Breach of integrity</strong> — unauthorized modification of data</li>
+<li><strong>Breach of availability</strong> — unauthorized destruction of data or prevention of access</li>
+<li><strong>Theft of service</strong> — unauthorized use of system resources</li>
+<li><strong>Denial of service (DoS)</strong> — preventing legitimate use by flooding or crashing the system</li>
 </ul>
+<p>The <strong>CIA triad</strong> (Confidentiality, Integrity, Availability) is the standard framework for thinking about what a security policy must protect. A good system design asks: for each piece of data or resource, who should be able to read it? Who should be able to modify it? How reliably must it be accessible?</p>
 </section>
-<section id="system-access-threats" class="level2">
-<h2 class="anchored" data-anchor-id="system-access-threats">System Access Threats</h2>
-<ul>
-<li>System access threats fall into two general categories:
-<ul>
-<li>Intruders: Individuals who attempt to gain unauthorized access to a system</li>
-<li>Malicious software: Programs that attempt to exploit system vulnerabilities</li>
-</ul></li>
-</ul>
+<section id="whos-attacking" class="level2">
+<h2 class="anchored" data-anchor-id="whos-attacking">Who’s Attacking?</h2>
+<p>Two broad sources of threats: humans (intruders) and automated programs (malware). Real attacks often combine both.</p>
+<p><strong>Masqueraders</strong> are outsiders who steal credentials and impersonate legitimate users. A hacker using a stolen password is a masquerader. Defense: strong authentication — make impersonation hard.</p>
+<p><strong>Misfeasors</strong> are legitimate insiders who exceed their authorized access — an employee reading HR files they have no business seeing, or an admin abusing privileges for personal gain. Their activity looks legitimate on the surface, making detection hard. Defense: granular access control and auditing.</p>
+<p><strong>Clandestine users</strong> gain privileged (root/admin) control and use it to disable logging and evade auditing. They attack the accountability layer — the goal is to act without evidence. Defense: tamper-evident logging, privileged operation monitoring.</p>
+<p>Each type requires different defenses. The mistake is assuming all attackers look the same.</p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Class Activity: Classify the Attack
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>For each scenario, identify the intruder type and the appropriate countermeasure:</p>
+<ol type="1">
+<li>A former employee still has VPN credentials three months after leaving the company</li>
+<li>A system administrator copies the customer database to a personal laptop</li>
+<li>An attacker gains root access and deletes all system logs before exfiltrating data</li>
+<li>An employee changes their own salary record in the HR system</li>
+</ol>
+</div>
+</div>
 </section>
-<section id="intruder-types" class="level2">
-<h2 class="anchored" data-anchor-id="intruder-types">Intruder Types</h2>
+<section id="malware-structure-and-types" class="level2">
+<h2 class="anchored" data-anchor-id="malware-structure-and-types">Malware: Structure and Types</h2>
+<p>Malicious software (malware) falls into two structural categories:</p>
+<p><strong>Parasitic malware</strong> cannot exist independently — it attaches to legitimate programs and runs when they do. Viruses copy themselves into executables. Logic bombs are dormant code planted in legitimate programs, activating when a condition is met (a specific date, the absence of a particular account, a key input). Backdoors are hidden authentication bypasses — a hardcoded password or extra admin account — that persist after the initial compromise.</p>
+<p><strong>Independent malware</strong> runs as a standalone process. Worms spread across networks autonomously, exploiting vulnerabilities to replicate from machine to machine without any human action (no need to click an attachment). Bots are compromised machines participating in a botnet — a network of thousands of infected computers used collectively for spam, DDoS attacks, and further attacks.</p>
+<p>Notable types:</p>
 <ul>
-<li>Masquerader: An individual who is not authorized to use the computer and who penetrates a system’s access controls to exploit a legitimate user’s account
-<ul>
-<li>Example: A hacker who steals a password to gain access to a system</li>
-</ul></li>
-<li>Misfeasor: A legitimate user who accesses data, programs, or resources for which such access is not authorized, or who is authorized for such access, but misuses their privileges
-<ul>
-<li>Example: An employee who accesses sensitive data for personal gain</li>
-</ul></li>
-<li>Clandestine user: An individual who seizes supervisory control of the system and uses this control to evade auditing and access controls or to suppress audit collection
-<ul>
-<li>Example: A hacker who gains root access to a system and disables auditing features</li>
-</ul></li>
+<li><strong>Trojan horse</strong> — looks legitimate, secretly performs malicious actions. Up to 80% of spam has historically been delivered through spyware-infected machines whose owners had no idea.</li>
+<li><strong>Ransomware</strong> — encrypts your files, demands payment for the key. Key insight: paying doesn’t guarantee recovery. The only reliable defense is offline backups.</li>
+<li><strong>Spyware</strong> — harvests personal data (browsing habits, passwords, financial info), often bundled with “free” software.</li>
 </ul>
+<p>All of these try to exploit or escalate privileges. A compromised web server account might pivot to root via a kernel vulnerability; a phishing email might capture credentials for a low-privilege account that has access to everything.</p>
 </section>
-<section id="security-violation-methods" class="level2">
-<h2 class="anchored" data-anchor-id="security-violation-methods">Security Violation Methods</h2>
-<ul>
-<li>Masquerading (breach authentication):
-<ul>
-<li>Pretending to be an authorized user to escalate privileges</li>
-</ul></li>
-<li>Replay attack:
-<ul>
-<li>As is or with message modification</li>
-</ul></li>
-<li>Man-in-the-middle attack, now normally called a On-Path attack:
-<ul>
-<li>Intruder sits in data flow, masquerading as sender to receiver and vice versa</li>
-</ul></li>
-<li>Session hijacking:
-<ul>
-<li>Intercept an already established session to bypass authentication</li>
-</ul></li>
-<li>Privilege escalation:
-<ul>
-<li>Common attack with access beyond what a user or resource is supposed to have</li>
-</ul></li>
-</ul>
+<section id="the-principle-of-least-privilege" class="level2">
+<h2 class="anchored" data-anchor-id="the-principle-of-least-privilege">The Principle of Least Privilege</h2>
+<p>Every user, process, and component should have the minimum access necessary to do its job — no more. Jerome Saltzer articulated this in 1974 for the Multics OS:</p>
+<blockquote class="blockquote">
+<p><em>“The purpose of this principle is to reduce the number of potential interactions among privileged programs to the minimum necessary to operate correctly, so that one may develop confidence that unintentional, unwanted, or improper uses of privilege do not occur.”</em></p>
+</blockquote>
+<p>In practice: your web browser shouldn’t have access to your SSH keys. Your text editor shouldn’t make network connections. A compromised application should be limited in what it can destroy. When a breach occurs — and eventually it will — least privilege limits the blast radius.</p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Board Exercise: Apply Least Privilege
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A web application needs to: serve static HTML files, write to a log file, read from a database, and send email notifications.</p>
+<p>Design the minimum permission set for the web server process. What should it <em>not</em> be able to do, even though the server runs as a software process on the machine? For each permission you’d deny, explain what attack it prevents.</p>
+</div>
+</div>
 </section>
-<section id="malicious-software" class="level2">
-<h2 class="anchored" data-anchor-id="malicious-software">Malicious Software</h2>
-<ul>
-<li>Programs that exploit vulnerabilities in a computer system</li>
-<li>Also called malware</li>
-<li>Can be split into two categories:
-<ul>
-<li>Parasitic: Fragments of programs that cannot exist independently of some real application program, utility, or system program
-<ul>
-<li>Viruses, logic bombs, and backdoors are examples</li>
-</ul></li>
-<li>Independent: Self contained programs that can be scheduled and run by the operating system
-<ul>
-<li>Worms and bot programs are examples</li>
-</ul></li>
-</ul></li>
-<li>There are a multitude of different types of malware, with many names</li>
-<li>Trojan horse:
-<ul>
-<li>Code segment that misuses its environment</li>
-<li>Exploits mechanisms for allowing programs written by users to be executed by other users</li>
-<li>Spyware, popup browser windows, covert channels</li>
-<li>Up to 80% of spam delivered by spyware-infected systems</li>
-</ul></li>
-<li>Trap Door:
-<ul>
-<li>Specific user identifier or password that circumvents normal security procedures</li>
-<li>Could be included in a compiler</li>
-</ul></li>
-<li>Malware:
-<ul>
-<li>Software designed to exploit, disable, or damage computers</li>
-<li>Spyware: Programs frequently installed with legitimate software to display ads and capture user data</li>
-<li>Ransomware: Locks up data via encryption and demands payment for decryption key</li>
-</ul></li>
-<li>Others include trap doors, logic bombs</li>
-<li>All try to violate the principle of least privilege</li>
-<li>Goal frequently is to leave behind a Remote Access Tool (RAT) for repeated access</li>
-</ul>
+<section id="four-layers-of-defense" class="level2">
+<h2 class="anchored" data-anchor-id="four-layers-of-defense">Four Layers of Defense</h2>
+<p>Security is layered — no single mechanism is sufficient, and defeating one layer should still leave others:</p>
+<p><strong>Physical security</strong> is the foundation. Physical access to a machine bypasses almost all software security. Countermeasures: locked server rooms, security cameras, full-disk encryption (a stolen drive contains only ciphertext), hardware security modules. Physical security is often the weakest link in small organizations.</p>
+<p><strong>Network security</strong> controls what enters and leaves. Attacks at this layer include packet sniffing (intercepting cleartext traffic), spoofing (forging source addresses), and on-path attacks (impersonating both parties in a communication). Countermeasures: encryption (TLS/HTTPS makes sniffed traffic useless), authentication (cryptographic proof of identity), and filtering (firewalls with strict ingress/egress rules).</p>
+<p><strong>Operating system security</strong> is where this course has spent most of its time. Attacks target insecure defaults, unpatched vulnerabilities, and misconfigured permissions. Countermeasures include regular patching, hardening (disabling unused services, strict permissions, removing unnecessary SUID binaries), and OS-level sandboxing via namespaces, seccomp filters, and containers.</p>
+<p><strong>Application security</strong> addresses bugs in software itself: logic errors, improper input validation, and memory safety violations. The buffer overflow attacks in the next lecture are application-layer attacks. Countermeasures include sandboxing applications (limiting which system calls they can make), software signing, and — critically — writing memory-safe code.</p>
+<div class="callout callout-style-default callout-important no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Key Pattern: Defense in Depth
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>An attacker who compromises your web server process should still face network controls preventing lateral movement. An attacker who gets on your network should still face host-based defenses. An attacker who compromises a low-privilege account should face access controls that prevent escalation. No single layer is impenetrable; the goal is that bypassing all of them requires disproportionate effort.</p>
+</div>
+</div>
 </section>
-<section id="principle-of-least-privilege" class="level2">
-<h2 class="anchored" data-anchor-id="principle-of-least-privilege">Principle of Least Privilege</h2>
-<ul>
-<li>A user should be given the minimum levels of access necessary to perform his/her job functions</li>
-<li>This is a fundamental principle of computer security</li>
-<li>Is used to limit the potential damage that can be done by a compromised account or system</li>
-<li>“The purpose of this principle is to reduce the number of potential interactions among privileged programs to the minimum necessary to operate correctly, so that one may develop confidence that unintentional, unwanted, or improper uses of privilege do not occur”
-<ul>
-<li>Jerome H. Saltzer describing a design principle for the Multics operating system in ’74</li>
-</ul></li>
-</ul>
+<section id="authentication-and-access-control" class="level2">
+<h2 class="anchored" data-anchor-id="authentication-and-access-control">Authentication and Access Control</h2>
+<p><strong>Authentication</strong> answers: who are you? <strong>Access control</strong> answers: what are you allowed to do? Both are necessary; neither alone is sufficient.</p>
+<p>Authentication factors:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Factor</th>
+<th>Type</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Something you know</td>
+<td>Secret</td>
+<td>Password, PIN</td>
+</tr>
+<tr class="even">
+<td>Something you have</td>
+<td>Token</td>
+<td>TOTP authenticator, smart card</td>
+</tr>
+<tr class="odd">
+<td>Something you are</td>
+<td>Biometric</td>
+<td>Fingerprint, facial recognition</td>
+</tr>
+<tr class="even">
+<td>Something you do</td>
+<td>Behavioral</td>
+<td>Typing rhythm, mouse dynamics</td>
+</tr>
+<tr class="odd">
+<td>Somewhere you are</td>
+<td>Location</td>
+<td>IP geolocation, GPS</td>
+</tr>
+</tbody>
+</table>
+<p>Multi-factor authentication (MFA) combines two or more categories. A stolen password plus no physical token cannot authenticate. MFA is the single most effective defense against credential attacks — which represent the majority of real-world breaches.</p>
+<p>An <strong>access control system</strong> mediates between authenticated users and system resources. It consults an authorization database and either permits or denies each request. An <strong>auditing component</strong> logs accesses for review and forensics. Access control policies range from discretionary (Unix file permissions — resource owners control access) to mandatory (OS enforces a central policy, no user override) to role-based (users are assigned roles; roles have permissions — used in enterprise systems).</p>
 </section>
-<section id="four-layer-model-of-security" class="level2">
-<h2 class="anchored" data-anchor-id="four-layer-model-of-security">Four Layer Model of Security</h2>
-<ul>
-<li>The four layers of security are:
-<ul>
-<li>Physical security
-<ul>
-<li>Attacks: console access, hardware-based attacks</li>
-<li>Countermeasures: locks, guards, vaults, device data encryption</li>
-</ul></li>
-<li>Network security
-<ul>
-<li>Attacks: sniffing, spoofing, masquerading</li>
-<li>Countermeasures: encryption, authentication, filtering</li>
-</ul></li>
-<li>Operating system security
-<ul>
-<li>Attacks: insecure defaults, platform vulnerabilities</li>
-<li>Countermeasures: patches, reconfiguration, hardening</li>
-</ul></li>
-<li>Application security
-<ul>
-<li>Attacks: logic bugs, design flaws, code injection</li>
-<li>Countermeasures: sandboxing, software restrictions</li>
-</ul></li>
-</ul></li>
-</ul>
-</section>
-<section id="countermeasures" class="level2">
-<h2 class="anchored" data-anchor-id="countermeasures">Countermeasures</h2>
-<ul>
-<li>RFC 4949: Internet Security Glossary
-<ul>
-<li>Defines intrusion detection as a security service that monitors and analyzes system events for the purpose of finding, and providing real-time or near real-time alerts of, attempts to access system resources in an unauthorized manner</li>
-<li>Intrusion detection systems (IDS) can be classified as:
-<ul>
-<li>Host-based IDS (HIDS): Monitors a single host for suspicious activity</li>
-<li>Network-based IDS (NIDS): Monitors network traffic for suspicious activity for a network segment.</li>
-</ul></li>
-</ul></li>
-</ul>
-</section>
-<section id="ids-components" class="level2">
-<h2 class="anchored" data-anchor-id="ids-components">IDS components</h2>
-<ul>
-<li>Sensors
-<ul>
-<li>Responsible for collecting data</li>
-<li>The input for a sensor may be any part of a system that could contain evidence of an intrusion</li>
-<li>Types of input to a sensor include network packets, log files, and system call traces</li>
-</ul></li>
-<li>Analyzers
-<ul>
-<li>Receive input from sensors or other analyzers</li>
-<li>Responsible for determining if an intrusion has occurred</li>
-<li>Must provide guidance about what actions to take as a result of the intrusion</li>
-</ul></li>
-<li>User interface (UI)
-<ul>
-<li>Enables a user to view output from the system or control the behavior of the system</li>
-<li>May equate to the manager, director, or console component</li>
-</ul></li>
-</ul>
-</section>
-<section id="user-authentication" class="level2">
-<h2 class="anchored" data-anchor-id="user-authentication">User Authentication</h2>
-<ul>
-<li>In most computer security contexts, user authentication is the fundamental building block and the primary line of defense</li>
-<li>RFC 4949 defines user authentication as the process of verifying an identity claimed by or for a system entity</li>
-<li>An authentication process consists of two steps:
-<ul>
-<li>Identification: The entity presents an identifier to the system</li>
-<li>Verification: Presenting or generating authentication information that corroborate the binding between the entity and the identifier</li>
-</ul></li>
-</ul>
-</section>
-<section id="means-of-authentication" class="level2">
-<h2 class="anchored" data-anchor-id="means-of-authentication">Means of Authentication</h2>
-<ul>
-<li>Something you know: Passwords, PINs, answers to security questions</li>
-<li>Something you have: Smart cards, tokens, key fobs</li>
-<li>Something you are: Biometrics (fingerprints, retina scans)</li>
-<li>Something you do: Behavioral biometrics (typing patterns, mouse movements)</li>
-<li>Somewhere you are: Geolocation data (IP address, GPS coordinates)</li>
-<li>Something that is in the user’s environment: Surroundings/ambient sounds or ambient access points</li>
-</ul>
-</section>
-<section id="access-control" class="level2">
-<h2 class="anchored" data-anchor-id="access-control">Access control</h2>
-<ul>
-<li>Implements a security policy that specifies who or what may have access to each specific system resource, and the type of access that is permitted in each instance</li>
-<li>Mediates between a user and system resources, such as applications, operating systems, firewalls, routers, files, and databases</li>
-<li>A security administrator maintains an authorization database that specifies what type of access to which resources is allowed for this user
-<ul>
-<li>The access control function consults this database to determine whether to grant access</li>
-</ul></li>
-<li>An auditing function monitors and keeps record of user accesses to system resources</li>
-</ul>
+<section id="intrusion-detection" class="level2">
+<h2 class="anchored" data-anchor-id="intrusion-detection">Intrusion Detection</h2>
+<p>Prevention is imperfect; detection is essential. An IDS monitors system events and alerts on signs of unauthorized access.</p>
+<p>An IDS has three components: <strong>sensors</strong> collect raw data (network traffic, system call traces, log files); <strong>analyzers</strong> examine sensor data to determine if an intrusion has occurred; a <strong>user interface</strong> presents findings and enables response.</p>
+<p><strong>Host-based IDS (HIDS)</strong> monitors a single machine — file access, system calls, process behavior. Detects attacks invisible to network monitoring. Limited to one host.</p>
+<p><strong>Network-based IDS (NIDS)</strong> monitors traffic for an entire network segment. Detects scanning, exploit attempts, and exfiltration across many machines simultaneously. Cannot see encrypted traffic or purely local attacks.</p>
 </section>
 <section id="cryptography-as-a-security-tool" class="level2">
 <h2 class="anchored" data-anchor-id="cryptography-as-a-security-tool">Cryptography as a Security Tool</h2>
-<ul>
-<li>Means to constrain potential senders (sources) and/or receivers (destinations) of messages
-<ul>
-<li>Based on secret informations (keys)</li>
-<li>Enables:
-<ul>
-<li>Confirmation of source</li>
-<li>Receipt only by certain destinations</li>
-<li>Trust relationship between sender and receiver</li>
-</ul></li>
-</ul></li>
-<li>Note: symmetric cryptography based on transformation, asymmetric is based on mathematical functions
-<ul>
-<li>Asymmetric is much more compute intensive</li>
-<li>Typically not used for bulk data encryption</li>
-</ul></li>
-</ul>
-</section>
-<section id="buffer-overflow" class="level2">
-<h2 class="anchored" data-anchor-id="buffer-overflow">Buffer Overflow</h2>
-<ul>
-<li>When more input is placed into a buffer than its capacity allows, which can overwrite other information and be exploited by attackers to crash systems or insert malicious code (more common) to gain control of the system
-<ul>
-<li>Also known as buffer overrun</li>
-</ul></li>
-<li>Stack overflow:
-<ul>
-<li>A classic attack</li>
-<li>A type of buffer overflow that occurs in the call stack of a program</li>
-<li>Can occur when a program uses too much stack space, causing the stack to overflow into adjacent memory areas</li>
-</ul></li>
-</ul>
-</section>
-<section id="defense-against-buffer-overflow" class="level2">
-<h2 class="anchored" data-anchor-id="defense-against-buffer-overflow">Defense against Buffer Overflow</h2>
-<ul>
-<li>Compile-time:
-<ul>
-<li>Programming language</li>
-<li>Safe Coding techniques</li>
-<li>use of safe libraries</li>
-<li>Stack protection
-<ul>
-<li>Stack canaries</li>
-</ul></li>
-</ul></li>
-<li>Runtime:
-<ul>
-<li>Executable address space protection</li>
-<li>Address space layout randomization (ASLR)</li>
-<li>Guard pages</li>
-</ul></li>
-</ul>
+<p>Cryptography secures data in transit and at rest by making it unreadable without the right key.</p>
+<p><strong>Symmetric cryptography</strong> uses the same key for encryption and decryption. Fast; well-suited for bulk data. Challenge: distributing the shared secret securely — you need a secure channel to establish the secret key, which is the very problem you’re trying to solve.</p>
+<p><strong>Asymmetric (public-key) cryptography</strong> uses a key pair: a <strong>public key</strong> shared openly and a <strong>private key</strong> kept secret. Anything encrypted with the public key can only be decrypted with the private key. This solves key distribution — publish your public key, and anyone can send you an encrypted message only you can read.</p>
+<p>Asymmetric cryptography is computationally expensive; in practice, it’s used only to securely exchange a symmetric session key (as in TLS), which then encrypts actual data traffic.</p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Discussion Prompt
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>You’re browsing your bank’s website over HTTPS. An attacker is monitoring your network traffic (on-path).</p>
+<p>Walk through what they can and cannot do: - Can they read the contents of your requests? Why or why not? - Can they modify your requests before they reach the bank? - Can they see which server you’re connecting to? - What would need to fail for them to be able to read your traffic?</p>
+<p><em>(This is a good way to ground TLS in a concrete threat model rather than abstract cryptographic promises.)</em></p>
+</div>
+</div>
 
 
 </section>

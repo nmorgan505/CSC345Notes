@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>07 · Deadlock &amp; Starvation – CSC 345 — Operating Systems</title>
+<title>07 · Deadlock &amp; Starvation – CSC 345 — Operating Systems (Enhanced)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -79,7 +79,7 @@ ul.task-list li input[type="checkbox"] {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">CSC 345 — Operating Systems</span>
+    <span class="navbar-title">CSC 345 — Operating Systems (Enhanced)</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -179,7 +179,7 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">CSC 345 — Operating Systems Notes</span></a>
+ <span class="menu-text">CSC 345 — Operating Systems (Enhanced)</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -269,29 +269,15 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#concurrency-deadlock-and-starvation" id="toc-concurrency-deadlock-and-starvation" class="nav-link active" data-scroll-target="#concurrency-deadlock-and-starvation">Concurrency: Deadlock and Starvation</a></li>
-  <li><a href="#dining-philosophers-problem" id="toc-dining-philosophers-problem" class="nav-link" data-scroll-target="#dining-philosophers-problem">Dining Philosophers problem</a></li>
-  <li><a href="#deadlock" id="toc-deadlock" class="nav-link" data-scroll-target="#deadlock">Deadlock</a></li>
-  <li><a href="#system-model" id="toc-system-model" class="nav-link" data-scroll-target="#system-model">System Model</a></li>
-  <li><a href="#deadlock-with-semaphores" id="toc-deadlock-with-semaphores" class="nav-link" data-scroll-target="#deadlock-with-semaphores">Deadlock with Semaphores</a></li>
-  <li><a href="#resource-categories" id="toc-resource-categories" class="nav-link" data-scroll-target="#resource-categories">Resource Categories</a></li>
-  <li><a href="#reusable-resource-deadlock" id="toc-reusable-resource-deadlock" class="nav-link" data-scroll-target="#reusable-resource-deadlock">Reusable Resource Deadlock</a></li>
-  <li><a href="#consumable-resource-deadlock" id="toc-consumable-resource-deadlock" class="nav-link" data-scroll-target="#consumable-resource-deadlock">Consumable Resource Deadlock</a></li>
-  <li><a href="#resource-allocation-graph" id="toc-resource-allocation-graph" class="nav-link" data-scroll-target="#resource-allocation-graph">Resource Allocation Graph</a></li>
-  <li><a href="#deadlock-characterization" id="toc-deadlock-characterization" class="nav-link" data-scroll-target="#deadlock-characterization">Deadlock Characterization</a></li>
-  <li><a href="#some-basic-facts" id="toc-some-basic-facts" class="nav-link" data-scroll-target="#some-basic-facts">Some Basic Facts</a></li>
-  <li><a href="#methods-for-handling-deadlocks" id="toc-methods-for-handling-deadlocks" class="nav-link" data-scroll-target="#methods-for-handling-deadlocks">Methods for Handling Deadlocks</a></li>
-  <li><a href="#deadlock-prevention-strategy" id="toc-deadlock-prevention-strategy" class="nav-link" data-scroll-target="#deadlock-prevention-strategy">Deadlock Prevention Strategy</a></li>
-  <li><a href="#deadlock-condition-prevention" id="toc-deadlock-condition-prevention" class="nav-link" data-scroll-target="#deadlock-condition-prevention">Deadlock Condition Prevention</a></li>
-  <li><a href="#deadlock-avoidance" id="toc-deadlock-avoidance" class="nav-link" data-scroll-target="#deadlock-avoidance">Deadlock Avoidance</a></li>
-  <li><a href="#resource-allocation-denial" id="toc-resource-allocation-denial" class="nav-link" data-scroll-target="#resource-allocation-denial">Resource Allocation Denial</a></li>
-  <li><a href="#facts" id="toc-facts" class="nav-link" data-scroll-target="#facts">Facts</a></li>
-  <li><a href="#bankers-algorithm" id="toc-bankers-algorithm" class="nav-link" data-scroll-target="#bankers-algorithm">Banker’s Algorithm</a></li>
-  <li><a href="#data-structures-for-the-bankers-algorithm" id="toc-data-structures-for-the-bankers-algorithm" class="nav-link" data-scroll-target="#data-structures-for-the-bankers-algorithm">Data Structures for the Banker’s Algorithm</a></li>
-  <li><a href="#deadlock-avoidance-restrictions" id="toc-deadlock-avoidance-restrictions" class="nav-link" data-scroll-target="#deadlock-avoidance-restrictions">Deadlock Avoidance Restrictions</a></li>
-  <li><a href="#deadlock-detection" id="toc-deadlock-detection" class="nav-link" data-scroll-target="#deadlock-detection">Deadlock Detection</a></li>
-  <li><a href="#recovery-from-deadlock" id="toc-recovery-from-deadlock" class="nav-link" data-scroll-target="#recovery-from-deadlock">Recovery from Deadlock</a></li>
-  <li><a href="#integrated-deadlock-strategy" id="toc-integrated-deadlock-strategy" class="nav-link" data-scroll-target="#integrated-deadlock-strategy">Integrated Deadlock Strategy</a></li>
+  <li><a href="#four-cars-at-a-four-way-stop" id="toc-four-cars-at-a-four-way-stop" class="nav-link active" data-scroll-target="#four-cars-at-a-four-way-stop">Four Cars at a Four-Way Stop</a></li>
+  <li><a href="#the-four-necessary-conditions" id="toc-the-four-necessary-conditions" class="nav-link" data-scroll-target="#the-four-necessary-conditions">The Four Necessary Conditions</a></li>
+  <li><a href="#resource-allocation-graphs" id="toc-resource-allocation-graphs" class="nav-link" data-scroll-target="#resource-allocation-graphs">Resource Allocation Graphs</a></li>
+  <li><a href="#strategies-for-handling-deadlock" id="toc-strategies-for-handling-deadlock" class="nav-link" data-scroll-target="#strategies-for-handling-deadlock">Strategies for Handling Deadlock</a>
+  <ul class="collapse">
+  <li><a href="#prevention-make-one-condition-impossible" id="toc-prevention-make-one-condition-impossible" class="nav-link" data-scroll-target="#prevention-make-one-condition-impossible">Prevention: Make One Condition Impossible</a></li>
+  <li><a href="#avoidance-never-enter-an-unsafe-state" id="toc-avoidance-never-enter-an-unsafe-state" class="nav-link" data-scroll-target="#avoidance-never-enter-an-unsafe-state">Avoidance: Never Enter an Unsafe State</a></li>
+  <li><a href="#detection-and-recovery-let-it-happen-then-break-it" id="toc-detection-and-recovery-let-it-happen-then-break-it" class="nav-link" data-scroll-target="#detection-and-recovery-let-it-happen-then-break-it">Detection and Recovery: Let It Happen, Then Break It</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -317,323 +303,247 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="concurrency-deadlock-and-starvation" class="level2">
-<h2 class="anchored" data-anchor-id="concurrency-deadlock-and-starvation">Concurrency: Deadlock and Starvation</h2>
-</section>
-<section id="dining-philosophers-problem" class="level2">
-<h2 class="anchored" data-anchor-id="dining-philosophers-problem">Dining Philosophers problem</h2>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Learning Objectives
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>By the end of this lecture, you should be able to:</p>
 <ul>
-<li>N Philosophers sit at a round table with a bowl of rice in the middle</li>
-<li>They spend their lives alternating thinking and eating</li>
-<li>Between each neighbor is one chopstick</li>
-<li>They do not interact with their neighbors</li>
-<li>They need two chopsticks to eat</li>
-<li>They release the chopsticks when done.</li>
-<li>What rules should they follow to avoid deadlock?</li>
+<li>State the four necessary and sufficient conditions for deadlock</li>
+<li>Detect deadlock using a resource allocation graph</li>
+<li>Explain the Banker’s Algorithm and evaluate a state as safe or unsafe</li>
+<li>Compare prevention, avoidance, and detection/recovery strategies and identify when each is appropriate</li>
 </ul>
+</div>
+</div>
+<section id="four-cars-at-a-four-way-stop" class="level2">
+<h2 class="anchored" data-anchor-id="four-cars-at-a-four-way-stop">Four Cars at a Four-Way Stop</h2>
+<p>Four cars arrive at a four-way stop simultaneously. Each one needs to cross, and each can only proceed when the opposing traffic clears. But each car is also blocking the opposing traffic for one of the others. Nobody moves. Nobody will ever move. This is deadlock.</p>
+<p>In computing: a set of processes where each one is waiting for a resource held by another, and none can ever proceed without external intervention. Deadlock is not a crash — the processes are alive and technically “running,” just permanently suspended waiting for something that will never happen. It’s often harder to detect than a crash for exactly this reason.</p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opening Activity: The Dining Philosophers
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Five philosophers sit at a round table with a bowl of rice in the middle. Between each pair of neighbors lies one chopstick. To eat, a philosopher needs both adjacent chopsticks. They alternate between thinking (needs nothing) and eating (needs two chopsticks).</p>
+<p><strong>Before I explain anything:</strong> in small groups, try to design a rule set that lets all five philosophers eat eventually, with no deadlock and no starvation. You have 3 minutes.</p>
+<p>We’ll compare solutions after discussing the formal conditions.</p>
+</div>
+</div>
 </section>
-<section id="deadlock" class="level2">
-<h2 class="anchored" data-anchor-id="deadlock">Deadlock</h2>
+<section id="the-four-necessary-conditions" class="level2">
+<h2 class="anchored" data-anchor-id="the-four-necessary-conditions">The Four Necessary Conditions</h2>
+<p>Deadlock can only arise if <em>all four</em> conditions hold simultaneously. Remove any one and deadlock is impossible.</p>
+<p><strong>Mutual exclusion</strong>: at least one resource must be held exclusively — only one process can use it at a time. Most I/O devices, write-mode file locks, and mutexes are mutually exclusive by design.</p>
+<p><strong>Hold and wait</strong>: a process holds at least one resource while waiting for additional resources held by others. The dangerous pattern: acquire A, then try to acquire B while still holding A.</p>
+<p><strong>No preemption</strong>: resources cannot be forcibly taken away. A process releases resources only voluntarily when done with them. You can’t just yank a lock out of a process’s hands.</p>
+<p><strong>Circular wait</strong>: there exists a circular chain {P0, P1, …, Pn} where P0 waits for a resource held by P1, P1 waits for one held by P2, …, and Pn waits for one held by P0.</p>
+<div class="callout callout-style-default callout-important no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Board Exercise: Identify the Conditions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Two processes, two semaphores:</p>
+<pre><code>Process P1:      Process P2:
+  semWait(s1)      semWait(s2)
+  semWait(s2)      semWait(s1)</code></pre>
+<p>P1 acquires s1, P2 acquires s2, then each tries for the other’s semaphore.</p>
+<p>Identify which of the four conditions is satisfied in this scenario. Which condition would you eliminate to prevent the deadlock, and what would that change about the code?</p>
+</div>
+</div>
+</section>
+<section id="resource-allocation-graphs" class="level2">
+<h2 class="anchored" data-anchor-id="resource-allocation-graphs">Resource Allocation Graphs</h2>
+<p>A <strong>resource allocation graph</strong> visualizes deadlock conditions. Processes are circles; resources are rectangles (dots inside represent instances). An arrow from process to resource means “waiting for”; an arrow from resource to process means “allocated to.”</p>
+<p>Key rules:</p>
 <ul>
-<li>The permanent blocking of a set of processes that either compete for system resources or communicate with each other.</li>
-<li>A set of processes is deadlocked when each process in the set is blocked awaiting an event that can only be triggered by another blocked process in the set</li>
-<li>In a general case, there is no efficient solution</li>
+<li><strong>No cycle</strong> → no deadlock possible</li>
+<li><strong>Cycle, one instance per resource type</strong> → deadlock</li>
+<li><strong>Cycle, multiple instances per resource type</strong> → possible deadlock, needs further analysis</li>
 </ul>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Board Exercise: Draw the Graph
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Draw the resource allocation graph for the semaphore example above. Does it contain a cycle? Now add a third semaphore s3 and a third process P3 that holds s3 and waits for s1. Add P1 also wanting s3. Is the system now definitely deadlocked, or only possibly?</p>
+</div>
+</div>
 </section>
-<section id="system-model" class="level2">
-<h2 class="anchored" data-anchor-id="system-model">System Model</h2>
+<section id="strategies-for-handling-deadlock" class="level2">
+<h2 class="anchored" data-anchor-id="strategies-for-handling-deadlock">Strategies for Handling Deadlock</h2>
+<p>Three fundamentally different approaches, each suitable for different situations.</p>
+<section id="prevention-make-one-condition-impossible" class="level3">
+<h3 class="anchored" data-anchor-id="prevention-make-one-condition-impossible">Prevention: Make One Condition Impossible</h3>
+<p>Design the system so at least one necessary condition can never hold. This is conservative but guarantees no deadlock.</p>
+<p><strong>Attacking mutual exclusion</strong> — generally impossible for devices and write locks. Some resources (read-only data, immutable files) are inherently shareable, but most aren’t.</p>
+<p><strong>Attacking hold-and-wait</strong> — require processes to request all resources upfront before execution begins. If they can’t get everything immediately, they get nothing and wait. Eliminates hold-and-wait but is deeply impractical: most programs can’t enumerate all their resource needs before running, and early-acquiring resources wastes them.</p>
+<p><strong>Attacking no preemption</strong> — allow the OS to forcibly reclaim resources. If P1 holds A and requests B but B is unavailable, take A away; P1 restarts from scratch. Works for CPU registers and memory pages; doesn’t work for half-written files or in-progress I/O.</p>
+<p><strong>Attacking circular wait</strong> — impose a global ordering on resource types and require every process to request in that order. If all processes must request R1 before R2 before R3, no circular chain can form. This is practical and widely used: Linux kernel developers follow strict documented lock-ordering conventions specifically to prevent deadlock in kernel code.</p>
+</section>
+<section id="avoidance-never-enter-an-unsafe-state" class="level3">
+<h3 class="anchored" data-anchor-id="avoidance-never-enter-an-unsafe-state">Avoidance: Never Enter an Unsafe State</h3>
+<p>Allow the four conditions but refuse resource requests that <em>might</em> lead to deadlock. Requires knowing processes’ maximum resource needs upfront.</p>
+<p>A state is <strong>safe</strong> if there exists at least one sequence in which all processes can finish. The OS checks before each allocation: does a safe ordering still exist after this grant? If yes, grant it. If no, deny and make the process wait.</p>
+<p><strong>The Banker’s Algorithm</strong> is the classical avoidance approach, named for how a bank manages loan risk. It uses four data structures:</p>
 <ul>
-<li>Systems consist of a finite number of resources</li>
-<li>Consider resource types: R1, R2, …, Rm
-<ul>
-<li>Could be CPU cycles, memory space, I/O devices, etc</li>
-</ul></li>
-<li>Each resource type Ri has Wi instances</li>
-<li>Each process can do each of the following on a resource:
-<ul>
-<li>Request: process requests an instance of a resource</li>
-<li>Use: process uses the resource</li>
-<li>Release: process releases the resource</li>
-</ul></li>
+<li><code>Available[j]</code> — how many instances of resource Rj are currently free</li>
+<li><code>Max[i][j]</code> — the maximum instances of Rj that process Pi might ever request</li>
+<li><code>Allocation[i][j]</code> — instances of Rj currently held by Pi</li>
+<li><code>Need[i][j]</code> = <code>Max[i][j] - Allocation[i][j]</code> — remaining potential requests from Pi</li>
 </ul>
-</section>
-<section id="deadlock-with-semaphores" class="level2">
-<h2 class="anchored" data-anchor-id="deadlock-with-semaphores">Deadlock with Semaphores</h2>
-<ul>
-<li>Data
-<ul>
-<li>A semaphore s1 initialized to 1</li>
-<li>A semaphore s2 initialized to 1</li>
-</ul></li>
-<li>Two Processes P1 and P2:
-<ul>
-<li><p><strong>P1:</strong></p>
-<pre><code>semWait(s1)
-semWait(s2)</code></pre></li>
-<li><p><strong>P2:</strong></p>
-<pre><code>semWait(s2)
-semWait(s1)</code></pre></li>
-</ul></li>
-<li>Both wait for each other to release a semaphore, which never happens</li>
-</ul>
-</section>
-<section id="resource-categories" class="level2">
-<h2 class="anchored" data-anchor-id="resource-categories">Resource Categories</h2>
-<ul>
-<li>Reusable: Can safely be used by only one process at a time and is not depleted by that use:
-<ul>
-<li>Processors, I/O channels, memory, storage, …</li>
-</ul></li>
-<li>Consumable:
-<ul>
-<li>A resource that can be created (produced) and destroyed (consumed) by processes:
-<ul>
-<li>Messages, signals, data, etc</li>
-</ul></li>
-</ul></li>
-</ul>
-</section>
-<section id="reusable-resource-deadlock" class="level2">
-<h2 class="anchored" data-anchor-id="reusable-resource-deadlock">Reusable Resource Deadlock</h2>
-<ul>
-<li>Space is available for allocation of 200 KB, and the following occurs:
-<ul>
-<li><p>P1: … request 80 KB … request 60 KB</p></li>
-<li><p>P2: … request 70 KB … request 80 KB</p></li>
-</ul></li>
-<li>Deadlock will occur if both processes are allowed to progress to their second request</li>
-</ul>
-</section>
-<section id="consumable-resource-deadlock" class="level2">
-<h2 class="anchored" data-anchor-id="consumable-resource-deadlock">Consumable Resource Deadlock</h2>
-<ul>
-<li><p>Consider a pair of processes, in which each process attempts to receive a message from the other process and then send a message to the other process: <strong>P1:</strong></p>
-<pre><code>...
-receive message from P2
-...
-send message to P2</code></pre>
-<p><strong>P2:</strong></p>
-<pre><code>...
-receive message from P1
-...
-send message to P1</code></pre></li>
-<li><p>Deadlock occurs if the Receive is blocking</p></li>
-</ul>
-</section>
-<section id="resource-allocation-graph" class="level2">
-<h2 class="anchored" data-anchor-id="resource-allocation-graph">Resource Allocation Graph</h2>
-<ul>
-<li>A directed graph that describes the allocation of resources</li>
-<li>A set of vertices V, and edges E</li>
-<li>V is partitioned into:
-<ul>
-<li>P = {P1, P2, …, Pn} is the set of processes</li>
-<li>R = {R1, R2, …, Rm} is the set of resources</li>
-</ul></li>
-<li>E is partitioned into:
-<ul>
-<li>Request edge: Pi -&gt; Rj
-<ul>
-<li>Pi is requesting an instance of resource Rj</li>
-</ul></li>
-<li>Assignment edge: Rj -&gt; Pi
-<ul>
-<li>Rj is assigned to Pi</li>
-</ul></li>
-</ul></li>
-</ul>
-</section>
-<section id="deadlock-characterization" class="level2">
-<h2 class="anchored" data-anchor-id="deadlock-characterization">Deadlock Characterization</h2>
-<ul>
-<li>Deadlocks can arise if four conditions are met simultaneously
-<ul>
-<li>Mutual Exclusion: Only one process at a time can use a resource</li>
-<li>Hold and Wait: A process holding at least one resource is waiting to acquire additional resources held by other processes</li>
-<li>No Preemption: A resource can be released only voluntarily by the process holding it, after that process has completed its task</li>
-<li>Circular Wait: There exists a set {P0, P1, …, Pn} of waiting processes such that P0 is waiting for a resource held by P1, P1 is waiting for a resource held by P2, …, Pn-1 is waiting for a resource held by Pn, and Pn is waiting for a resource held by P0</li>
-</ul></li>
-</ul>
-</section>
-<section id="some-basic-facts" class="level2">
-<h2 class="anchored" data-anchor-id="some-basic-facts">Some Basic Facts</h2>
-<ul>
-<li>If a graph contains no cycles, then no deadlock can occur</li>
-<li>If a graph contains a cycle:
-<ul>
-<li>If only one instance per resource type, then deadlock</li>
-<li>If several instances per resource type, possibility of deadlock</li>
-</ul></li>
-</ul>
-</section>
-<section id="methods-for-handling-deadlocks" class="level2">
-<h2 class="anchored" data-anchor-id="methods-for-handling-deadlocks">Methods for Handling Deadlocks</h2>
-<ul>
-<li>There is no single effective strategy that can deal with all deadlock types</li>
-<li>There are three common approaches:
-<ul>
-<li>Deadlock prevention:
-<ul>
-<li>Disallow one of the three necessary conditions for deadlock occurrence, or prevent circular wait condition from happening</li>
-</ul></li>
-<li>Deadlock detection:
-<ul>
-<li>Grant resource requests, when possible, but periodically check for the presence of deadlocks and take action to recover</li>
-</ul></li>
-<li>Deadlock Avoidance:
-<ul>
-<li>Do not grant a resource request if this allocation may lead to a deadlock</li>
-</ul></li>
-</ul></li>
-</ul>
-</section>
-<section id="deadlock-prevention-strategy" class="level2">
-<h2 class="anchored" data-anchor-id="deadlock-prevention-strategy">Deadlock Prevention Strategy</h2>
-<ul>
-<li>Design a system in such a way that the possibility of deadlock is excluded</li>
-<li>Two methods:
-<ul>
-<li>Indirect:
-<ul>
-<li>Prevent the occurrence of one of the three necessary conditions</li>
-</ul></li>
-<li>Direct:
-<ul>
-<li>Prevent the occurrence of circular wait condition</li>
-</ul></li>
-</ul></li>
-</ul>
-</section>
-<section id="deadlock-condition-prevention" class="level2">
-<h2 class="anchored" data-anchor-id="deadlock-condition-prevention">Deadlock Condition Prevention</h2>
-<ul>
-<li>Mutual Exclusion:
-<ul>
-<li>CANNOT be disallowed in general</li>
-<li>If access to a resource requires mutual exclusion, then mutual exclusion must be supported by the OS</li>
-<li>Some resources, such as files, may allow multiple accesses for reads but only exclusive access for writes</li>
-<li>Even in this case, deadlock can occur if more than one process requires write permission</li>
-</ul></li>
-<li>Hold and Wait:
-<ul>
-<li>Require that a process request all of its required resources at one time and blocking the process until all requests can be granted simultaneously</li>
-<li>This is not practical, as it is quite inefficient</li>
-</ul></li>
-<li>No Preemption:
-<ul>
-<li>If a process holding certain resources is denied a further request, that process must release its original resources and request them again</li>
-<li>OS may preempt the second process and require it to release its resources</li>
-</ul></li>
-<li>Circular Wait:
-<ul>
-<li>The circular wait condition can be prevented by defining a linear ordering of resource types</li>
-</ul></li>
-</ul>
-</section>
-<section id="deadlock-avoidance" class="level2">
-<h2 class="anchored" data-anchor-id="deadlock-avoidance">Deadlock Avoidance</h2>
-<ul>
-<li>Allows the three necessary conditions but makes judicious choices to assure that the deadlock point is never reached</li>
-<li>A decision is made dynamically whether the current resource allocation request will, if granted, potentially lead to a deadlock</li>
-<li>Requires knowledge of future process requests</li>
-</ul>
-</section>
-<section id="resource-allocation-denial" class="level2">
-<h2 class="anchored" data-anchor-id="resource-allocation-denial">Resource Allocation Denial</h2>
-<ul>
-<li>Referred to as the banker’s algorithm</li>
-<li>Definitions:
-<ul>
-<li>State of the system reflects the current allocation of resources to processes</li>
-<li>Safe state: The system can allocate resources to each thread (up to its maximum) in some order and still avoid deadlock (there is at least one sequence of resource allocations to processes that does not result in a deadlock)</li>
-<li>Unsafe state: A state that is not safe (may lead to deadlock)</li>
-</ul></li>
-</ul>
-</section>
-<section id="facts" class="level2">
-<h2 class="anchored" data-anchor-id="facts">Facts</h2>
-<ul>
-<li>If a system is in a safe state, there is no deadlock</li>
-<li>If a system is in an unsafe state, there may be a deadlock</li>
-<li>Avoidance ensures that a system will never enter an unsafe state</li>
-</ul>
-</section>
-<section id="bankers-algorithm" class="level2">
-<h2 class="anchored" data-anchor-id="bankers-algorithm">Banker’s Algorithm</h2>
+<div class="callout callout-style-default callout-important no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Board Exercise: Banker’s Algorithm Safety Check
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>5 processes (P0–P4), 3 resource types (A: 10, B: 5, C: 7 total).</p>
+<p><strong>Allocation:</strong></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th></th>
+<th>A</th>
+<th>B</th>
+<th>C</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>P0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>P1</td>
+<td>2</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>P2</td>
+<td>3</td>
+<td>0</td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td>P3</td>
+<td>2</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>P4</td>
+<td>0</td>
+<td>0</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Max:</strong></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th></th>
+<th>A</th>
+<th>B</th>
+<th>C</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>P0</td>
+<td>7</td>
+<td>5</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td>P1</td>
+<td>3</td>
+<td>2</td>
+<td>2</td>
+</tr>
+<tr class="odd">
+<td>P2</td>
+<td>9</td>
+<td>0</td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td>P3</td>
+<td>2</td>
+<td>2</td>
+<td>2</td>
+</tr>
+<tr class="odd">
+<td>P4</td>
+<td>4</td>
+<td>3</td>
+<td>3</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Available</strong>: (3, 3, 2) — remaining after all allocations.</p>
 <ol type="1">
-<li>Multiple instances of resources</li>
-<li>Each process must have a priori claim maximum use</li>
-<li>When a process requests a resource, it may have to wait</li>
-<li>When a process gets all its resources, it must return them in a finite amount of time</li>
+<li>Calculate <code>Need</code> for each process</li>
+<li>Find a process whose Need ≤ Available; run it (simulate completion, release resources)</li>
+<li>Repeat until all processes finish or no process can proceed</li>
 </ol>
+<p>Is this state safe? If so, what is the safe sequence?</p>
+<p><em>(Answer: P1 can run first with (3,3,2). After P1 releases, Available becomes (5,3,2). Then P3, P4, P0, P2 — safe sequence exists.)</em></p>
+</div>
+</div>
+<p>The Banker’s Algorithm’s limitation: it requires knowing maximum resource needs in advance, assumes a fixed set of processes and resources, and is impractical for most real applications. It’s elegant as a design principle; real OSes rarely implement it directly.</p>
 </section>
-<section id="data-structures-for-the-bankers-algorithm" class="level2">
-<h2 class="anchored" data-anchor-id="data-structures-for-the-bankers-algorithm">Data Structures for the Banker’s Algorithm</h2>
-<ul>
-<li>Let n = number of processes and m = number of resource types</li>
-<li>Available: A vector of length m. If Available[j] = k, then there are k instances of resource type Rj available</li>
-<li>Max: An n x m matrix. If Max[i,j] = k, then process Pi may request at most k instances of resource type Rj</li>
-<li>Allocation: An n x m matrix. If Allocation[i,j] = k, then Pi is currently allocated k instances of resource type Rj</li>
-<li>Need: An n x m matrix. If Need[i,j] = k, then Pi may need k more instances of resource type Rj to complete its task
-<ul>
-<li>Need[i,j] = Max[i,j] - Allocation[i,j]</li>
-</ul></li>
-</ul>
-</section>
-<section id="deadlock-avoidance-restrictions" class="level2">
-<h2 class="anchored" data-anchor-id="deadlock-avoidance-restrictions">Deadlock Avoidance Restrictions</h2>
-<ul>
-<li>Maximum resource requirements for each process must be stated in advance</li>
-<li>Processes under consideration must be independent and with no synchronization requirements</li>
-<li>There must be a fixed number of resources to allocate</li>
-<li>No process may be terminated while holding resources</li>
-</ul>
-</section>
-<section id="deadlock-detection" class="level2">
-<h2 class="anchored" data-anchor-id="deadlock-detection">Deadlock Detection</h2>
-<ul>
-<li>Allows the system to enter a deadlock state</li>
-<li>Detection algorithm:
-<ul>
-<li>A check for deadlock can be made as frequently as each resource request, or less frequently, depending on how likely it is for a deadlock to occur</li>
-<li>The algorithm is relatively simple</li>
-<li>For a single instance of each resource type: maintain a wait-for graph (nodes are processes; Pi -&gt; Pj if Pi is waiting for Pj). Periodically search for a cycle — O(n^2)</li>
-<li>For multiple instances per resource type: use Available, Allocation, and Request matrices (similar to banker’s)</li>
-</ul></li>
-<li>Recovery scheme</li>
-</ul>
-</section>
-<section id="recovery-from-deadlock" class="level2">
-<h2 class="anchored" data-anchor-id="recovery-from-deadlock">Recovery from Deadlock</h2>
-<ul>
-<li>Process Termination:
-<ul>
-<li>Abort all deadlocked processes (simple but costly)</li>
-<li>Abort one process at a time until the deadlock cycle is eliminated</li>
-<li>Order to abort based on: priority, how long the process has computed, resources used, resources still needed, number of processes that would need to be terminated, whether interactive or batch</li>
-</ul></li>
-<li>Resource Preemption:
-<ul>
-<li>Selecting a victim: minimize cost</li>
-<li>Rollback: return to a safe state and restart the process from that state</li>
-<li>Starvation risk: the same process may always be selected as victim; include number of rollbacks in cost factor to prevent this</li>
-</ul></li>
-</ul>
-</section>
-<section id="integrated-deadlock-strategy" class="level2">
-<h2 class="anchored" data-anchor-id="integrated-deadlock-strategy">Integrated Deadlock Strategy</h2>
-<ul>
-<li>Rather than using a single strategy for all deadlock types, it can be more efficient to group resources into classes and apply the most appropriate strategy per class</li>
-<li>Classes of resources and their typical strategies:
-<ul>
-<li>Swappable space (secondary storage for swapping): Prevention via hold-and-wait (allocate all required resources at once)</li>
-<li>Process resources (devices, files): Avoidance is often effective since processes can declare resource needs in advance</li>
-<li>Main memory: Prevention by preemption (swap preempted process to secondary memory)</li>
-<li>Internal resources (I/O channels): Prevention via resource ordering</li>
-</ul></li>
-</ul>
+<section id="detection-and-recovery-let-it-happen-then-break-it" class="level3">
+<h3 class="anchored" data-anchor-id="detection-and-recovery-let-it-happen-then-break-it">Detection and Recovery: Let It Happen, Then Break It</h3>
+<p>Allow deadlock to occur. Periodically check for it. When found, break it. This is common for resources that can’t easily be made preemptible or for systems where deadlock is rare.</p>
+<p>Detection requires cycle detection in the resource allocation graph (for single-instance resources) or a matrix algorithm similar to the Banker’s (for multiple instances). Check frequency is a design decision: more frequent checks find deadlocks faster but consume CPU.</p>
+<p><strong>Process termination</strong> recovery: kill one or more deadlocked processes to break the cycle. Choose which to kill based on priority, runtime so far, resources held, and impact on other processes. Aborting all deadlocked processes is simple but brutal; aborting one at a time is surgical but requires re-running detection after each.</p>
+<p><strong>Resource preemption</strong> recovery: forcibly take a resource from one process and give it to another. The victim process rolls back to a checkpoint. Risk: the same process may be repeatedly victimized (starvation at the recovery level). Fix: include rollback count in the victim-selection cost function.</p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Discussion Prompt
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Return to the dining philosophers solutions your groups proposed at the start. Classify each solution: does it use prevention (which condition?), avoidance, or detection/recovery? Does it guarantee no starvation as well as no deadlock? Which solution would you actually implement in production code, and why?</p>
+</div>
+</div>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
