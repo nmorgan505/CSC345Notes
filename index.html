@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>CSC 345 — Operating Systems (Enhanced)</title>
+<title>CSC 345 — Operating Systems Notes – CSC 345 — Operating Systems</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -79,7 +79,7 @@ ul.task-list li input[type="checkbox"] {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">CSC 345 — Operating Systems (Enhanced)</span>
+    <span class="navbar-title">CSC 345 — Operating Systems</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -156,7 +156,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">CSC 345 — Operating Systems (Enhanced)</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">CSC 345 — Operating Systems Notes</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -179,7 +179,7 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">CSC 345 — Operating Systems (Enhanced)</span></a>
+ <span class="menu-text">CSC 345 — Operating Systems Notes</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -272,7 +272,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">CSC 345 — Operating Systems (Enhanced)</h1>
+<h1 class="title">CSC 345 — Operating Systems Notes</h1>
 </div>
 
 
@@ -290,66 +290,65 @@ ul.task-list li input[type="checkbox"] {
 
 
 <p>Course notes for <strong>CSC 345 Operating Systems</strong> at Louisiana Tech University. Textbook: <em>Operating System Concepts</em>, Silberschatz, 10th Edition.</p>
-<p>This is the <strong>enhanced version</strong> of the course notes — rewritten with narrative prose, real-world examples, hands-on exercises, and discussion questions designed to connect OS theory to software you use every day.</p>
 <hr>
 <table class="caption-top table">
 <thead>
 <tr class="header">
 <th>#</th>
 <th>Topic</th>
-<th>What You’ll Understand Afterward</th>
+<th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td><a href="./01-OS-Overview.html">01</a></td>
 <td>OS Overview</td>
-<td>What happens when you double-click an app; the three roles the OS plays; why the memory hierarchy matters; how fault tolerance works.</td>
+<td>What an OS is, its roles (Referee/Illusionist/Glue), OS services, history of OS phases, memory hierarchy, virtual memory, fault tolerance, and multicore considerations.</td>
 </tr>
 <tr class="even">
 <td><a href="./02-Processes.html">02</a></td>
 <td>Processes</td>
-<td>What <code>ps aux</code> is actually showing you; how the PCB works; what a context switch does; why <code>strace</code> is a superpower for debugging.</td>
+<td>Process model, process states, the Process Control Block (PCB), context switching, process creation/termination, interrupts, and the kernel’s role.</td>
 </tr>
 <tr class="odd">
 <td><a href="./03-Threads.html">03</a></td>
 <td>Threads</td>
-<td>Why browsers can scroll while loading; the real cost of synchronization; how pthreads work; why race conditions are so hard to debug.</td>
+<td>Threads vs.&nbsp;processes, multithreading benefits, User-Level Threads (ULTs) vs.&nbsp;Kernel-Level Threads (KLTs), pthreads API, fork-join parallelism, and multicore programming.</td>
 </tr>
 <tr class="even">
 <td><a href="./04-Multiprocessor-Scheduling.html">04</a></td>
 <td>Multiprocessor Scheduling</td>
-<td>Why 8 cores don’t give 8× speedup; when gang scheduling beats load sharing; how dynamic scheduling handles bursty workloads.</td>
+<td>SMP, synchronization granularity, primary/secondary vs.&nbsp;peer architectures, load sharing, gang scheduling, dedicated assignment, and dynamic scheduling.</td>
 </tr>
 <tr class="odd">
 <td><a href="./05-Uniprocessor-Scheduling.html">05</a></td>
 <td>Uniprocessor Scheduling</td>
-<td>Why FCFS ruins interactive performance; what makes SJF optimal; how to choose a Round Robin quantum; what starvation looks like.</td>
+<td>FCFS, SJF, SRTF, Round Robin, and Priority Scheduling — with criteria, metrics, and preemption concepts.</td>
 </tr>
 <tr class="even">
 <td><a href="./06-Concurrency-Mutual-Exclusion.html">06</a></td>
 <td>Concurrency &amp; Mutual Exclusion</td>
-<td>Why <code>counter++</code> is broken in two threads; what Peterson’s Algorithm actually proves; when to use a spinlock vs.&nbsp;a blocking mutex.</td>
+<td>Race conditions, critical section problem, Peterson’s Algorithm, hardware solutions (test-and-set, compare-and-swap), mutex locks, and semaphores.</td>
 </tr>
 <tr class="odd">
 <td><a href="./07-Deadlock-and-Starvation.html">07</a></td>
 <td>Deadlock &amp; Starvation</td>
-<td>The four conditions that cause deadlock; why the Banker’s Algorithm is elegant but impractical; how Linux avoids deadlock in kernel code.</td>
+<td>Dining philosophers, deadlock conditions, resource allocation graphs, Banker’s Algorithm, deadlock detection, and recovery strategies.</td>
 </tr>
 <tr class="even">
 <td><a href="./08-Memory-Management.html">08</a></td>
 <td>Memory Management</td>
-<td>Why your program is lying to you about memory addresses; why loop order affects performance by 10×; what causes Chrome to use 4GB of RAM.</td>
+<td>Fixed/dynamic partitioning, paging, segmentation, virtual memory, demand paging, page replacement (FIFO, OPT, LRU), thrashing, and disk scheduling.</td>
 </tr>
 <tr class="odd">
 <td><a href="./09-OS-Security.html">09</a></td>
 <td>OS Security</td>
-<td>How to think like an attacker; why least privilege is the most important security principle; what TLS does and doesn’t protect.</td>
+<td>Security violations, intruder types, malware, principle of least privilege, four-layer security model, IDS, user authentication, access control, and cryptography.</td>
 </tr>
 <tr class="even">
 <td><a href="./10-Buffer-Overflow-Lab.html">10</a></td>
 <td>Buffer Overflow Lab</td>
-<td>How to exploit a real stack buffer overflow using GDB and pwntools — the bridge from theory to practice.</td>
+<td>Step-by-step lab demo for exploiting a stack buffer overflow using GDB and pwntools.</td>
 </tr>
 <tr class="odd">
 <td><a href="./11-File-Management.html">11</a></td>
@@ -360,7 +359,7 @@ ul.task-list li input[type="checkbox"] {
 </table>
 <hr>
 <blockquote class="blockquote">
-<p>Use the sidebar or <strong>Lectures</strong> menu in the navbar to navigate between topics. Each page includes a <strong>table of contents</strong> on the right, <strong>Try it yourself</strong> exercises, and <strong>discussion questions</strong> to go deeper.</p>
+<p>Use the sidebar or <strong>Lectures</strong> menu in the navbar to navigate between topics. Each page has a <strong>table of contents</strong> on the right for quick in-page navigation.</p>
 </blockquote>
 
 

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>03 · Threads – CSC 345 — Operating Systems (Enhanced)</title>
+<title>03 · Threads – CSC 345 — Operating Systems</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,40 +19,6 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
-}
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -113,7 +79,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">CSC 345 — Operating Systems (Enhanced)</span>
+    <span class="navbar-title">CSC 345 — Operating Systems</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -213,7 +179,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">CSC 345 — Operating Systems (Enhanced)</span></a>
+ <span class="menu-text">CSC 345 — Operating Systems Notes</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -303,14 +269,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#why-can-you-scroll-while-the-page-is-loading" id="toc-why-can-you-scroll-while-the-page-is-loading" class="nav-link active" data-scroll-target="#why-can-you-scroll-while-the-page-is-loading">Why Can You Scroll While the Page Is Loading?</a></li>
-  <li><a href="#processes-vs.-threads" id="toc-processes-vs.-threads" class="nav-link" data-scroll-target="#processes-vs.-threads">Processes vs.&nbsp;Threads</a></li>
-  <li><a href="#thread-states-and-operations" id="toc-thread-states-and-operations" class="nav-link" data-scroll-target="#thread-states-and-operations">Thread States and Operations</a></li>
-  <li><a href="#user-level-vs.-kernel-level-threads" id="toc-user-level-vs.-kernel-level-threads" class="nav-link" data-scroll-target="#user-level-vs.-kernel-level-threads">User-Level vs.&nbsp;Kernel-Level Threads</a></li>
-  <li><a href="#the-pthreads-api" id="toc-the-pthreads-api" class="nav-link" data-scroll-target="#the-pthreads-api">The pthreads API</a></li>
+  <li><a href="#review" id="toc-review" class="nav-link active" data-scroll-target="#review">Review</a></li>
+  <li><a href="#threads" id="toc-threads" class="nav-link" data-scroll-target="#threads">Threads</a></li>
   <li><a href="#multicore-programming" id="toc-multicore-programming" class="nav-link" data-scroll-target="#multicore-programming">Multicore Programming</a></li>
-  <li><a href="#fork-join-parallelism" id="toc-fork-join-parallelism" class="nav-link" data-scroll-target="#fork-join-parallelism">Fork-Join Parallelism</a></li>
-  <li><a href="#threading-gotchas" id="toc-threading-gotchas" class="nav-link" data-scroll-target="#threading-gotchas">Threading Gotchas</a></li>
+  <li><a href="#back-to-threads" id="toc-back-to-threads" class="nav-link" data-scroll-target="#back-to-threads">Back to Threads</a></li>
+  <li><a href="#types-of-threads" id="toc-types-of-threads" class="nav-link" data-scroll-target="#types-of-threads">Types of Threads</a></li>
+  <li><a href="#threading-issues-in-programming" id="toc-threading-issues-in-programming" class="nav-link" data-scroll-target="#threading-issues-in-programming">Threading Issues (in programming)</a></li>
   </ul>
 </nav>
     </div>
@@ -336,144 +300,232 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<div class="callout callout-style-default callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Learning Objectives
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>By the end of this lecture, you should be able to:</p>
+<section id="review" class="level2">
+<h2 class="anchored" data-anchor-id="review">Review</h2>
 <ul>
-<li>Explain the difference between a process and a thread and what each one owns</li>
-<li>Compare the advantages and disadvantages of User-Level Threads vs.&nbsp;Kernel-Level Threads</li>
-<li>Describe the three thread states and the four operations that change them</li>
-<li>Write and reason about basic <code>pthreads</code> code</li>
-<li>Explain why race conditions occur and what fork-join parallelism looks like</li>
+<li>PCB vs Process Image:
+<ul>
+<li>PCB: Data Structure maintained by the OS for every process
+<ul>
+<li>Contains essential information about the process such as process state, program counter, register info, memory management info, accounting info, I/O status, and CPU scheduling</li>
+</ul></li>
+<li>Process Image:
+<ul>
+<li>The entire collection of information that makes up what is being executed by a process
+<ul>
+<li>Includes code, data, and the process stack</li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li>Multiprogramming:
+<ul>
+<li>When multiprogramming is used, CPU utilization can be improved
+<ul>
+<li>If the average process computes only 30% of the time it is sitting in memory, then we can have three processes in memory at once, and the CPU should be busy all of the time.</li>
+<li>This is unrealistic at best, however, since it assumes that all processes will never be waiting for I/O at the same time</li>
+</ul></li>
+<li>It is better to view multiprogramming from a probabilistic standpoint.
+<ul>
+<li>Suppose that a process spends a fraction of its time (p) waiting for I/O</li>
+<li>With multiple processes in memory at once, the probability that all processes are waiting for I/O is p ^ n (n is number of processes)</li>
+<li>CPU Utilization = 1 - p^n</li>
+</ul></li>
+<li>Suppose that a computer has 8 GB of memory, with the OS and its tables taking up 2 GB, and each process also taking 2 GB, what is the CPU utilization with 80% chance a process is waiting? .488
+<ul>
+<li>What is the new CPU utilization if 8GB of memory are added? .79</li>
+<li>What is the new utilization if another 8GB are added? .914</li>
+</ul></li>
+</ul></li>
 </ul>
-</div>
-</div>
-<section id="why-can-you-scroll-while-the-page-is-loading" class="level2">
-<h2 class="anchored" data-anchor-id="why-can-you-scroll-while-the-page-is-loading">Why Can You Scroll While the Page Is Loading?</h2>
-<p>Open a browser and navigate to a heavy website. While images and scripts are still downloading, you can scroll, click, type in the address bar, and switch tabs. How?</p>
-<p>The browser isn’t taking turns between downloading and responding to you — it’s doing multiple things genuinely at once, within the same program. One part handles network I/O, another renders what’s already arrived, another listens for your input. These are <strong>threads</strong>: independent flows of execution sharing the same process.</p>
-<p>That’s the thread model in a sentence: <strong>shared memory, independent execution.</strong> Understanding it changes how you think about performance, about writing concurrent programs, and about why some bugs are so hard to reproduce.</p>
 </section>
-<section id="processes-vs.-threads" class="level2">
-<h2 class="anchored" data-anchor-id="processes-vs.-threads">Processes vs.&nbsp;Threads</h2>
-<p>Recall from last lecture that a process has two responsibilities: owning resources and executing instructions. Threads split these apart.</p>
-<p>A <strong>process</strong> is the unit of resource ownership. It has a virtual address space, open files, I/O channels, and all the OS bookkeeping that goes with them.</p>
-<p>A <strong>thread</strong> is the unit of execution within a process. It has its own program counter, register set, and stack — the minimum needed to independently track where it is in execution. But it <em>shares</em> the process’s code, data, and file handles with every other thread in the same process.</p>
-<div class="callout callout-style-default callout-tip no-icon callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Board Exercise: What’s Shared, What’s Private?
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Draw a process containing three threads. Label which resources are shared across all three threads and which are private to each thread.</p>
-<p>Shared: <em>code</em>, <em>data</em>, <em>heap</em>, <em>open files</em></p>
-<p>Private to each thread: <em>program counter</em>, <em>registers</em>, <em>stack</em></p>
-<p>Follow-up: if Thread 1 writes to a global variable, which threads see the change immediately?</p>
-</div>
-</div>
-<p>This distinction has practical consequences. Creating a new thread is much cheaper than a new process — no new address space, no new file descriptor table, no full PCB copy. Switching between threads in the same process is cheaper — the memory mappings don’t change, so the cache stays warm. And threads can communicate simply by reading and writing shared memory, without pipes, sockets, or any IPC overhead.</p>
-<p>The cost is coordination. Because threads share memory, any thread can corrupt any shared data. Without careful synchronization — the subject of Lecture 6 — this produces silent, timing-dependent bugs. Threads make some things simple and other things genuinely hard.</p>
-</section>
-<section id="thread-states-and-operations" class="level2">
-<h2 class="anchored" data-anchor-id="thread-states-and-operations">Thread States and Operations</h2>
-<p>Thread state mirrors process state, simplified to three values: <strong>Running</strong>, <strong>Ready</strong>, and <strong>Blocked</strong>. The key difference from processes: a blocked thread does not block the other threads in its process. If the download thread blocks on a slow network connection, the render thread and input thread continue running. This is precisely what makes browsers responsive.</p>
-<p>Four operations drive state changes: <strong>Spawn</strong> creates a new thread, <strong>Block</strong> suspends a thread waiting for an event, <strong>Unblock</strong> moves a blocked thread back to Ready, and <strong>Finish</strong> terminates the thread.</p>
-<p>Two exceptions: <strong>suspending a process</strong> suspends all its threads — there’s no way to keep some threads running while the process is swapped out. <strong>Terminating a process</strong> terminates all threads within it. The process is the container; removing the container removes everything inside.</p>
-</section>
-<section id="user-level-vs.-kernel-level-threads" class="level2">
-<h2 class="anchored" data-anchor-id="user-level-vs.-kernel-level-threads">User-Level vs.&nbsp;Kernel-Level Threads</h2>
-<p>The OS doesn’t have to know threads exist. Thread management can happen entirely in user space, invisible to the kernel. Alternatively, the kernel can manage threads directly. Both approaches exist and both have real tradeoffs.</p>
-<p><strong>User-Level Threads (ULTs)</strong> are managed by a user-space library. The kernel sees only a single-threaded process. Thread operations — creation, switching, scheduling — happen without kernel involvement, making them fast and portable across different OSes.</p>
-<p>The problem: when a ULT makes a <em>blocking</em> system call (like reading a file), the kernel blocks the entire process, not just that one thread. All other ULTs freeze. The kernel doesn’t know they exist. This cripples I/O concurrency. The workaround is <em>jacketing</em> — converting blocking calls to non-blocking ones and polling — which is complex and unpleasant to do correctly.</p>
-<p>The second problem: on a multiprocessor, only one ULT runs at a time. The kernel allocates exactly one CPU to the process. True parallelism is impossible.</p>
-<p><strong>Kernel-Level Threads (KLTs)</strong> are managed by the kernel. Each thread is a real scheduling entity. One thread blocking on I/O doesn’t affect the others. Multiple threads can run simultaneously on multiple cores. Windows uses this model.</p>
-<p>The cost: every thread operation — creation, context switch, blocking — requires a system call and a mode switch into kernel mode. With many frequently-switching threads, this overhead accumulates.</p>
-<p><strong>The combined approach</strong> does creation and scheduling in user space (fast) but uses the kernel for CPU assignment (parallel). This is essentially how modern runtimes work — Go’s goroutines, Java virtual threads, Python’s asyncio — many lightweight user-space units multiplexed onto a smaller pool of kernel threads.</p>
-<div class="callout callout-style-default callout-tip no-icon callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Discussion Prompt
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Chrome uses a multi-process architecture — each tab runs in its own <em>process</em>, not just its own thread. What reliability benefit does this give? What’s the performance cost compared to a purely multi-threaded design? Is the tradeoff worth it?</p>
-</div>
-</div>
-</section>
-<section id="the-pthreads-api" class="level2">
-<h2 class="anchored" data-anchor-id="the-pthreads-api">The pthreads API</h2>
-<p>On Unix/Linux, the standard thread API is <strong>POSIX threads (pthreads)</strong>, a user-space library interfacing with kernel threads underneath.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Create a thread running function func with argument arg</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> pthread_create<span class="op">(</span>pthread_t <span class="op">*</span>tid<span class="op">,</span> pthread_attr_t <span class="op">*</span>attr<span class="op">,</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>                   <span class="dt">void</span> <span class="op">*(*</span>func<span class="op">)(</span><span class="dt">void</span> <span class="op">*),</span> <span class="dt">void</span> <span class="op">*</span>arg<span class="op">);</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">// Returns 0 on success, nonzero on error</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">// Wait for a thread to finish; collect its return value</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> pthread_join<span class="op">(</span>pthread_t tid<span class="op">,</span> <span class="dt">void</span> <span class="op">**</span>return_value<span class="op">);</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">// Terminate the calling thread</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> pthread_exit<span class="op">(</span><span class="dt">void</span> <span class="op">*</span>return_value<span class="op">);</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">// Voluntarily yield the CPU to another thread</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>pthread_yield<span class="op">();</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><code>pthread_create</code> takes a function pointer — the function the new thread runs — and an argument to pass it. The thread runs until the function returns or it calls <code>pthread_exit</code>. The parent uses <code>pthread_join</code> to wait for the child, exactly as a process uses <code>wait()</code> for a child process.</p>
-<div class="callout callout-style-default callout-tip no-icon callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Class Activity: A Broken Counter
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>The following program has a race condition. Compile it, run it several times, and observe the output:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;pthread.h&gt;</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> counter <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> <span class="op">*</span>increment<span class="op">(</span><span class="dt">void</span> <span class="op">*</span>arg<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="dv">1000000</span><span class="op">;</span> i<span class="op">++)</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>        counter<span class="op">++;</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> NULL<span class="op">;</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span> <span class="op">{</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    pthread_t t1<span class="op">,</span> t2<span class="op">;</span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    pthread_create<span class="op">(&amp;</span>t1<span class="op">,</span> NULL<span class="op">,</span> increment<span class="op">,</span> NULL<span class="op">);</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    pthread_create<span class="op">(&amp;</span>t2<span class="op">,</span> NULL<span class="op">,</span> increment<span class="op">,</span> NULL<span class="op">);</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    pthread_join<span class="op">(</span>t1<span class="op">,</span> NULL<span class="op">);</span> pthread_join<span class="op">(</span>t2<span class="op">,</span> NULL<span class="op">);</span></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">"counter = </span><span class="sc">%d\n</span><span class="st">"</span><span class="op">,</span> counter<span class="op">);</span></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="co">// Compile: gcc -pthread broken_counter.c -o broken_counter</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Expected result: 2,000,000. Actual result: varies. Why? (Hint: <code>counter++</code> is not one instruction.) We’ll fix this properly in Lecture 6.</p>
-</div>
-</div>
+<section id="threads" class="level2">
+<h2 class="anchored" data-anchor-id="threads">Threads</h2>
+<ul>
+<li>Charactaristics of processes:
+<ul>
+<li>Resource Ownership:
+<ul>
+<li>Processes include virtual memory space to hold a process image</li>
+<li>The OS performs a protection function to prevent unwanted interference between processes with respect to resources</li>
+</ul></li>
+<li>Scheduling/Execution:
+<ul>
+<li>Follows an execution path that may be interleaed with other processes (multiprogramming)</li>
+<li>A process has an execution state and a dispatch priority, and is the entity that is scheduled and dispatched by the OS.</li>
+</ul></li>
+</ul></li>
+<li>A process is a whole
+<ul>
+<li>The unit of resource ownership</li>
+</ul></li>
+<li>A thread is a lightweight part of the process
+<ul>
+<li>The unit of dispatching of a process is called a thread, or lightweight process</li>
+</ul></li>
+<li>Multithreading: The ability of an OS to support multiple concurrent paths of execution in a single process
+<ul>
+<li>All threads in a multithreaded process with share code, data, and files from a process, but have their own (smaller) registers, stack, and program counter</li>
+</ul></li>
+<li>Single Thread Approach: A single thread of execution per process, in which the concept of a thread is not recognized.
+<ul>
+<li>Example: MS-DOS</li>
+</ul></li>
+<li>The process in a multithreaded environment is defined as “the unit of resource allocation and unit of protection”
+<ul>
+<li>Things associated with the process:
+<ul>
+<li>the virtual address space that holds the process image</li>
+<li>protected access to resources
+<ul>
+<li>processors</li>
+<li>files</li>
+<li>I/O resources</li>
+</ul></li>
+<li>Things associated with the thread:
+<ul>
+<li>An execution state</li>
+<li>Saved thread context</li>
+<li>An execution stack</li>
+<li>Some per-thread static storage for local variables (register set)</li>
+<li>Access to the memory and resources of its process, shared with all threads of that process</li>
+</ul></li>
+</ul></li>
+<li>Benefits of using threads:
+<ul>
+<li>Takes less time to create and terminate</li>
+<li>Switching between two threads takes less time than switching between processes</li>
+<li>Threads enhance efficiency of interprocess communication</li>
+</ul></li>
+</ul></li>
+</ul>
 </section>
 <section id="multicore-programming" class="level2">
 <h2 class="anchored" data-anchor-id="multicore-programming">Multicore Programming</h2>
-<p>Having multiple cores available doesn’t make programs faster automatically. <strong>Concurrent</strong> execution means tasks make progress interleaved over time — possible even on a single core through rapid switching. <strong>Parallel</strong> execution means tasks run at literally the same instant on different cores — requires multiple cores. Parallelism implies concurrency; concurrency does not imply parallelism.</p>
-<p>Using threads well on multicore hardware requires thinking carefully about: how to divide work, how to balance load across cores, how threads share data, which computations depend on others’ results, and how to test and debug behavior that varies with timing.</p>
+<ul>
+<li>Multicore processessing is the ability for multiple cores on a CPU to execute a process (or threads)</li>
+<li>Provides opportunity to increase efficiency, but comes with some drawbacks:
+<ul>
+<li>Dividing activites between cores</li>
+<li>Balancing work between cores</li>
+<li>Dividing data</li>
+<li>Data dependency</li>
+<li>Testing and debugging</li>
+</ul></li>
+<li>Two types of multicore programming
+<ul>
+<li>Parallel processing: implies a system can perform more than one task simultaneously</li>
+<li>Concurrent processing: More than one task makes progress at a time in a single core or single core processor, allowed by the scheduler</li>
+</ul></li>
+</ul>
 </section>
-<section id="fork-join-parallelism" class="level2">
-<h2 class="anchored" data-anchor-id="fork-join-parallelism">Fork-Join Parallelism</h2>
-<p>Fork-join is the cleanest pattern for expressing parallel work: break a problem into subproblems, fork a thread for each, and join when all are done.</p>
+<section id="back-to-threads" class="level2">
+<h2 class="anchored" data-anchor-id="back-to-threads">Back to Threads</h2>
+<ul>
+<li>Scheduling: In an OS that supports Threads, scheduling and dispatching is done on a thread by thread basis as opposed to a process by process basis
+<ul>
+<li>Most state information dealing with execution is maintained in thread level data structures instead of process level data structures; however:
+<ul>
+<li>Suspending a process involves suspending all the threads involved</li>
+<li>Termination of a process terminates all threads in a process</li>
+</ul></li>
+</ul></li>
+<li>Thread execution states:
+<ul>
+<li>Process level states: Ready, Blocked, Suspended, Running, Terminated, New</li>
+<li>Threads level states: Running, Ready, Blocked</li>
+<li>Thread operations associated with a change of states: Spawn, Block, Unblock, Finish</li>
+</ul></li>
+<li>Thread Synchronization
+<ul>
+<li>It is necessary to synchronize the activities of the various threads
+<ul>
+<li>All threads of a process share the same address space and resources</li>
+<li>Any alteration of a resource by one thread affects other threads in the same process, so timing it of significant importance</li>
+</ul></li>
+</ul></li>
+</ul>
+</section>
+<section id="types-of-threads" class="level2">
+<h2 class="anchored" data-anchor-id="types-of-threads">Types of Threads</h2>
+<ul>
+<li><p>User Level Threads (ULTs)</p>
+<ul>
+<li>All thread management is done by the application</li>
+<li>The kernel is not aware of the existence of threads
+<ul>
+<li>Advantages of ULTs:
+<ul>
+<li>Thread switching does not require kernel mode privileges</li>
+<li>Scheduling is application specific</li>
+<li>ULTs can run on any OS.</li>
+</ul></li>
+<li>Disadvantages of ULTs:
+<ul>
+<li>In a typical OS, many system calls are blocking (have to wait for an event). As a result, when a ULT executes a system call, not only is that thread blocked, but all of the threads within that process are blocked as well.</li>
+<li>In a pure ULT strategy, a multithreaded application cannot take advantage of multiprocessing. A kernel only assigns one process to a single processor at a time, therefore only a single thread within a process can execute at a time.</li>
+</ul></li>
+<li>Overcoming ULT Disadvantages:
+<ul>
+<li>Jacketing: Convert blocking system calls into non-blocking system calls</li>
+<li>Writing an application as multiple processes (so they can use multiple processors) rather than multiple threads, though this does eliminate the core advantage of threads</li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><p>Kernel Level Threads (KLTs)</p>
+<ul>
+<li>Thread management is does by the kernel</li>
+<li>There is no thread management code in the application level, but an application programming interface (API) is used to interact with the kernel thread facility
+<ul>
+<li>Windows is an OS that uses the KLT approach</li>
+</ul></li>
+<li>Advantages of the KLT approach:
+<ul>
+<li>The kernel can simultaneously schedule multiple threads from the same process across multiple cores</li>
+<li>If one thread of a process is blocked, the kernel can schedule another thread from the same process</li>
+<li>Kernel routines themselves can be multithreaded</li>
+</ul></li>
+<li>Disadvantage of the KLT approach:
+<ul>
+<li>The transfer of control from one thread to anther within the same process requires a mode switch (similar to a context switch), which when overperformed can cause a system to become inefficient</li>
+</ul></li>
+</ul></li>
+<li><p>Combined approach: Thread creation is done completely in the user space, as is the bulk of scheduling and synchronization of threads within an application, while the kernel space is used for processor/core assignment</p></li>
+<li><p>Thread Libraries</p>
+<ul>
+<li>Thread libraries provide a programmer with an API for creating and managing threads</li>
+<li>Ways of implementation:
+<ul>
+<li>Libraries entirely in user space (pthreads)</li>
+<li>Kernel-level libraries supported by the OS</li>
+</ul></li>
+<li>Pthreads:
+<ul>
+<li>Stored in user space, interfaces with the kernel</li>
+<li>A POSIX standard (IEEE 1003.1c) API for thread creation and synchronization</li>
+<li>Common in UNIX OS</li>
+</ul></li>
+<li>pthread_create: fuction used to create a thread
+<ul>
+<li>int pthread_create(pthread_t <em>tid, pthread_attr_t </em>attr, func <em>f, void </em>arg);
+<ul>
+<li>returns 0 if everything works, nonzero on error</li>
+</ul></li>
+</ul></li>
+<li>pthread_exit: Terminates a thread
+<ul>
+<li>void pthread_exit(void *thread_return)</li>
+</ul></li>
+<li>pthread_join: Main thread waits for another thread to terminate
+<ul>
+<li>int pthread_join(pthread_t tid, void **thread_return)</li>
+</ul></li>
+<li>pthread_yield: Release the CPU and allows another thread to run</li>
+<li>pthread_attr_init: create and initialize a thread’s attribute structure</li>
+<li>pthread_attr_destroy: remove a thread’s attribute structure</li>
+</ul></li>
+<li><p>Fork-Join Parallelism: Multiple threads (tasks/jobs) are forked, execute individually, and join back up</p>
+<ul>
+<li><p>General Algorithm for fork-join strategy:</p>
 <pre><code>if problem is small enough:
     solve the problem directly
 
@@ -484,26 +536,23 @@ else: (problem is large or can be broken down)
     result1 = join(subtask1)
     result2 = join(subtask2)
 
-    return result1 combined with result2</code></pre>
-<p>Merge sort, parallel reduce, map-reduce — all are fork-join at heart. Fork creates parallel execution; join synchronizes results. Java’s <code>ForkJoinPool</code>, Go’s goroutines with channels, and Rust’s Rayon library all implement variations of this.</p>
+    return result1 combined with result2</code></pre></li>
+</ul></li>
+</ul>
 </section>
-<section id="threading-gotchas" class="level2">
-<h2 class="anchored" data-anchor-id="threading-gotchas">Threading Gotchas</h2>
-<p>When <code>fork()</code> is called from a multithreaded process, Linux creates a child with only a single thread — the one that called <code>fork()</code>. The other parent threads don’t exist in the child. This is a subtle trap: if the parent’s threads held any locks at the moment of the fork, the child process inherits those locks in a locked state that can never be unlocked. Programs that mix <code>fork()</code> and threads must handle this carefully.</p>
-<p><code>exec()</code> in a multithreaded context replaces the entire process — all threads — with the new program, which starts fresh with a single thread. No surprises there.</p>
-<div class="callout callout-style-default callout-tip no-icon callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Discussion Prompt
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>A ULT makes a blocking read from the network. All other ULTs in that process freeze. Describe two approaches to avoid this without switching to KLTs. What are the downsides of each? This is a real engineering problem that Node.js, Python’s asyncio, and others have had to solve.</p>
-</div>
-</div>
+<section id="threading-issues-in-programming" class="level2">
+<h2 class="anchored" data-anchor-id="threading-issues-in-programming">Threading Issues (in programming)</h2>
+<ul>
+<li>The semantics of fork() and exec() can change in a multithreaded program:
+<ul>
+<li>Does fork() duplicate only the calling thread or all threads?
+<ul>
+<li>Linux (POSIX): Child process is created with a single thread</li>
+<li>Solaris: Either single threaded child or duplication of all threads is allowed</li>
+</ul></li>
+<li>Exec works as normal, replace the running process with the called process, including all threads</li>
+</ul></li>
+</ul>
 
 
 </section>

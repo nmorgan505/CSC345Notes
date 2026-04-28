@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>04 · Multiprocessor Scheduling – CSC 345 — Operating Systems (Enhanced)</title>
+<title>04 · Multiprocessor Scheduling – CSC 345 — Operating Systems</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -79,7 +79,7 @@ ul.task-list li input[type="checkbox"] {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">CSC 345 — Operating Systems (Enhanced)</span>
+    <span class="navbar-title">CSC 345 — Operating Systems</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -179,7 +179,7 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">CSC 345 — Operating Systems (Enhanced)</span></a>
+ <span class="menu-text">CSC 345 — Operating Systems Notes</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -269,12 +269,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#why-dont-8-cores-give-you-8-speedup" id="toc-why-dont-8-cores-give-you-8-speedup" class="nav-link active" data-scroll-target="#why-dont-8-cores-give-you-8-speedup">Why Don’t 8 Cores Give You 8× Speedup?</a></li>
-  <li><a href="#types-of-multiprocessor-systems" id="toc-types-of-multiprocessor-systems" class="nav-link" data-scroll-target="#types-of-multiprocessor-systems">Types of Multiprocessor Systems</a></li>
-  <li><a href="#synchronization-granularity" id="toc-synchronization-granularity" class="nav-link" data-scroll-target="#synchronization-granularity">Synchronization Granularity</a></li>
-  <li><a href="#assigning-processes-to-processors" id="toc-assigning-processes-to-processors" class="nav-link" data-scroll-target="#assigning-processes-to-processors">Assigning Processes to Processors</a></li>
-  <li><a href="#architecture-who-decides" id="toc-architecture-who-decides" class="nav-link" data-scroll-target="#architecture-who-decides">Architecture: Who Decides?</a></li>
-  <li><a href="#thread-scheduling-strategies" id="toc-thread-scheduling-strategies" class="nav-link" data-scroll-target="#thread-scheduling-strategies">Thread Scheduling Strategies</a></li>
+  <li><a href="#multiprocessormulticore-scheduling" id="toc-multiprocessormulticore-scheduling" class="nav-link active" data-scroll-target="#multiprocessormulticore-scheduling">Multiprocessor/Multicore Scheduling</a></li>
+  <li><a href="#dynamic-scheduling" id="toc-dynamic-scheduling" class="nav-link" data-scroll-target="#dynamic-scheduling">Dynamic Scheduling</a></li>
   </ul>
 </nav>
     </div>
@@ -300,142 +296,268 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<div class="callout callout-style-default callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Learning Objectives
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>By the end of this lecture, you should be able to:</p>
+<section id="multiprocessormulticore-scheduling" class="level2">
+<h2 class="anchored" data-anchor-id="multiprocessormulticore-scheduling">Multiprocessor/Multicore Scheduling</h2>
 <ul>
-<li>Distinguish loosely coupled, functionally specialized, and tightly coupled (SMP) multiprocessor systems</li>
-<li>Explain the tradeoffs between dynamic and static process-to-processor assignment</li>
-<li>Compare primary/secondary and peer architectures and identify the failure modes of each</li>
-<li>Describe the four thread-scheduling strategies (load sharing, gang, dedicated, dynamic) and the workloads each is suited for</li>
-</ul>
-</div>
-</div>
-<section id="why-dont-8-cores-give-you-8-speedup" class="level2">
-<h2 class="anchored" data-anchor-id="why-dont-8-cores-give-you-8-speedup">Why Don’t 8 Cores Give You 8× Speedup?</h2>
-<p>Buy a laptop with an 8-core processor and run a parallelized program. You probably won’t get 8× faster execution. You might get 4×. Sometimes less. Why?</p>
-<p>Not all code can run in parallel. Cores share resources — memory buses, caches — that become bottlenecks under heavy load. Threads need to synchronize and wait for each other. And the OS itself, managing all of this, introduces overhead. Multiprocessor scheduling is the OS’s attempt to assign work to multiple processors as intelligently as possible — and understanding the constraints that make it genuinely hard.</p>
-<div class="callout callout-style-default callout-tip no-icon callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Opening Discussion
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Before diving in: can you name a task from everyday computing where you’d expect good parallelism? A task where you’d expect poor parallelism? What’s the difference between them? <em>(Lead toward: embarrassingly parallel work vs.&nbsp;inherently sequential work.)</em></p>
-</div>
-</div>
-</section>
-<section id="types-of-multiprocessor-systems" class="level2">
-<h2 class="anchored" data-anchor-id="types-of-multiprocessor-systems">Types of Multiprocessor Systems</h2>
-<p>Not all multiprocessor systems are the same, and the right scheduling strategy depends on the system type.</p>
-<p><strong>Loosely coupled (distributed)</strong> systems are independent machines with their own memory and I/O, connected by a network. Each machine runs its own OS. Coordination happens through message passing at the application level. Cloud computing clusters are the modern example.</p>
-<p><strong>Functionally specialized</strong> systems have a primary general-purpose processor that offloads work to specialized processors — a GPU for graphics, a DSP for audio, a network processor for packet handling. Your phone does this. The primary controls the others and feeds them work.</p>
-<p><strong>Tightly coupled (SMP)</strong> systems have multiple processors sharing physical memory and running under a single OS. This is what “multicore” means in practice — your laptop’s cores share RAM and are coordinated by one kernel. SMP is dominant for everything from laptops to large servers and is the focus of this lecture.</p>
-</section>
-<section id="synchronization-granularity" class="level2">
-<h2 class="anchored" data-anchor-id="synchronization-granularity">Synchronization Granularity</h2>
-<p>Before you can schedule parallel work effectively, you need to understand how often the parallel threads communicate and synchronize. This is <strong>granularity</strong>:</p>
+<li><p>Classifications of Multiprocessor Systems:</p>
+<ul>
+<li>Loosely Coupled/Distributed Microprocessors or cluster processors:
+<ul>
+<li>Consists of a collection of relatively autonomous systems, each processor having its own main memory and I/O channels</li>
+</ul></li>
+<li>Functionally specialized processor:
+<ul>
+<li>There is a primary, general-purpose processor</li>
+<li>Specialized processors are generally controlled by the primary processor, and provide services to it</li>
+</ul></li>
+<li>Tightly Coupled Multiprocessors:
+<ul>
+<li>Consists of a set of processors that share common main memory and are under the integrated control of the OS</li>
+<li>Symmetrical MultiProcessing (SMP) is the most common modern example of this</li>
+</ul></li>
+</ul></li>
+<li><p>Synchronization granularity in processes</p>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 33%">
-<col style="width: 33%">
-<col style="width: 33%">
+<col style="width: 12%">
+<col style="width: 61%">
+<col style="width: 26%">
 </colgroup>
 <thead>
 <tr class="header">
 <th>Grain Size</th>
 <th>Description</th>
-<th>Sync Interval</th>
+<th>Sync Interval (instructions)</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td>Fine</td>
-<td>Parallelism within a single instruction stream</td>
-<td>&lt; 20 instructions</td>
+<td>Parallelism inherent in a single instruction stream</td>
+<td>&lt; 20</td>
 </tr>
 <tr class="even">
 <td>Medium</td>
-<td>Parallel tasks within one application</td>
-<td>20–200 instructions</td>
+<td>Parallel processing or multitasking within a single application</td>
+<td>20 – 200</td>
 </tr>
 <tr class="odd">
 <td>Coarse</td>
-<td>Concurrent processes in a multiprogrammed environment</td>
-<td>200–2,000 instructions</td>
+<td>Multiprocessing of concurrent processes in a multiprogrammed env.</td>
+<td>200 – 2,000</td>
 </tr>
 <tr class="even">
 <td>Very Coarse</td>
 <td>Distributed processes across network nodes</td>
-<td>2,000–1M instructions</td>
+<td>2,000 – 1M</td>
 </tr>
 <tr class="odd">
 <td>Independent</td>
-<td>Unrelated processes, no coordination</td>
+<td>Multiple unrelated processes</td>
 <td>N/A</td>
 </tr>
 </tbody>
-</table>
-<p>Granularity matters because synchronization has overhead — locking, waiting, signaling, cache invalidation. Fine-grained parallelism (vectorized math, pipeline execution) is usually managed by hardware and compilers, not the OS. Medium-grained parallelism — parallel threads within an application — is where OS scheduling decisions make the biggest difference.</p>
+</table></li>
+<li><p>Independent Parallelism</p>
+<ul>
+<li>No explicit synchronization between processes
+<ul>
+<li>Each process represents a separate, independent job or application</li>
+<li>Typically used in time-sharing systems where each user is (generally) performing an independent job</li>
+</ul></li>
+<li>Multiprocessor provides the same service as a multiprogrammed uniprocessor</li>
+<li>Because there are multiple processors, average user response time is lower</li>
+</ul></li>
+<li><p>Coarse/Very Coarse:</p>
+<ul>
+<li>There is synchronization between processes, but at a very low level</li>
+<li>Easily handled as a set of concurrent processes running on a multiprogrammed processor</li>
+<li>Can be supported on a multiprocessor with little to no change in user software</li>
+</ul></li>
+<li><p>Medium-Grained Parallelism</p>
+<ul>
+<li>Single application can be effectively implemented as a collection of threads within a single process
+<ul>
+<li>Programmer must explicitly specify the potential parallelism in code</li>
+<li>There needs to be a high-degree of coordination and interaction among threads of an application</li>
+</ul></li>
+<li>Because the various threads of an application interact so frequently, scheduling decisions concerning one thread may affect the performance of the entire application
+<ul>
+<li>Think of if a single thread gets blocked, and the others don’t wait, which could cause data inconsistency</li>
+</ul></li>
+</ul></li>
+<li><p>Fine-Grained Parallelism</p>
+<ul>
+<li>Represents a much more complex use of parallelism than is found in the use of threads in code</li>
+<li>Mostly OS/Scheduler, or hardware based</li>
+</ul></li>
+<li><p>Design issues:</p>
+<ul>
+<li>The approach taken to scheduling depends on a couple of things:
+<ul>
+<li>The granularity of applications</li>
+<li>Speed of applications</li>
+<li>The number of processors you have available</li>
+</ul></li>
+<li>Scheduling on a multiprocessor involves three interrelated issues:
+<ul>
+<li>The dispatching of a process (separate but linked to the assignment of a process)</li>
+<li>Assignment of processes to processors</li>
+<li>Use of multiprogramming on an individual proccesor/core</li>
+</ul></li>
+</ul></li>
+<li><p>Assignment of processes to a processor:</p>
+<ul>
+<li>Assuming all processors are equal, it is simplest to treat processors like a pooled resource and assign processes to processors as needed
+<ul>
+<li>Dynamic Assignment</li>
+</ul></li>
+<li>If a process is permanently assigned to a processor from activation to termination
+<ul>
+<li>Static Assignment</li>
+<li>Each processor has its own short term assignment queue</li>
+<li>The advantage is that there may be less overhead in the scheduling function</li>
+<li>Allows for group/gang scheduling</li>
+<li>Disadvantage:
+<ul>
+<li>Load imbalance: One processor could be idle, with an empty queue, while another processor has a backlog</li>
+<li>The simplest solution is to provide a common queue of processes shared across all processors, or use dynamic load balancing</li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><p>There are two methods of process assignment to a processor used for both static and dynamic methods:</p>
+<ul>
+<li>Primary/Secondary Architecture</li>
+<li>Peer Assignment</li>
+</ul></li>
+<li><p>Primary Secondary Architecture</p>
+<ul>
+<li>Primary processor executes key kernel functions, and schedules for all other processors</li>
+<li>Secondary processors provides services for the primary</li>
+<li>Think of the primary as the brain, and secondary as arms or legs</li>
+<li>Advantages:
+<ul>
+<li>Simple, and requires very little enhancement to a multiprogrammed uniprocessor system</li>
+<li>Conflict resolution for resources and synchronization is simplified since one processor has control</li>
+</ul></li>
+<li>Disadvantage:
+<ul>
+<li>Single point of failure: If the primary fails, the system fails</li>
+<li>Primary can become a performance bottleneck: If a lot of small processes are sent to schedule at the same time, it would take longer to distribute each task to a processor than it would take for that processor to complete that task</li>
+</ul></li>
+</ul></li>
+<li><p>Peer Architecture:</p>
+<ul>
+<li>Kernel can execute on any processor</li>
+<li>Each processor does self-scheduling from a pool of available processes</li>
+<li>Complicates the OS:
+<ul>
+<li>OS must ensure that two processors do not choose the same process, and that processes are completed before being removed from the queue</li>
+</ul></li>
+</ul></li>
+<li><p>Process Scheduling:</p>
+<ul>
+<li>In traditional multicore systems, processes are not dedicated to a single processor. Dynamic Assignment is most common.</li>
+<li>A single process queue is used for all processors to retrieve tasks from
+<ul>
+<li>If some priority scheme is used, there are multiple queues, one for each priority</li>
+</ul></li>
+</ul></li>
+<li><p>Thread Scheduling:</p>
+<ul>
+<li>Thread execution is separated from the rest of a process</li>
+<li>An application can be a set of threads that cooperate and execute concurrently (or in parallel) in the same memory address space</li>
+<li>On a uniprocessor (concurrent system), threads can be used as a program structuring aid, and allows overlap of I/O processing</li>
+<li>In a multiprocessor system, threads can be used to exploit true parallelism of an application
+<ul>
+<li>Dramatic gains in performance are possible in multiprocessor system due to this</li>
+</ul></li>
+<li>Four approaches to thread scheduling:
+<ul>
+<li>Load sharing: Threads are not assigned to a particular processor</li>
+<li>Gang Scheduling: A set of related threads are scheduled to run on a set of processors at the same time on a one-to-one basis</li>
+<li>Dedicated Processor Assignment: Provides implicit scheduling defined by the assignment of threads to processors</li>
+<li>Dynamic Scheduling: The number of threads in a process can be altered during the course of execution</li>
+</ul></li>
+</ul></li>
+<li><p>Load Sharing:</p>
+<ul>
+<li>Simplest approach and the one that carries over the most from uniprocessor environments</li>
+<li>Advantages:
+<ul>
+<li>Load is distributed evenly across all processors, ensuring that no processor is idle while there is work available to do</li>
+<li>No centralized scheduler required</li>
+<li>There is a global queue of threads that is easier to organize and access</li>
+</ul></li>
+<li>Disadvantages:
+<ul>
+<li>Central queue occupies a region of memory that must be accessed in a manner that enforces mutual exclusion (so multiple processors can’t take the same process)
+<ul>
+<li>Leads to performance bottleneck</li>
+</ul></li>
+<li>Preemptive threads are unlikely to resume execution on the same processor
+<ul>
+<li>Caching becomes less efficient, leading to another performance bottleneck</li>
+</ul></li>
+<li>If all threads are treated as a common pool of threads, it is unlikely that all of the threads of a program will gain access to processors at the same time
+<ul>
+<li>Decreases efficiency of parallel processes</li>
+<li>The process switches could seriously compromise performance</li>
+</ul></li>
+</ul></li>
+<li>Common implementations of Load sharing:
+<ul>
+<li>FCFS</li>
+<li>Smallest number of threads first</li>
+<li>Preemptive smallest number of threads first</li>
+</ul></li>
+</ul></li>
+<li><p>Gang/Group Scheduling:</p>
+<ul>
+<li>A set of related threads is scheduled to run on a set of processors at the same time on a one-to-one basis</li>
+<li>Can be uniform or weighted:
+<ul>
+<li>Uniform: As processes have no weight, all the threads in one process will execute before the threads of another process, alternating until completion</li>
+<li>Weighted: Processes are prioritized such that all of the threads of a higher priority process will execute until completion before another process executes</li>
+</ul></li>
+<li>Advantages:
+<ul>
+<li>Synchronization and blocking may be reduced, as there is less process switching</li>
+<li>Scheduling process overhead may be reduced</li>
+<li>Useful for medium/fine grained applications whose performance severely degrades when any part of the application is not running, while other parts are ready to run</li>
+</ul></li>
+<li>Disadvantage:
+<ul>
+<li>If there is a large process queue, a process will likely take longer to execute while waiting for processors to be freed for each of its threads</li>
+</ul></li>
+</ul></li>
+<li><p>Dedicated processor assignment:</p>
+<ul>
+<li>When an application is scheduled, each of its threads is assigned to a processor that remains dedicated to that thread until the application is completed</li>
+<li>If a thread of an application is blocked waiting for I/O or for synchronization with another thread then that thread’s processor remains idle</li>
+<li>Defense of this strategy:
+<ul>
+<li>In a highly parallel system with tens or hundreds of processors, processor utilization is no longer an important metric of a system</li>
+<li>The total avoidance of process switching during the lifetime of a process should result in a substantial speedup of that process</li>
+</ul></li>
+</ul></li>
+</ul>
 </section>
-<section id="assigning-processes-to-processors" class="level2">
-<h2 class="anchored" data-anchor-id="assigning-processes-to-processors">Assigning Processes to Processors</h2>
-<p>In an SMP system, the OS decides which core each process runs on. Two approaches:</p>
-<p><strong>Dynamic assignment</strong> treats all cores as a shared pool. Any process can run on any available core. A single global ready queue services all processors. This achieves excellent load balance and is the dominant approach in modern OSes including Linux and Windows.</p>
-<p><strong>Static assignment</strong> binds a process to a specific core at creation. That core’s scheduler manages it exclusively until termination. The advantage is reduced scheduling overhead and potentially better cache reuse — the process always runs on the same core, keeping its data warm. The disadvantage is load imbalance: one core can be swamped while another idles.</p>
-</section>
-<section id="architecture-who-decides" class="level2">
-<h2 class="anchored" data-anchor-id="architecture-who-decides">Architecture: Who Decides?</h2>
-<p>Two patterns govern how scheduling decisions are made across processors:</p>
-<p><strong>Primary/Secondary architecture</strong>: one processor handles all scheduling for the others. The secondaries request work from the primary. Simple to implement — scheduling logic lives in one place, conflicts are easy to resolve. But the primary is both a performance bottleneck (all scheduling traffic flows through one processor) and a single point of failure (if the primary crashes, the system stops).</p>
-<p><strong>Peer architecture</strong>: every processor runs the kernel and makes its own scheduling decisions from a shared process pool. Better scalability, no single point of failure. Significantly more complex: the OS must ensure two processors don’t pick the same process simultaneously, requiring mutual exclusion on the global ready queue — which itself becomes a contention point under heavy load. Most real SMP OSes use a peer architecture.</p>
-<div class="callout callout-style-default callout-tip no-icon callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Board Exercise: Primary/Secondary Failure
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Walk through what happens in a primary/secondary system when: (a) a secondary processor fails, (b) the primary processor fails. Compare to the same scenarios in a peer architecture. Which architecture would you choose for a hospital’s life-support monitoring system, and why?</p>
-</div>
-</div>
-</section>
-<section id="thread-scheduling-strategies" class="level2">
-<h2 class="anchored" data-anchor-id="thread-scheduling-strategies">Thread Scheduling Strategies</h2>
-<p>Processes aren’t always the unit of work on multiprocessors — often threads are. Four strategies:</p>
-<p><strong>Load sharing</strong> extends uniprocessor scheduling to multiple cores. A global queue of threads exists; any idle core pulls from it. Load stays balanced, no central scheduler is needed. The costs: the global queue requires mutual exclusion (contention under heavy load); preempted threads often resume on different cores (cold cache); threads from the same application rarely all run simultaneously (hurting parallelism for tightly-coupled apps).</p>
-<p><strong>Gang scheduling</strong> assigns a set of related threads to run simultaneously on matching cores — one thread per core, all at once. When the time slice expires, the whole gang is preempted together. This dramatically reduces synchronization overhead: if all threads in a parallel task run at the same time, they can coordinate without waiting on each other to be scheduled. Particularly valuable for scientific simulations, game engines, and parallel database queries.</p>
-<p>Gang scheduling can be uniform (all gangs get equal time slices) or weighted (higher-priority gangs get larger slices).</p>
-<p><strong>Dedicated processor assignment</strong> gives each thread its own processor for the application’s entire lifetime. If a thread blocks, its processor idles. The defense: in high-performance computing with hundreds of cores, processor utilization is no longer the most important metric. If letting a processor idle during a 10ms lock wait allows the overall job to finish 5× faster by eliminating scheduling overhead, the idle time is worth it.</p>
-<p><strong>Dynamic scheduling</strong> lets the application vary its thread count during execution. The OS responds dynamically: when processors are idle, allocate them to requesting jobs; when a new job arrives and all processors are busy, take one processor from any job currently holding more than one; if no job has more than one processor, the new job waits. This requires cooperation between the OS and application runtime, but achieves good utilization across mixed workloads.</p>
-<div class="callout callout-style-default callout-tip no-icon callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Discussion Prompt
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>A scientific simulation uses 32 threads that synchronize at a barrier every 15 instructions. A web server handles 500 independent HTTP requests per second. Which scheduling strategy would you recommend for each, and why? What would happen if you applied the wrong strategy?</p>
-</div>
-</div>
+<section id="dynamic-scheduling" class="level2">
+<h2 class="anchored" data-anchor-id="dynamic-scheduling">Dynamic Scheduling</h2>
+<ul>
+<li>This method allows an application to adjust the number of threads used during execution</li>
+<li>This allows the OS to adjust the load on processors to improve utilization by reallocating resources based on current workload</li>
+<li>When a job requests one or more processors (either when the job arrives for the first time, or because its requirements change):
+<ul>
+<li>If there are idle processors, use them to satisfy the request</li>
+<li>If there are no idle processors, and if the job making the request is a new arrival:
+<ul>
+<li>allocate a single processor by taking one away from any current job that currently holds more than one processor</li>
+</ul></li>
+<li>If any portion of the request cannot be satisfied (if all current processes only have a single processor), the new job remains outstanding until either a processor becomes available, or the job is rescinded</li>
+</ul></li>
+</ul>
 
 
 </section>
